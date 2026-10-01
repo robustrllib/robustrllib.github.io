@@ -274,32 +274,7 @@ python<span class="w"> </span>baselines/evaluate.py<span class="w"> </span>--run
 </table>
 <p>Training is on the nominal task. The configuration files are explained in <a href="../../run-a-method/">Train an algorithm</a>, and the evaluation of the frozen checkpoint in <a href="../../../evaluation/protocol/">Evaluation Protocol</a>.</p>
 <h2 id="robust-performance">Robust performance<a class="headerlink" href="#robust-performance" title="Permanent link">&para;</a></h2>
-<p>Normalized score of the frozen last checkpoint. Q1 to Q4 are the severity quartiles of each perturbation ladder, ordered by displacement from the nominal setting, and <em>All</em> covers every shifted condition.</p>
-<table>
-<thead>
-<tr>
-<th>Method</th>
-<th style="text-align: right;">Nominal</th>
-<th style="text-align: right;">Q1</th>
-<th style="text-align: right;">Q2</th>
-<th style="text-align: right;">Q3</th>
-<th style="text-align: right;">Q4</th>
-<th style="text-align: right;">All</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>RFQI</strong></td>
-<td style="text-align: right;"><strong>79.3</strong></td>
-<td style="text-align: right;"><strong>58.3</strong></td>
-<td style="text-align: right;"><strong>50.4</strong></td>
-<td style="text-align: right;"><strong>36.5</strong></td>
-<td style="text-align: right;"><strong>29.7</strong></td>
-<td style="text-align: right;"><strong>43.6</strong></td>
-</tr>
-</tbody>
-</table>
-<h2 id="by-task">By task<a class="headerlink" href="#by-task" title="Permanent link">&para;</a></h2>
+<p>Normalized score of the frozen last checkpoint. Q1 to Q4 are the severity quartiles of each perturbation ladder, ordered by displacement from the nominal setting, and <em>All</em> covers every shifted condition. The last row averages the tasks.</p>
 <table>
 <thead>
 <tr>
@@ -367,6 +342,15 @@ python<span class="w"> </span>baselines/evaluate.py<span class="w"> </span>--run
 <td style="text-align: right;">28.8</td>
 <td style="text-align: right;">56.2</td>
 </tr>
+<tr>
+<td><strong>Average</strong></td>
+<td style="text-align: right;"><strong>79.3</strong></td>
+<td style="text-align: right;"><strong>58.3</strong></td>
+<td style="text-align: right;"><strong>50.4</strong></td>
+<td style="text-align: right;"><strong>36.5</strong></td>
+<td style="text-align: right;"><strong>29.7</strong></td>
+<td style="text-align: right;"><strong>43.6</strong></td>
+</tr>
 </tbody>
 </table>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
@@ -402,8 +386,6 @@ python<span class="w"> </span>baselines/evaluate.py<span class="w"> </span>--run
   <li><a class="bk-toc-link" href="#run-the-method">Run the method</a>
   </li>
   <li><a class="bk-toc-link" href="#robust-performance">Robust performance</a>
-  </li>
-  <li><a class="bk-toc-link" href="#by-task">By task</a>
   </li>
   <li><a class="bk-toc-link" href="#references">References</a>
   </li>

@@ -247,7 +247,7 @@ own setting. Two barriers follow.</p>
   See <a href="../../shifts/">Shift Sources and Modes</a>.</li>
 <li><strong>One evaluation protocol.</strong> The frozen last checkpoint of every method is evaluated on the
   same grid. See <a href="../../evaluation/protocol/">Evaluation Protocol</a>.</li>
-<li><strong>Extensible.</strong> A new algorithm implements four methods, and a new simulator backend
+<li><strong>Extensible.</strong> A new algorithm implements four methods, and a new simulator
   implements one adapter.</li>
 </ul>
 <h2 id="comparison-with-related-benchmarks">Comparison with related benchmarks<a class="headerlink" href="#comparison-with-related-benchmarks" title="Permanent link">&para;</a></h2>
@@ -273,12 +273,12 @@ robust algorithms with shifts on every component of the interaction loop, under 
 <p><strong>RobustRLlib integrates 16 robust and robust safe methods</strong> next to 6 standard algorithms.
 It evaluates shift on <strong>all four MDP components</strong>: observations, actions, transitions, and
 reward or cost. It adds <strong>Latency shift</strong>, <strong>Semantic shift</strong> and <strong>compound shift</strong>, and
-carries the same interface to <strong>additional task backends</strong>.</p>
+carries the same interface to <strong>additional simulators</strong>.</p>
 </blockquote>
 <p><em>Robust algorithms</em> counts the robust or robust safe methods that a benchmark evaluates,
 without standard algorithms. <em>MDP shifts</em> counts, out of four, the components on which shift
 is evaluated. <em>Compound shift</em> requires several shift sources to be active at once. <em>Task
-expansion</em> is an interface for carrying the benchmark to further task backends.</p>
+expansion</em> is an interface for carrying the benchmark to further simulators.</p>
 <h2 id="code-structure">Code structure<a class="headerlink" href="#code-structure" title="Permanent link">&para;</a></h2>
 <p>The code has four parts. <strong>Configuration</strong> selects what runs, <strong>Algorithms</strong> and the
 <strong>Shifted environment</strong> interact during training, and <strong>Evaluation</strong> scores the result.</p>
@@ -325,7 +325,7 @@ expansion</em> is an interface for carrying the benchmark to further task backen
 <td>The Non-stationary mode: a multiplier that changes within the episode</td>
 </tr>
 <tr>
-<td>Backend adapters</td>
+<td>Simulator adapters</td>
 <td><code>robustrllib.adapters</code></td>
 <td><code>DynamicsAdapter</code>: <code>list_params</code>, <code>get_nominal</code>, <code>set_param</code>, <code>reset_all</code></td>
 <td>Reads and writes the parameters of one simulator</td>

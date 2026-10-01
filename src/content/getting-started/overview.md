@@ -52,7 +52,7 @@ The library has four groups. Robust methods are split further by where robustnes
   See [Shift Sources and Modes](../shifts/index.md).
 - **One evaluation protocol.** The frozen last checkpoint of every method is evaluated on the
   same grid. See [Evaluation Protocol](../evaluation/protocol.md).
-- **Extensible.** A new algorithm implements four methods, and a new simulator backend
+- **Extensible.** A new algorithm implements four methods, and a new simulator
   implements one adapter.
 
 ## Comparison with related benchmarks
@@ -79,12 +79,12 @@ robust algorithms with shifts on every component of the interaction loop, under 
 > **RobustRLlib integrates 16 robust and robust safe methods** next to 6 standard algorithms.
 > It evaluates shift on **all four MDP components**: observations, actions, transitions, and
 > reward or cost. It adds **Latency shift**, **Semantic shift** and **compound shift**, and
-> carries the same interface to **additional task backends**.
+> carries the same interface to **additional simulators**.
 
 *Robust algorithms* counts the robust or robust safe methods that a benchmark evaluates,
 without standard algorithms. *MDP shifts* counts, out of four, the components on which shift
 is evaluated. *Compound shift* requires several shift sources to be active at once. *Task
-expansion* is an interface for carrying the benchmark to further task backends.
+expansion* is an interface for carrying the benchmark to further simulators.
 
 ## Code structure
 
@@ -102,7 +102,7 @@ The code has four parts. **Configuration** selects what runs, **Algorithms** and
 | Pipeline | `robustrllib.pipeline` | `make_robust(env_id, shifts, seed)` | Creates the task and stacks one wrapper per shift, in list order |
 | Shift wrappers | `robustrllib.shifts` | `ShiftWrapper`, one subclass per target | Applies a shift at `reset` and at `step` |
 | Schedules | `robustrllib.schedule` | `make_schedule(spec)` | The Non-stationary mode: a multiplier that changes within the episode |
-| Backend adapters | `robustrllib.adapters` | `DynamicsAdapter`: `list_params`, `get_nominal`, `set_param`, `reset_all` | Reads and writes the parameters of one simulator |
+| Simulator adapters | `robustrllib.adapters` | `DynamicsAdapter`: `list_params`, `get_nominal`, `set_param`, `reset_all` | Reads and writes the parameters of one simulator |
 | Algorithm interface | `robustrllib.algos` | `Algo`: `train`, `predict`, `save`, `load` | The contract a method implements to enter the library |
 | Task environments | `robustrllib.tasks` | `make_env(task_card, shifts, seed)` | Builds the environment of a task card, for training and evaluation alike |
 | Method implementations | `baselines/<method>/` | `baselines/train.py -c <experiment.yaml> --seed N` | The training recipe of each method, behind one launcher |

@@ -24,7 +24,7 @@ objects, the lights and the cameras, and it displaces objects and cameras by a p
 | Modes | Stochastic, Parametric, Non-stationary, Composition |
 | Applied | At every `reset`; with a schedule before every step |
 | Acts on a frozen policy | Yes, for policies that read rendered images or object positions |
-| Backends | MuJoCo |
+| Simulators | MuJoCo |
 
 ## Supported modes
 

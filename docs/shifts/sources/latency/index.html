@@ -226,7 +226,7 @@ closes around the plant, which noise on an observation or an action cannot imita
 <td><code>fixed</code>, <code>buffer</code>, <code>substep</code> and <code>interp</code>; <code>delay</code> is applied during training</td>
 </tr>
 <tr>
-<td>Backends</td>
+<td>Simulators</td>
 <td>Any; <code>substep</code> needs a MuJoCo task that exposes <code>frame_skip</code> or <code>n_substeps</code></td>
 </tr>
 </tbody>
@@ -507,7 +507,7 @@ its dataset, along each recorded episode.</p>
 <li>All five timing mode names are written on the target <code>latency</code>.</li>
 <li><code>fixed</code> is the mode name for a severity axis of an evaluation grid, because it adds no
   variance of its own.</li>
-<li><code>buffer</code> needs nothing from the simulator and runs on any backend.</li>
+<li><code>buffer</code> needs nothing from the simulator and runs on any simulator.</li>
 <li><strong><code>substep</code> is written only for MuJoCo tasks</strong>; on other tasks it raises
   <code>NotImplementedError</code> when the environment is built.</li>
 <li><code>interp</code> delays are given in seconds, which grades the delay below one control step.</li>

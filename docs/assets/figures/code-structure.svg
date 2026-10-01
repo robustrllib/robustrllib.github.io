@@ -60,7 +60,7 @@
   <text class="mono" x="906" y="315" text-anchor="end">robustrllib.schedule</text>
   <text class="note" x="594" y="335">vary a shift within the episode</text>
   <rect class="card" x="580" y="354" width="340" height="52"/>
-  <text class="h2"   x="594" y="375">Backend adapters</text>
+  <text class="h2"   x="594" y="375">Simulator adapters</text>
   <text class="mono" x="906" y="375" text-anchor="end">robustrllib.adapters</text>
   <text class="note" x="594" y="395">read and write simulator parameters</text>
   <rect class="card" x="580" y="414" width="340" height="44" fill="#f9fafb"/>

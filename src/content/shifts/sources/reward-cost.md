@@ -25,7 +25,7 @@ the dynamics untouched.
 | Modes | Stochastic, Parametric, Non-stationary, Composition |
 | Applied | At every `step` |
 | Acts on a frozen policy | No; it is applied during training |
-| Backends | Any; the shift needs nothing from the simulator |
+| Simulators | Any; the shift needs nothing from the simulator |
 
 ## Supported modes
 

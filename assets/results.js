@@ -8,6 +8,15 @@
   if (!node) { return; }
   var DATA;
   try { DATA = JSON.parse(node.textContent); } catch (e) { return; }
+  var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var chartObserver = !reduced && window.IntersectionObserver ? new window.IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("is-on");
+        chartObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 }) : null;
 
   // ---- colours: the families in the tints of the paper's figures (its base colours
   //      blended 22 % towards white); pale, so every bar also carries its family in
@@ -201,6 +210,9 @@
     return el("div", { class: "table-scroll viz-table-wrap" }, [t]);
   }
   function mount(host, controls, note, buildChart, buildTable) {
+    if (chartObserver) {
+      Array.prototype.forEach.call(host.querySelectorAll(".viz-svg"), function (svg) { chartObserver.unobserve(svg); });
+    }
     host.replaceChildren();
     var showTable = host.getAttribute("data-view") === "table";
     var toggle = el("button", { type: "button", class: "viz-toggle", "aria-pressed": String(showTable), text: showTable ? "Chart" : "Table" });
@@ -212,6 +224,13 @@
     host.appendChild(row);
     host.appendChild(el("div", { class: "viz-body" }, [showTable ? buildTable() : buildChart()]));
     if (note) { host.appendChild(el("p", { class: "viz-note", text: note })); }
+    Array.prototype.forEach.call(host.querySelectorAll(".viz-svg"), function (svg) {
+      var groups = svg.querySelectorAll(".viz-bar-row, .viz-col");
+      Array.prototype.forEach.call(groups, function (group, index) {
+        group.style.setProperty("--viz-delay", (groups.length > 1 ? index / (groups.length - 1) * 0.8 : 0) + "s");
+      });
+      if (chartObserver) { chartObserver.observe(svg); } else { svg.classList.add("is-on"); }
+    });
   }
 
   // =================================================================== Part 1

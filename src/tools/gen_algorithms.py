@@ -8,8 +8,8 @@ Writes content/algorithms/index.md (all methods), one overview page per group
 (content/algorithms/<group>/<slug>.md). The groups are the ones of the sidebar:
 standard, robust-online, robust-offline, robust-safe.
 
-A method page carries two tables of numbers, "Robust performance" on the
-library-wide grid and its breakdown "By task", and nothing else about results. Both are computed here from
+A method page carries one table of numbers, "Robust performance" per task with an
+average row, and nothing else about results. It is computed here from
 data/results/part1_master.csv with the aggregation the paper uses: condition ->
 axis -> task -> method, equal weight at every level, on the pre-registered
 selection of 220 conditions. The script re-derives the paper's headline numbers
@@ -323,23 +323,14 @@ def method_page(algo, fam, refs, p1):
 
     variants = [v for v in algo["variants"] if v.get("part1")]
     if variants and group != "robust-safe":
-        regime = variants[0]["part1"][0]
-        out += ["## Robust performance", "", GRID_NOTE, "",
-                "| Method " + GRID_HEAD, "|---|" + GRID_RULE]
-        shown = set()
-        for v in variants:
-            out.append(grid_line(v["label"], p1.row(tuple(v["part1"])), bold=True))
-            bb = v.get("backbone")
-            if bb and bb not in shown:
-                shown.add(bb)
-                out.append(grid_line(f"{bb} (base algorithm)", p1.row((regime, bb))))
-        out += ["", "## By task", ""]
+        out += ["## Robust performance", "", GRID_NOTE + " The last row averages the tasks.", ""]
         for v in variants:
             if len(variants) > 1:
                 out += [f"**{v['label']}**", ""]
             table = p1.per_task(v["part1"])
             out += ["| Task " + GRID_HEAD, "|---|" + GRID_RULE]
-            out += [grid_line(task, table[task]) for task in sorted(table)] + [""]
+            out += [grid_line(task, table[task]) for task in sorted(table)]
+            out += [grid_line("Average", p1.row(tuple(v["part1"])), bold=True), ""]
 
     keys = [algo["ref"]["key"]] + algo["ref"].get("extra", [])
     out += ["## References", ""] + [f"- {cite(refs, k)}" for k in keys] + [""]

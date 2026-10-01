@@ -24,7 +24,7 @@ applies an external force to a body, or perturbs the simulator state between ste
 | Modes | Stochastic, Parametric, Non-stationary, Composition |
 | Applied | Parameter edits at every `reset`; forces during a push; state noise after every step |
 | Acts on a frozen policy | Yes |
-| Backends | MuJoCo for every mode name; Box2D for parameter edits |
+| Simulators | MuJoCo for every mode name; Box2D for parameter edits |
 
 ## Supported modes
 

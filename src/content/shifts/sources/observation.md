@@ -24,7 +24,7 @@ from the task to the policy and leaves the state of the simulator untouched.
 | Modes | Stochastic, Adversarial, Parametric, Non-stationary, Composition |
 | Observations | Arrays and dictionaries; the Adversarial mode needs an array |
 | Acts on a frozen policy | Yes |
-| Backends | Any; the shift needs nothing from the simulator |
+| Simulators | Any; the shift needs nothing from the simulator |
 
 ## Supported modes
 

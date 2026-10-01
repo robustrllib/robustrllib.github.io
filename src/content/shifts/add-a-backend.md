@@ -1,16 +1,17 @@
 # Add a physics simulation
 
-A backend is a simulator the shift wrappers can reach into. Most shifts act on what passes
-through `reset` and `step` and need nothing from it; the shifts that edit the simulator go
-through a dynamics adapter.
+The shift wrappers reach a simulator through one adapter, so carrying the library to a new
+simulator means writing that adapter. Most shifts act on what passes through `reset` and
+`step` and need nothing from the simulator; the shifts that edit the simulator go through a
+dynamics adapter.
 
 ## Summary
 
-| Aspect | Backend adapter |
+| Aspect | Simulator adapter |
 |---|---|
 | Interface | A subclass of `DynamicsAdapter` with `list_params`, `get_nominal` and `set_param` |
 | Selection | `get_adapter(env)` inspects the attributes of `env.unwrapped` |
-| Vocabulary | Names of physical parameters, shared across backends |
+| Vocabulary | Names of physical parameters, shared across simulators |
 | Needed for | The Dynamic shift and the Semantic shift |
 | Bundled | Adapters for MuJoCo and Box2D, and a template |
 | Limits | `push` and the colour mode names use MuJoCo data structures directly |
@@ -36,7 +37,7 @@ from robustrllib.adapters import DynamicsAdapter, get_adapter
 
 ### Requirements per shift
 
-| Shift | Mode names | Requirement on the backend |
+| Shift | Mode names | Requirement on the simulator |
 |---|---|---|
 | Observation shift, Action shift, Reward/cost shift | All | None |
 | Latency shift | `fixed`, `buffer`, `interp`, `delay` | None |
@@ -170,7 +171,7 @@ differ stores a vector of nominal values, as the MuJoCo adapter does.
 
 !!! note
     The parameter names are the vocabulary of the evaluation grids. A grid that says
-    `param: actuator_gear` runs on every backend that defines that name.
+    `param: actuator_gear` runs on every simulator that defines that name.
 
 ## Register an adapter
 

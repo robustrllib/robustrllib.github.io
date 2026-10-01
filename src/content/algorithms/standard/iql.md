@@ -28,9 +28,6 @@ IQL avoids querying out-of-distribution actions altogether. A value function is 
 critic by expectile regression, the twin critics bootstrap from that value function, and the
 actor is extracted by advantage-weighted regression.
 
-IQL is the backbone of five mechanisms in the library (ATLA-IQL, RSC-IQL, ROMB, FWM and
-PLR-PVL). Each of them changes one component and keeps the rest of this recipe.
-
 ## Run the method
 
 ```bash
@@ -49,13 +46,7 @@ Training is on the nominal task. The configuration files are explained in [Train
 
 ## Robust performance
 
-Normalized score of the frozen last checkpoint. Q1 to Q4 are the severity quartiles of each perturbation ladder, ordered by displacement from the nominal setting, and *All* covers every shifted condition.
-
-| Method | Nominal | Q1 | Q2 | Q3 | Q4 | All |
-|---|--:|--:|--:|--:|--:|--:|
-| **IQL** | **102.5** | **77.5** | **57.0** | **42.1** | **35.4** | **53.1** |
-
-## By task
+Normalized score of the frozen last checkpoint. Q1 to Q4 are the severity quartiles of each perturbation ladder, ordered by displacement from the nominal setting, and *All* covers every shifted condition. The last row averages the tasks.
 
 | Task | Nominal | Q1 | Q2 | Q3 | Q4 | All |
 |---|--:|--:|--:|--:|--:|--:|
@@ -65,6 +56,7 @@ Normalized score of the frozen last checkpoint. Q1 to Q4 are the severity quarti
 | LunarLander | 100.0 | 94.7 | 86.5 | 72.8 | 70.4 | 81.6 |
 | PointMaze | 100.0 | 64.0 | 51.3 | 44.0 | 38.7 | 49.5 |
 | Walker2d | 125.1 | 109.6 | 69.7 | 46.8 | 43.0 | 67.3 |
+| **Average** | **102.5** | **77.5** | **57.0** | **42.1** | **35.4** | **53.1** |
 
 ## References
 

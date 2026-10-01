@@ -39,9 +39,6 @@ algorithms:
       IQL avoids querying out-of-distribution actions altogether. A value function is fitted to the
       critic by expectile regression, the twin critics bootstrap from that value function, and the
       actor is extracted by advantage-weighted regression.
-
-      IQL is the backbone of five mechanisms in the library (ATLA-IQL, RSC-IQL, ROMB, FWM and
-      PLR-PVL). Each of them changes one component and keeps the rest of this recipe.
     ref: {key: kostrikov2021offline}
     code:
       dir: baselines/iql

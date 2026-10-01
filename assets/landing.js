@@ -7,19 +7,28 @@
   var observe = window.IntersectionObserver && !reduced;
   document.documentElement.classList.add("has-js");
 
-  // ---- the five numbers keep one height, however many lines their tags wrap to
-  //      (the cards are placed absolutely for the intro, so the layout cannot stretch them)
+  // ---- compact number cards grow downwards as their tags appear, ending at one height
   (function () {
     var cards = Array.prototype.slice.call(document.querySelectorAll(".hero-metric"));
     var stage = document.querySelector(".hero-stage");
     if (!cards.length || !stage) { return; }
     function level() {
-      cards.forEach(function (card) { card.style.minHeight = ""; });
       stage.style.marginBottom = "";
-      var tallest = Math.max.apply(null, cards.map(function (card) { return card.offsetHeight; }));
-      cards.forEach(function (card) { card.style.minHeight = tallest + "px"; });
-      // the cards hang below the stage; on mid-width screens they need more room than the stylesheet's margin
-      var below = Math.max.apply(null, cards.map(function (card) { return card.offsetTop + card.offsetHeight; })) - stage.clientHeight;
+      var tags = cards.map(function (card) { return card.querySelector(".hero-tags"); });
+      // Measure the natural wrapped content even while the tag area is collapsed.
+      tags.forEach(function (tag) { tag.style.height = "auto"; });
+      var tallest = Math.max.apply(null, tags.map(function (tag) { return tag.offsetHeight; }));
+      var fullHeights = cards.map(function (card, index) {
+        var tag = tags[index];
+        return card.offsetHeight - tag.offsetHeight
+          - parseFloat(window.getComputedStyle(tag).marginTop) + tallest + 8;
+      });
+      stage.style.setProperty("--hero-tags-height", tallest + "px");
+      tags.forEach(function (tag) { tag.style.height = ""; });
+      // Reserve the final footprint so unfolding the cards does not push the next section.
+      var below = Math.max.apply(null, cards.map(function (card, index) {
+        return card.offsetTop + fullHeights[index];
+      })) - stage.clientHeight;
       var margin = parseFloat(window.getComputedStyle(stage).marginBottom) || 0;
       if (below + 14 > margin) { stage.style.marginBottom = (below + 14) + "px"; }
     }
@@ -157,7 +166,7 @@
     function flow() { scene.classList.add("flow"); }
     function play() {
       scene.classList.add("play");
-      window.setTimeout(flow, steps * 260 + 700);
+      window.setTimeout(flow, steps * 150 + 500);
     }
     if (!observe) { scene.classList.add("play", "still"); return; }
     var io = new window.IntersectionObserver(function (entries) {

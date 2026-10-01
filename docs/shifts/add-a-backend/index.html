@@ -183,15 +183,16 @@
 
       <main class="bk-article" id="bk-content">
         <h1 id="add-a-physics-simulation">Add a physics simulation<a class="headerlink" href="#add-a-physics-simulation" title="Permanent link">&para;</a></h1>
-<p>A backend is a simulator the shift wrappers can reach into. Most shifts act on what passes
-through <code>reset</code> and <code>step</code> and need nothing from it; the shifts that edit the simulator go
-through a dynamics adapter.</p>
+<p>The shift wrappers reach a simulator through one adapter, so carrying the library to a new
+simulator means writing that adapter. Most shifts act on what passes through <code>reset</code> and
+<code>step</code> and need nothing from the simulator; the shifts that edit the simulator go through a
+dynamics adapter.</p>
 <h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
 <th>Aspect</th>
-<th>Backend adapter</th>
+<th>Simulator adapter</th>
 </tr>
 </thead>
 <tbody>
@@ -205,7 +206,7 @@ through a dynamics adapter.</p>
 </tr>
 <tr>
 <td>Vocabulary</td>
-<td>Names of physical parameters, shared across backends</td>
+<td>Names of physical parameters, shared across simulators</td>
 </tr>
 <tr>
 <td>Needed for</td>
@@ -278,7 +279,7 @@ are abstract.</p>
 <tr>
 <th>Shift</th>
 <th>Mode names</th>
-<th>Requirement on the backend</th>
+<th>Requirement on the simulator</th>
 </tr>
 </thead>
 <tbody>
@@ -450,7 +451,7 @@ differ stores a vector of nominal values, as the MuJoCo adapter does.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>The parameter names are the vocabulary of the evaluation grids. A grid that says
-<code>param: actuator_gear</code> runs on every backend that defines that name.</p>
+<code>param: actuator_gear</code> runs on every simulator that defines that name.</p>
 </div>
 <h2 id="register-an-adapter">Register an adapter<a class="headerlink" href="#register-an-adapter" title="Permanent link">&para;</a></h2>
 <p>The shift wrappers obtain their adapter from <code>get_adapter(env)</code> in the package

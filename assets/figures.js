@@ -88,12 +88,12 @@
         var top = yL(Math.max(v[0], 0)), h = Math.abs(yL(v[0]) - yL(0));
         var rect = sv("rect", { x: pos - w / 2, y: top, width: w, height: Math.max(h, 0.01), fill: p[2], class: "fig-bar" });
         rect.style.transformOrigin = pos + "px " + yL(0) + "px";
-        gl.appendChild(delay(rect, 0.11 * order));
+        gl.appendChild(delay(rect, 0.04 * order));
         var rule = sv("line", { x1: pos, y1: yL(v[1]), x2: pos, y2: yL(v[2]), stroke: f.rule, "stroke-width": 1, opacity: 0.5, class: "fig-late" });
-        gl.appendChild(delay(rule, 0.11 * order + 0.7));
+        gl.appendChild(delay(rule, 0.04 * order + 0.25));
         var ly = v[0] >= 0 ? yL(v[0]) - 6 : yL(v[0]) + 13;
         var label = text(pos, ly, (v[0] >= 0 ? "+" : "") + fmt(v[0], 1), { "text-anchor": "middle", "font-size": 11.5, "font-weight": 700, fill: C.ink, class: "fig-late" });
-        gl.appendChild(delay(label, 0.11 * order + 0.75));
+        gl.appendChild(delay(label, 0.04 * order + 0.28));
         order += 1;
       });
     });
@@ -108,7 +108,7 @@
       lx += 30 + f.label.length * 6.6 + 28;
     });
     lg.setAttribute("transform", "translate(" + Math.max(0, (W - lx) / 2 - 40) + " 0)");
-    svg.appendChild(delay(lg, 1.0));
+    svg.appendChild(delay(lg, 0.35));
     // ---- right: the decay curves
     var R = { x0: 590, x1: 960, y0: 46, y1: 330 };
     var cs = D.curves, qs = cs.standard.length;
@@ -142,7 +142,7 @@
     [[0, "+", 44, -10], [qs - 1, "+", -42, 12]].forEach(function (g) {
       var i = g[0], gap = cs.robust[i] - cs.standard[i];
       var lab = text(xR(i) + g[2], (yR(cs.robust[i]) + yR(cs.standard[i])) / 2 + g[3], g[1] + fmt(gap, 1), { "text-anchor": "middle", "font-size": 15, "font-weight": 700, fill: C.robust, class: "fig-late" });
-      gr.appendChild(delay(lab, i === 0 ? 0.9 : 2.6));
+      gr.appendChild(delay(lab, i === 0 ? 0.32 : 1.0));
     });
     var leg = sv("g", { class: "fig-late" });
     [["Standard RL", C.standard], ["Robust RL", C.robust]].forEach(function (s, i) {
@@ -151,7 +151,7 @@
       leg.appendChild(sv("circle", { cx: R.x1 - 105, cy: y, r: 3.6, fill: s[1] }));
       leg.appendChild(text(R.x1 - 84, y + 4, s[0], { "font-size": 12, fill: C.ink }));
     });
-    gr.appendChild(delay(leg, 0.2));
+    gr.appendChild(delay(leg, 0.07));
     svg.appendChild(gr);
     return svg;
   }
@@ -181,11 +181,11 @@
         var bars = sv("g", { stroke: m.edge, "stroke-width": 1.1, class: "fig-late" }, [
           sv("line", { x1: x(v.x[0] - v.x[1]), y1: cy, x2: x(v.x[0] + v.x[1]), y2: cy }),
           sv("line", { x1: cx, y1: y(v.y[0] - v.y[1]), x2: cx, y2: y(v.y[0] + v.y[1]) })]);
-        g.appendChild(delay(bars, 0.6 + i * 0.12));
+        g.appendChild(delay(bars, 0.24 + i * 0.05));
         var mk = marker(m.marker, cx, cy, SIZE[m.marker]);
         mk.setAttribute("fill", m.color); mk.setAttribute("stroke", m.edge); mk.setAttribute("stroke-width", 1.1); mk.setAttribute("class", "fig-pop");
         mk.style.transformOrigin = cx + "px " + cy + "px";
-        g.appendChild(delay(mk, 0.15 + i * 0.12));
+        g.appendChild(delay(mk, 0.06 + i * 0.05));
       });
       panel.appendChild(g);
     }
@@ -200,7 +200,7 @@
       mx += 20 + m.label.length * 6.4 + 16;
     });
     ml.setAttribute("transform", "translate(" + (265 - mx / 2) + " 0)");
-    left.appendChild(delay(ml, 0.9));
+    left.appendChild(delay(ml, 0.36));
     svg.appendChild(left);
     svg.appendChild(sv("line", { x1: 548, y1: 14, x2: 548, y2: 346, stroke: C.ink, "stroke-width": 1 }));
     // ---- the VLA ladders
@@ -223,7 +223,7 @@
     D.vla.forEach(function (a) {
       var n = a.rungs.length, pts = a.rungs.map(function (r, i) { return [xv(i / (n - 1)), yv(r.retention), yv(r.retention - r.sd), yv(r.retention + r.sd)]; });
       var bandPts = pts.map(function (p) { return p[0].toFixed(1) + "," + p[3].toFixed(1); }).concat(pts.slice().reverse().map(function (p) { return p[0].toFixed(1) + "," + p[2].toFixed(1); }));
-      gv.appendChild(delay(sv("polygon", { points: bandPts.join(" "), fill: a.color, "fill-opacity": 0.13, class: "fig-late" }), 2.2));
+      gv.appendChild(delay(sv("polygon", { points: bandPts.join(" "), fill: a.color, "fill-opacity": 0.13, class: "fig-late" }), 0.88));
       var d = pts.map(function (p, i) { return (i ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1); }).join(" ");
       var attrs = { d: d, fill: "none", stroke: a.color, "stroke-width": 2.6, "stroke-linejoin": "round", class: "fig-line" };
       var path = sv("path", attrs);
@@ -240,13 +240,13 @@
       pts.forEach(function (p, i) {
         var m = sv("circle", { cx: p[0], cy: p[1], r: 3.2, fill: a.color, stroke: C.ink, "stroke-width": 0.6, class: "fig-pop" });
         m.style.transformOrigin = p[0] + "px " + p[1] + "px";
-        gv.appendChild(delay(m, 0.4 + (i / (n - 1)) * 1.9));
+        gv.appendChild(delay(m, 0.16 + (i / (n - 1)) * 0.76));
       });
       if (a.hardware) {
         var j = a.rungs.map(function (r) { return r.name; }).indexOf(a.hardware);
         var dm = marker("D", pts[j][0], pts[j][1], 5.2); dm.setAttribute("fill", a.color); dm.setAttribute("stroke", C.ink); dm.setAttribute("stroke-width", 0.8); dm.setAttribute("class", "fig-pop");
         dm.style.transformOrigin = pts[j][0] + "px " + pts[j][1] + "px";
-        gv.appendChild(delay(dm, 2.3));
+        gv.appendChild(delay(dm, 0.92));
       }
       ends.push([pts[n - 1][1], a.label, a.color, a.rungs[n - 1].retention]);
     });
@@ -259,7 +259,7 @@
       var lab = sv("g", { class: "fig-late" }, [
         Math.abs(yText - e[0]) > 0.5 ? sv("line", { x1: V.x1 + 2, y1: e[0], x2: V.x1 + 10, y2: yText, stroke: e[2], "stroke-width": 0.7 }) : null,
         text(V.x1 + 13, yText + 3.5, e[1] + "  " + fmt(e[3], 2), { "font-size": 10.5, "font-weight": 700, fill: C.ink })]);
-      gv.appendChild(delay(lab, 2.5));
+      gv.appendChild(delay(lab, 1.0));
     });
     var cl = sv("g", { class: "fig-late" }), seen = {}, cx0 = V.x0 - 10, row = 0, col = 0;
     D.vla.forEach(function (a) {
@@ -273,7 +273,7 @@
     var dx = cx0 + col * 112, dy = 318 + row * 16;
     var dd = marker("D", dx + 11, dy, 5); dd.setAttribute("fill", "#fff"); dd.setAttribute("stroke", C.ink); dd.setAttribute("stroke-width", 0.9);
     cl.appendChild(dd); cl.appendChild(text(dx + 28, dy + 4, "real-robot operating point", { "font-size": 11, fill: C.ink }));
-    gv.appendChild(delay(cl, 1.0));
+    gv.appendChild(delay(cl, 0.4));
     svg.appendChild(gv);
     return svg;
   }

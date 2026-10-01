@@ -24,7 +24,7 @@ action and the task executes another; the result is always clipped to the action
 | Modes | Stochastic, Adversarial, Parametric, Non-stationary, Composition |
 | Spaces | Continuous action spaces; `rotate` needs two dimensions |
 | Acts on a frozen policy | Yes |
-| Backends | Any; `oppose_goal` needs a goal-conditioned maze task |
+| Simulators | Any; `oppose_goal` needs a goal-conditioned maze task |
 
 ## Supported modes
 

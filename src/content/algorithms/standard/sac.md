@@ -48,13 +48,7 @@ Training is on the nominal task. The configuration files are explained in [Train
 
 ## Robust performance
 
-Normalized score of the frozen last checkpoint. Q1 to Q4 are the severity quartiles of each perturbation ladder, ordered by displacement from the nominal setting, and *All* covers every shifted condition.
-
-| Method | Nominal | Q1 | Q2 | Q3 | Q4 | All |
-|---|--:|--:|--:|--:|--:|--:|
-| **SAC** | **78.6** | **70.6** | **64.6** | **49.0** | **43.0** | **56.7** |
-
-## By task
+Normalized score of the frozen last checkpoint. Q1 to Q4 are the severity quartiles of each perturbation ladder, ordered by displacement from the nominal setting, and *All* covers every shifted condition. The last row averages the tasks.
 
 | Task | Nominal | Q1 | Q2 | Q3 | Q4 | All |
 |---|--:|--:|--:|--:|--:|--:|
@@ -64,6 +58,7 @@ Normalized score of the frozen last checkpoint. Q1 to Q4 are the severity quarti
 | Hopper | 71.0 | 55.4 | 45.0 | 33.0 | 24.1 | 39.4 |
 | PointMaze | 99.1 | 85.9 | 73.8 | 68.4 | 54.4 | 70.6 |
 | Walker2d | 104.8 | 101.0 | 92.1 | 72.8 | 60.5 | 81.6 |
+| **Average** | **78.6** | **70.6** | **64.6** | **49.0** | **43.0** | **56.7** |
 
 ## References
 

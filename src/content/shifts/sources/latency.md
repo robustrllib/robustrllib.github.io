@@ -25,7 +25,7 @@ closes around the plant, which noise on an observation or an action cannot imita
 | Modes | Stochastic, Parametric, Non-stationary, Composition |
 | Units | Control steps for `fixed`, `buffer` and `delay`; seconds for `substep` and `interp` |
 | Acts on a frozen policy | `fixed`, `buffer`, `substep` and `interp`; `delay` is applied during training |
-| Backends | Any; `substep` needs a MuJoCo task that exposes `frame_skip` or `n_substeps` |
+| Simulators | Any; `substep` needs a MuJoCo task that exposes `frame_skip` or `n_substeps` |
 
 ## Supported modes
 
@@ -212,7 +212,7 @@ reward_delay_16:
 - All five timing mode names are written on the target `latency`.
 - `fixed` is the mode name for a severity axis of an evaluation grid, because it adds no
   variance of its own.
-- `buffer` needs nothing from the simulator and runs on any backend.
+- `buffer` needs nothing from the simulator and runs on any simulator.
 - **`substep` is written only for MuJoCo tasks**; on other tasks it raises
   `NotImplementedError` when the environment is built.
 - `interp` delays are given in seconds, which grades the delay below one control step.

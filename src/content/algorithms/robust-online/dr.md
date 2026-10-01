@@ -54,14 +54,7 @@ Training rollouts come from the method's own perturbed environment. The configur
 
 ## Robust performance
 
-Normalized score of the frozen last checkpoint. Q1 to Q4 are the severity quartiles of each perturbation ladder, ordered by displacement from the nominal setting, and *All* covers every shifted condition.
-
-| Method | Nominal | Q1 | Q2 | Q3 | Q4 | All |
-|---|--:|--:|--:|--:|--:|--:|
-| **DR-SAC** | **91.1** | **84.7** | **76.9** | **58.3** | **48.2** | **66.8** |
-| SAC (base algorithm) | 78.6 | 70.6 | 64.6 | 49.0 | 43.0 | 56.7 |
-
-## By task
+Normalized score of the frozen last checkpoint. Q1 to Q4 are the severity quartiles of each perturbation ladder, ordered by displacement from the nominal setting, and *All* covers every shifted condition. The last row averages the tasks.
 
 | Task | Nominal | Q1 | Q2 | Q3 | Q4 | All |
 |---|--:|--:|--:|--:|--:|--:|
@@ -71,6 +64,7 @@ Normalized score of the frozen last checkpoint. Q1 to Q4 are the severity quarti
 | Hopper | 103.1 | 83.7 | 64.8 | 52.5 | 33.0 | 58.5 |
 | PointMaze | 96.8 | 85.3 | 75.3 | 70.1 | 54.1 | 71.2 |
 | Walker2d | 83.0 | 90.2 | 78.3 | 63.9 | 56.2 | 72.1 |
+| **Average** | **91.1** | **84.7** | **76.9** | **58.3** | **48.2** | **66.8** |
 
 ## References
 

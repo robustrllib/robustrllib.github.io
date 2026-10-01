@@ -156,14 +156,13 @@ def task_card(task, sources):
         fig = f'<img src="{esc(media)}" alt="{esc(task["caption"])}" loading="lazy">'
     dots = "".join(f'<span class="tb-dot tb-{k}" title="{esc(next(s["name"] for s in sources if s["key"] == k))}"></span>'
                    for k in task["shifts"])
-    parts = ", ".join(f"Part {n}" for n in task["parts"])
     return (f'<article class="tb-task" data-family="{esc(task["family"])}" data-regime="{esc(" ".join(task["regime"]))}" '
             f'data-shifts="{esc(" ".join(task["shifts"]))}">'
             f'<figure class="tb-task-media">{fig}</figure>'
             f'<h4>{esc(task["name"])}</h4>'
             f'<p class="tb-task-meta">{esc(task["family"])} · {esc(task["backend"])} · {esc(" / ".join(task["regime"]))}</p>'
             f'<p class="tb-task-axes">{esc(", ".join(task["axes"]))}</p>'
-            f'<p class="tb-task-foot"><span class="tb-task-dots">{dots}</span><span class="tb-task-parts">{esc(parts)}</span></p>'
+            f'<p class="tb-task-foot"><span class="tb-task-dots">{dots}</span></p>'
             f'</article>')
 
 

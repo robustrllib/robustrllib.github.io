@@ -9,7 +9,7 @@ grid of shift conditions.
 | Aspect | Evaluation protocol |
 |---|---|
 | Interface | `baselines/evaluate.py --run <run directory> [--eval <grid>]` |
-| Checkpoint | The final checkpoint of the run; never selected on evaluation results (RFQI keeps its own best-checkpoint rule) |
+| Checkpoint | The final checkpoint of the run; never selected on evaluation results |
 | Conditions | The `grid` of an eval card; each condition is a list of shifts |
 | Episodes | 20 per condition, deterministic actions, the task's time limit |
 | Seeds | A fixed evaluation seed, offset by the episode index; conditions are paired |

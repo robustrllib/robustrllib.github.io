@@ -54,15 +54,7 @@ Training rollouts come from the method's own perturbed environment. The configur
 
 ## Robust performance
 
-Normalized score of the frozen last checkpoint. Q1 to Q4 are the severity quartiles of each perturbation ladder, ordered by displacement from the nominal setting, and *All* covers every shifted condition.
-
-| Method | Nominal | Q1 | Q2 | Q3 | Q4 | All |
-|---|--:|--:|--:|--:|--:|--:|
-| **RARL-PPO** | **76.3** | **65.2** | **49.4** | **43.8** | **38.4** | **49.4** |
-| PPO (base algorithm) | 71.2 | 58.8 | 47.7 | 41.2 | 37.2 | 46.2 |
-| **RARL-TRPO** | **72.8** | **64.4** | **51.9** | **45.3** | **37.7** | **49.8** |
-
-## By task
+Normalized score of the frozen last checkpoint. Q1 to Q4 are the severity quartiles of each perturbation ladder, ordered by displacement from the nominal setting, and *All* covers every shifted condition. The last row averages the tasks.
 
 **RARL-PPO**
 
@@ -74,6 +66,7 @@ Normalized score of the frozen last checkpoint. Q1 to Q4 are the severity quarti
 | Hopper | 74.1 | 59.2 | 37.2 | 26.2 | 20.7 | 35.8 |
 | PointMaze | 73.4 | 63.4 | 50.3 | 47.6 | 34.4 | 48.9 |
 | Walker2d | 112.3 | 80.3 | 51.4 | 33.4 | 29.5 | 48.6 |
+| **Average** | **76.3** | **65.2** | **49.4** | **43.8** | **38.4** | **49.4** |
 
 **RARL-TRPO**
 
@@ -85,6 +78,7 @@ Normalized score of the frozen last checkpoint. Q1 to Q4 are the severity quarti
 | Hopper | 76.3 | 62.2 | 42.6 | 37.5 | 24.7 | 41.8 |
 | PointMaze | 74.6 | 65.7 | 60.8 | 59.0 | 39.8 | 56.3 |
 | Walker2d | 97.9 | 78.7 | 45.5 | 33.6 | 28.5 | 46.6 |
+| **Average** | **72.8** | **64.4** | **51.9** | **45.3** | **37.7** | **49.8** |
 
 ## References
 
