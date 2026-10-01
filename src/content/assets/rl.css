@@ -1,0 +1,62 @@
+/* RobustRLlib documentation: the parts that are particular to this site. The theme
+   itself is theme/css/site.css. Family colours follow the palette of the paper's
+   figures, so a family has the same hue in a figure, a badge and a table; the colours
+   (--rl-fam-*) are defined in book.css, which the landing page loads as well. */
+
+/* ---- method header ---- */
+.bk-article .rl-subtitle { margin: -.6rem 0 .8rem; font-size: 1.15rem; color: var(--bk-faint); }
+.bk-article .rl-badges,
+.bk-article .rl-legend { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 1.15rem; }
+.bk-article .rl-badge {
+  display: inline-block; padding: 1px 10px; border-radius: 999px;
+  font-size: .8rem; font-weight: 700; line-height: 1.7; white-space: nowrap;
+  color: #111827; background: #e5e7eb;
+}
+.bk-article .rl-plain { background: transparent; border: 1px solid #c9ccd1; font-weight: 600; }
+.bk-article .rl-setting { background: #30302e; color: #faf9f5; }
+.bk-article .rl-fam-standard    { background: var(--rl-fam-standard); }
+.bk-article .rl-fam-learner     { background: var(--rl-fam-learner); }
+.bk-article .rl-fam-data        { background: var(--rl-fam-data); }
+.bk-article .rl-fam-generative  { background: var(--rl-fam-generative); }
+.bk-article .rl-fam-environment { background: var(--rl-fam-environment); }
+.bk-article .rl-fam-safe        { background: var(--rl-fam-safe); }
+
+/* ---- figures: centred, caption directly below ---- */
+.bk-article p > img { display: block; margin: 0 auto; }
+.bk-article p > img + em,
+.bk-article img + br + em { display: block; text-align: center; font-size: .92rem; color: var(--bk-muted); }
+.bk-article .rl-pair { display: flex; gap: 12px; margin: 0 0 12px; }
+.bk-article .rl-pair img { width: 50%; min-width: 0; height: auto; }
+
+/* ---- comparison table: features in rows, benchmarks in columns ---- */
+.bk-article .rl-scroll { overflow-x: auto; margin: 0 0 .8rem; }
+.bk-article table.rl-compare {
+  display: table; width: 100%; max-width: none; overflow: visible; margin: 0; font-size: .95rem;
+}
+.bk-article table.rl-compare th,
+.bk-article table.rl-compare td { padding: 13px 10px; border: 0; white-space: nowrap; vertical-align: middle; }
+.bk-article table.rl-compare td { text-align: center; }
+.bk-article table.rl-compare tbody th { text-align: left; font-weight: 700; }
+.bk-article table.rl-compare thead th {
+  text-align: center; background: var(--bk-surface); border-bottom: 3px solid var(--bk-primary);
+}
+.bk-article table.rl-compare thead th:first-child { text-align: left; }
+.bk-article table.rl-compare tbody tr:hover { background: transparent; }
+.bk-article table.rl-compare tbody tr:nth-child(odd) th,
+.bk-article table.rl-compare tbody tr:nth-child(odd) td { background: var(--bk-ground); }
+/* the highlighted column keeps its colour on every row, zebra or not */
+.bk-article table.rl-compare tbody tr td.rl-ours { background: #f4e6df; font-weight: 700; }
+.bk-article table.rl-compare thead tr th.rl-ours { background: #ecd6c9; color: var(--bk-primary-dark); }
+.bk-article .rl-ico { display: inline-block; width: 1.7em; color: var(--bk-primary); }
+.bk-article .rl-yes  { color: #6f9a63; font-size: 135%; }
+.bk-article .rl-no   { color: #b53333; font-size: 135%; }
+.bk-article .rl-part { color: #c08a2e; font-size: 125%; }
+.bk-article .rl-legend-marks { font-size: .9rem; color: var(--bk-faint); margin: 0 0 1.15rem; }
+.bk-article .rl-legend-marks .fa { font-size: 110%; vertical-align: -1px; }
+
+/* ---- highlighted summary below the comparison ---- */
+.bk-article blockquote {
+  margin: 0 0 1.4rem; padding: 14px 18px; border-left: 5px solid #87867f;
+  background: var(--bk-surface); border-radius: 0 6px 6px 0;
+}
+.bk-article blockquote p { margin: 0; line-height: 1.7; }

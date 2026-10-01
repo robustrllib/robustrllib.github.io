@@ -1,0 +1,25 @@
+# Display form of the original papers. Exported once from the paper's bibliography
+# and tidied by hand (capitalisation, venue abbreviations). Keys are the citation keys.
+kostrikov2021offline:   {authors: "Kostrikov et al.",     title: "Offline Reinforcement Learning with Implicit Q-Learning", venue: "arXiv:2110.06169", year: 2021}
+fujimoto2021minimalist: {authors: "Fujimoto and Gu",      title: "A Minimalist Approach to Offline Reinforcement Learning", venue: "NeurIPS", year: 2021}
+yu2020mopo:             {authors: "Yu et al.",            title: "MOPO: Model-based Offline Policy Optimization", venue: "NeurIPS", year: 2020}
+lu2023synthetic:        {authors: "Lu et al.",            title: "Synthetic Experience Replay", venue: "NeurIPS", year: 2023}
+panaganti2022robust:    {authors: "Panaganti et al.",     title: "Robust Reinforcement Learning using Offline Data", venue: "NeurIPS", year: 2022}
+yang2022rorl:           {authors: "Yang et al.",          title: "RORL: Robust Offline Reinforcement Learning via Conservative Smoothing", venue: "NeurIPS", year: 2022}
+zhang2021robust:        {authors: "Zhang et al.",         title: "Robust Reinforcement Learning on State Observations with Learned Optimal Adversary", venue: "ICLR", year: 2021}
+zhang2020robust:        {authors: "Zhang et al.",         title: "Robust Deep Reinforcement Learning against Adversarial Perturbations on State Observations", venue: "NeurIPS", year: 2020}
+ding2023seeing:         {authors: "Ding et al.",          title: "Seeing is not Believing: Robust Reinforcement Learning against Spurious Correlation", venue: "NeurIPS", year: 2023}
+rigter2022rambo:        {authors: "Rigter et al.",        title: "RAMBO-RL: Robust Adversarial Model-Based Offline Reinforcement Learning", venue: "NeurIPS", year: 2022}
+chen2025policy:         {authors: "Chen et al.",          title: "Policy-Driven World Model Adaptation for Robust Offline Model-based Reinforcement Learning", venue: "arXiv:2505.13709", year: 2025}
+ding2024diffusion:      {authors: "Ding et al.",          title: "Diffusion World Model: Future Modeling Beyond Step-by-Step Rollout for Offline Reinforcement Learning", venue: "arXiv:2402.03570", year: 2024}
+lipman2022flow:         {authors: "Lipman et al.",        title: "Flow Matching for Generative Modeling", venue: "arXiv:2210.02747", year: 2022}
+berdica2024robust:      {authors: "Berdica et al.",       title: "Robust Offline Learning via Adversarial World Models", venue: "NeurIPS Workshop on Open-World Agents", year: 2024}
+haarnoja2018soft:       {authors: "Haarnoja et al.",      title: "Soft Actor-Critic: Off-Policy Maximum Entropy Deep Reinforcement Learning with a Stochastic Actor", venue: "ICML", year: 2018}
+schulman2017proximal:   {authors: "Schulman et al.",      title: "Proximal Policy Optimization Algorithms", venue: "arXiv:1707.06347", year: 2017}
+schulman2015trust:      {authors: "Schulman et al.",      title: "Trust Region Policy Optimization", venue: "ICML", year: 2015}
+raffin2021stable:       {authors: "Raffin et al.",        title: "Stable-Baselines3: Reliable Reinforcement Learning Implementations", venue: "JMLR", year: 2021}
+pinto2017robust:        {authors: "Pinto et al.",         title: "Robust Adversarial Reinforcement Learning", venue: "ICML", year: 2017}
+tobin2017domain:        {authors: "Tobin et al.",         title: "Domain Randomization for Transferring Deep Neural Networks from Simulation to the Real World", venue: "IROS", year: 2017}
+peng2018sim:            {authors: "Peng et al.",          title: "Sim-to-Real Transfer of Robotic Control with Dynamics Randomization", venue: "ICRA", year: 2018}
+queeney2023risk:        {authors: "Queeney and Benosman", title: "Risk-Averse Model Uncertainty for Distributionally Robust Safe Reinforcement Learning", venue: "NeurIPS", year: 2023}
+as2026spidr:            {authors: "As et al.",            title: "SPiDR: A Simple Approach for Zero-Shot Safety in Sim-to-Real Transfer", venue: "NeurIPS", year: 2026}

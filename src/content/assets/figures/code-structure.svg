@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 640" role="img" aria-labelledby="t d" font-family="Lato, 'Helvetica Neue', Helvetica, Arial, sans-serif">
+  <title id="t">Code structure of RobustRLlib</title>
+  <desc id="d">Configuration cards at the top select an algorithm and a shifted environment. The algorithm and the shifted environment exchange actions and observations. Evaluation at the bottom takes the checkpoint of the algorithm and the shifted episodes of the environment.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#4b5563"/>
+    </marker>
+    <style>
+      .band  { stroke-width: 1.5; rx: 10; }
+      .card  { fill: #ffffff; stroke: #c9ccd1; stroke-width: 1; rx: 6; }
+      .h1    { font-size: 18px; font-weight: 700; fill: #111827; }
+      .h2    { font-size: 14.5px; font-weight: 700; fill: #111827; }
+      .mono  { font-family: SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace; font-size: 12.5px; fill: #1d4ed8; }
+      .note  { font-size: 13px; fill: #4b5563; }
+      .lab   { font-size: 12.5px; fill: #374151; font-style: italic; }
+      .chip  { fill: #ffffff; stroke: #9ca3af; stroke-width: 1; rx: 14; }
+      .chipt { font-size: 13px; font-weight: 700; fill: #111827; text-anchor: middle; }
+      .flow  { stroke: #4b5563; stroke-width: 1.6; fill: none; marker-end: url(#arrow); }
+    </style>
+  </defs>
+
+  <!-- configuration -->
+  <rect class="band" x="20" y="20" width="920" height="112" fill="#f3f4f6" stroke="#9ca3af"/>
+  <text class="h1" x="40" y="50">Configuration</text>
+  <text class="mono" x="920" y="50" text-anchor="end">robustrllib/configs/</text>
+  <text class="note" x="40" y="72">One experiment file names an algorithm card, a task card and an evaluation grid.</text>
+  <g>
+    <rect class="chip" x="40"  y="88" width="190" height="28"/><text class="chipt" x="135" y="107">algorithm</text>
+    <rect class="chip" x="244" y="88" width="190" height="28"/><text class="chipt" x="339" y="107">task</text>
+    <rect class="chip" x="448" y="88" width="190" height="28"/><text class="chipt" x="543" y="107">eval</text>
+    <rect class="chip" x="652" y="88" width="190" height="28"/><text class="chipt" x="747" y="107">experiment</text>
+  </g>
+
+  <!-- algorithms -->
+  <rect class="band" x="20" y="172" width="380" height="300" fill="#e8f1f9" stroke="#7aa7cc"/>
+  <text class="h1" x="40" y="202">Algorithms</text>
+  <rect class="card" x="40" y="218" width="340" height="72"/>
+  <text class="h2"   x="54" y="240">Method implementations</text>
+  <text class="mono" x="54" y="260">baselines/&lt;method&gt;/train_*.py</text>
+  <text class="note" x="54" y="279">the native training recipe of each method</text>
+  <rect class="card" x="40" y="300" width="340" height="72"/>
+  <text class="h2"   x="54" y="322">Algorithm interface</text>
+  <text class="mono" x="54" y="342">robustrllib.algos.Algo</text>
+  <text class="note" x="54" y="361">train · predict · save · load</text>
+  <rect class="card" x="40" y="382" width="340" height="72"/>
+  <text class="h2"   x="54" y="404">Training runtime</text>
+  <text class="mono" x="54" y="424">robustrllib.training</text>
+  <text class="note" x="54" y="443">launch, checkpoint and resume a run</text>
+
+  <!-- shifted environment -->
+  <rect class="band" x="560" y="172" width="380" height="300" fill="#fdf0e2" stroke="#e0a060"/>
+  <text class="h1" x="580" y="202">Shifted environment</text>
+  <text class="mono" x="580" y="222">make_robust(env_id, shifts, seed)</text>
+  <rect class="card" x="580" y="234" width="340" height="52"/>
+  <text class="h2"   x="594" y="255">Shift wrappers</text>
+  <text class="mono" x="906" y="255" text-anchor="end">robustrllib.shifts</text>
+  <text class="note" x="594" y="275">one per ShiftSpec, stacked in list order</text>
+  <rect class="card" x="580" y="294" width="340" height="52"/>
+  <text class="h2"   x="594" y="315">Schedules</text>
+  <text class="mono" x="906" y="315" text-anchor="end">robustrllib.schedule</text>
+  <text class="note" x="594" y="335">vary a shift within the episode</text>
+  <rect class="card" x="580" y="354" width="340" height="52"/>
+  <text class="h2"   x="594" y="375">Backend adapters</text>
+  <text class="mono" x="906" y="375" text-anchor="end">robustrllib.adapters</text>
+  <text class="note" x="594" y="395">read and write simulator parameters</text>
+  <rect class="card" x="580" y="414" width="340" height="44" fill="#f9fafb"/>
+  <text class="h2"   x="594" y="441">Simulator</text>
+  <text class="note" x="906" y="441" text-anchor="end">MuJoCo · Box2D · Isaac Lab</text>
+
+  <!-- interaction -->
+  <path class="flow" d="M400,296 L560,296"/>
+  <text class="lab" x="480" y="287" text-anchor="middle">action</text>
+  <path class="flow" d="M560,352 L400,352"/>
+  <text class="lab" x="480" y="372" text-anchor="middle">observation, reward</text>
+
+  <!-- configuration selects -->
+  <path class="flow" d="M210,132 L210,172"/>
+  <text class="lab" x="220" y="157">algorithm card</text>
+  <path class="flow" d="M750,132 L750,172"/>
+  <text class="lab" x="760" y="157">task card, shifts</text>
+
+  <!-- evaluation -->
+  <path class="flow" d="M210,472 L210,512"/>
+  <text class="lab" x="220" y="497">frozen checkpoint</text>
+  <path class="flow" d="M750,472 L750,512"/>
+  <text class="lab" x="760" y="497">shifted episodes</text>
+  <rect class="band" x="20" y="512" width="920" height="108" fill="#e9f5e6" stroke="#7fb86f"/>
+  <text class="h1" x="40" y="542">Evaluation</text>
+  <text class="mono" x="920" y="542" text-anchor="end">baselines/eval_final.py · robustrllib.evaluate · robustrllib.metrics</text>
+  <text class="note" x="40" y="568">The frozen last checkpoint of a method is run on every condition of the evaluation grid.</text>
+  <text class="note" x="40" y="590">The grid is the same for every method.</text>
+  <text class="note" x="800" y="590" text-anchor="end">Result:</text>
+  <text class="mono" x="920" y="590" text-anchor="end">final_eval.json</text>
+</svg>

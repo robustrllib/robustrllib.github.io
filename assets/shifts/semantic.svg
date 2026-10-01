@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 220" role="img" aria-label="The same room by day and with changed lights and colours">
+  <rect width="360" height="220" rx="16" fill="#eef3ff"/>
+  <g fill="none" stroke="#14305e" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+    <g transform="translate(24,0)">
+      <rect x="0" y="40" width="150" height="90" fill="#fff7e6"/>
+      <rect x="0" y="130" width="150" height="40" fill="#f3e2c3"/>
+      <rect x="24" y="96" width="44" height="34" rx="4" fill="#2f6bff"/>
+      <circle cx="112" cy="62" r="12" fill="#ffe08a"/>
+      <path d="M112 74 v56" />
+      <rect x="0" y="40" width="150" height="130" rx="8" fill="none"/>
+    </g>
+    <g transform="translate(186,0)">
+      <rect x="0" y="40" width="150" height="90" fill="#dfe3f5"/>
+      <rect x="0" y="130" width="150" height="40" fill="#b9c2dc"/>
+      <rect x="24" y="96" width="44" height="34" rx="4" fill="#e5484d"/>
+      <circle cx="112" cy="62" r="12" fill="#9aa5c6"/>
+      <path d="M112 74 v56" />
+      <rect x="0" y="40" width="150" height="130" rx="8" fill="none"/>
+    </g>
+    <path d="M170 105 h12 M182 100 L190 105 L182 110" stroke="#14305e" stroke-width="4"/>
+    <text x="24" y="196" font-family="sans-serif" font-size="14" font-weight="700" fill="#8a94a6" stroke="none">training</text>
+    <text x="186" y="196" font-family="sans-serif" font-size="14" font-weight="700" fill="#e5484d" stroke="none">deployment: changed</text>
+  </g>
+</svg>

@@ -1,0 +1,21 @@
+# One formula per shift source, as in Section 2.2 of the paper. Rendered to
+# content/assets/figures/formula-<key>.svg by tools/render_figures.py.
+# `alt` is the plain-text reading used as the alternative text of the image.
+dynamic:
+  tex: 's_{t+1} \sim P_{\theta^p}(\cdot \mid x_t)'
+  alt: 'the next state is drawn from the transition kernel P with shift parameter theta-p, given x_t'
+observation:
+  tex: '\tilde o_t \sim O_{\theta^o}(\cdot \mid s_t)'
+  alt: 'the observation shown to the policy is drawn from the observation kernel O with shift parameter theta-o, given the state'
+action:
+  tex: '\tilde a_t \sim A_{\theta^a}(\cdot \mid s_t, a_t)'
+  alt: 'the executed action is drawn from the action kernel A with shift parameter theta-a, given the state and the intended action'
+reward-cost:
+  tex: '\tilde r_t \sim R_{\theta^r}(\cdot \mid y_t), \quad \tilde c_t \sim C_{\theta^c}(\cdot \mid y_t)'
+  alt: 'the reward and the cost are drawn from the kernels R and C with shift parameters theta-r and theta-c, given y_t'
+latency:
+  tex: '\tilde o_t = \mathcal{I}(\mathcal{H}_t,\, t-\delta_o), \quad \tilde a_t = a_{t-\delta_a}, \quad s_{t+1} \sim P_0^{(\kappa_t)}(\cdot \mid s_t, \tilde a_t)'
+  alt: 'the observation is interpolated from the history at time t minus delta-o, the executed action is the action issued delta-a steps earlier, and the nominal transition runs with control period kappa-t'
+semantic:
+  tex: 'o_t \sim O_{\theta^z}(\cdot \mid s_t), \quad s_{t+1} \sim P_{\theta^z}(\cdot \mid x_t), \quad (r_t, c_t) \sim (R_{\theta^z}, C_{\theta^z})(\cdot \mid y_t)'
+  alt: 'observation, transition, reward and cost all depend on the semantic shift parameter theta-z'

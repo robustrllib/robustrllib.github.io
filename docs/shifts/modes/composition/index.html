@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <meta name="description" content="A unified library and benchmark for robust reinforcement learning algorithms.">
+  <title>Composition - RobustRLlib Tutorial</title>
+  <link rel="icon" type="image/svg+xml" href="../../../assets/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="../../../assets/favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../../../assets/apple-touch-icon.png">
+  <link rel="stylesheet" href="../../../css/site.css">
+  <link rel="stylesheet" href="../../../assets/pygments.css">
+  <link rel="stylesheet" href="../../../assets/rl.css">
+  <link rel="stylesheet" href="../../../assets/book.css">
+</head>
+<body class="bk">
+<a class="bk-skip" href="#bk-content">Skip to the text</a>
+
+<header class="bk-topbar">
+  <div class="bk-topbar-inner">
+    <button type="button" class="bk-icon-button bk-topbar-menu" id="bk-toggle-nav" aria-controls="bk-sidebar" aria-label="Show or hide the pages" title="Pages">
+      <span class="fa fa-bars" aria-hidden="true"></span>
+    </button>
+    <a class="bk-brand" href="../../..">
+  <svg class="mark" viewBox="0 0 44 40" width="30" height="27" aria-hidden="true">
+        <g transform="translate(22,9)">
+        <rect x="-19" y="-3" width="8" height="6" rx="1.5" transform="rotate(-16 -15 0)" fill="#eb8787" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="-9" y="-7" width="8" height="6" rx="1.5" transform="rotate(-5 -5 -4)" fill="#cde4be" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="1" y="-7" width="8" height="6" rx="1.5" transform="rotate(5 5 -4)" fill="#bcd6eb" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="11" y="-3" width="8" height="6" rx="1.5" transform="rotate(16 15 0)" fill="#d5c8ed" stroke="#5e5d59" stroke-width="1.1"/>
+        </g>
+        <path d="M4 16 L3 34 L22 38 L41 34 L40 16 L22 20 Z" fill="#c96442" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M22 20 L41 16 L40 16 L41 34 L22 38 Z" fill="#d97757" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M6 13 Q14 11 22 17 L22 35 Q14 30 5 31 Z" fill="#faf9f5" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M38 13 Q30 11 22 17 L22 35 Q30 30 39 31 Z" fill="#faf9f5" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        </svg>
+  <span class="bk-brand-name"><span class="bk-brand-mark">Robust</span>RLlib</span>
+  <span class="bk-brand-kind">Tutorial</span>
+</a>
+    <span class="bk-topbar-space"></span>
+    <a class="bk-topbar-link" href="/">Project Page</a>
+  </div>
+</header>
+
+<div class="bk-page">
+
+  <aside class="bk-sidebar-drawer" id="bk-sidebar" aria-label="Pages of the tutorial">
+    <div class="bk-sidebar">
+      <a class="bk-brand" href="../../..">
+  <svg class="mark" viewBox="0 0 44 40" width="30" height="27" aria-hidden="true">
+        <g transform="translate(22,9)">
+        <rect x="-19" y="-3" width="8" height="6" rx="1.5" transform="rotate(-16 -15 0)" fill="#eb8787" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="-9" y="-7" width="8" height="6" rx="1.5" transform="rotate(-5 -5 -4)" fill="#cde4be" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="1" y="-7" width="8" height="6" rx="1.5" transform="rotate(5 5 -4)" fill="#bcd6eb" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="11" y="-3" width="8" height="6" rx="1.5" transform="rotate(16 15 0)" fill="#d5c8ed" stroke="#5e5d59" stroke-width="1.1"/>
+        </g>
+        <path d="M4 16 L3 34 L22 38 L41 34 L40 16 L22 20 Z" fill="#c96442" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M22 20 L41 16 L40 16 L41 34 L22 38 Z" fill="#d97757" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M6 13 Q14 11 22 17 L22 35 Q14 30 5 31 Z" fill="#faf9f5" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M38 13 Q30 11 22 17 L22 35 Q30 30 39 31 Z" fill="#faf9f5" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        </svg>
+  <span class="bk-brand-name"><span class="bk-brand-mark">Robust</span>RLlib</span>
+  <span class="bk-brand-kind">Tutorial</span>
+</a>
+      <button type="button" class="bk-search-button" id="bk-search-open" aria-haspopup="dialog">
+        <span class="fa fa-search" aria-hidden="true"></span>
+        <span class="bk-search-label">Search</span>
+      </button>
+      <nav class="bk-nav" aria-label="Pages">
+        <ul class="bk-nav-list bk-nav-depth-0">
+  <li><a class="bk-nav-link" href="../../..">Home</a></li>
+</ul>
+        <p class="bk-caption">Getting Started</p>
+        <ul class="bk-nav-list bk-nav-depth-1">
+  <li><a class="bk-nav-link" href="../../../getting-started/overview/">Overview</a></li>
+  <li><a class="bk-nav-link" href="../../../getting-started/quick-start/">Quick Start</a></li>
+</ul>
+        <p class="bk-caption">Algorithms</p>
+        <ul class="bk-nav-list bk-nav-depth-1">
+  <li><a class="bk-nav-link" href="../../../algorithms/">All Methods</a></li>
+  <li class="bk-nav-group">
+    <details>
+      <summary>Standard</summary>
+      <ul class="bk-nav-list bk-nav-depth-2">
+  <li><a class="bk-nav-link" href="../../../algorithms/standard/">Overview</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/standard/iql/">IQL</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/standard/td3bc/">TD3+BC</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/standard/mopo/">MOPO</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/standard/synther/">SynthER</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/standard/ppo/">PPO</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/standard/sac/">SAC</a></li>
+</ul>
+    </details>
+  </li>
+  <li class="bk-nav-group">
+    <details>
+      <summary>Robust Online</summary>
+      <ul class="bk-nav-list bk-nav-depth-2">
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-online/">Overview</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-online/atla/">ATLA</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-online/atla-sa/">ATLA-SA</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-online/rsc/">RSC</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-online/rarl/">RARL</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-online/dr/">DR</a></li>
+</ul>
+    </details>
+  </li>
+  <li class="bk-nav-group">
+    <details>
+      <summary>Robust Offline</summary>
+      <ul class="bk-nav-list bk-nav-depth-2">
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-offline/">Overview</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-offline/rfqi/">RFQI</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-offline/rorl/">RORL</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-offline/atla-iql/">ATLA-IQL</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-offline/rsc-iql/">RSC-IQL</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-offline/rambo/">RAMBO</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-offline/romb/">ROMB</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-offline/fwm/">FWM</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-offline/plr-pvl/">PLR-PVL</a></li>
+</ul>
+    </details>
+  </li>
+  <li class="bk-nav-group">
+    <details>
+      <summary>Robust Safe</summary>
+      <ul class="bk-nav-list bk-nav-depth-2">
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-safe/">Overview</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-safe/ramu/">RAMU</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-safe/spidr/">SPiDR</a></li>
+</ul>
+    </details>
+  </li>
+  <li><a class="bk-nav-link" href="../../../algorithms/run-a-method/">Run a Method</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/add-an-algorithm/">Add an Algorithm</a></li>
+</ul>
+        <p class="bk-caption">Shift Sources and Modes</p>
+        <ul class="bk-nav-list bk-nav-depth-1">
+  <li><a class="bk-nav-link" href="../../">Overview</a></li>
+  <li class="bk-nav-group">
+    <details>
+      <summary>Shift Sources</summary>
+      <ul class="bk-nav-list bk-nav-depth-2">
+  <li><a class="bk-nav-link" href="../../sources/dynamic/">Dynamic shift</a></li>
+  <li><a class="bk-nav-link" href="../../sources/observation/">Observation shift</a></li>
+  <li><a class="bk-nav-link" href="../../sources/action/">Action shift</a></li>
+  <li><a class="bk-nav-link" href="../../sources/reward-cost/">Reward/cost shift</a></li>
+  <li><a class="bk-nav-link" href="../../sources/latency/">Latency shift</a></li>
+  <li><a class="bk-nav-link" href="../../sources/semantic/">Semantic shift</a></li>
+</ul>
+    </details>
+  </li>
+  <li class="bk-nav-group">
+    <details open>
+      <summary>Shift Modes</summary>
+      <ul class="bk-nav-list bk-nav-depth-2">
+  <li><a class="bk-nav-link" href="../stochastic/">Stochastic</a></li>
+  <li><a class="bk-nav-link" href="../adversarial/">Adversarial</a></li>
+  <li><a class="bk-nav-link" href="../parametric/">Parametric</a></li>
+  <li><a class="bk-nav-link" href="../non-stationary/">Non-stationary</a></li>
+  <li><a class="bk-nav-link is-active" href="./" aria-current="page">Composition</a></li>
+</ul>
+    </details>
+  </li>
+  <li><a class="bk-nav-link" href="../../add-a-backend/">Add a Backend</a></li>
+</ul>
+        <p class="bk-caption">Evaluation</p>
+        <ul class="bk-nav-list bk-nav-depth-1">
+  <li><a class="bk-nav-link" href="../../../evaluation/protocol/">Evaluation Protocol</a></li>
+</ul>
+      </nav>
+    </div>
+  </aside>
+
+  <div class="bk-main">
+    <div class="bk-content">
+      <div class="bk-tools">
+        <button type="button" class="bk-icon-button" id="bk-toggle-toc" aria-controls="bk-toc" aria-label="Show or hide the contents of this page" title="On this page">
+          <span class="fa fa-list-ul" aria-hidden="true"></span>
+        </button>
+      </div>
+
+      <main class="bk-article" id="bk-content">
+        <h1 id="composition">Composition<a class="headerlink" href="#composition" title="Permanent link">&para;</a></h1>
+<p>In the Composition mode several shifts act at once. It is declared by the list of shifts: every
+entry becomes one wrapper, and the order of the list is the order in which the wrappers are
+stacked.</p>
+<h2 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Composition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Built by</td>
+<td>One wrapper per shift, stacked on the task</td>
+</tr>
+<tr>
+<td>Declared by</td>
+<td>The order of the <code>shifts</code> list</td>
+</tr>
+<tr>
+<td>Order</td>
+<td>The first entry sits closest to the task</td>
+</tr>
+<tr>
+<td>Shifts</td>
+<td>Every shift source, in any combination</td>
+</tr>
+<tr>
+<td>Seeding</td>
+<td>Pipeline seed, per-shift seed and reset seed</td>
+</tr>
+<tr>
+<td>Limit</td>
+<td>One physical parameter and index is addressed by one shift only</td>
+</tr>
+</tbody>
+</table>
+<h2 id="supported-shifts">Supported shifts<a class="headerlink" href="#supported-shifts" title="Permanent link">&para;</a></h2>
+<p>Every mode name of every shift can be part of a composition.</p>
+<table>
+<thead>
+<tr>
+<th>Shift</th>
+<th>Mode names it accepts in this mode</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../../sources/dynamic/">Dynamic shift</a></td>
+<td><code>scale</code>, <code>set</code>, <code>translate</code>, <code>gauss</code>, <code>uniform</code>, <code>loguniform</code>, <code>push</code>; <code>gauss</code> on the target <code>transition</code></td>
+</tr>
+<tr>
+<td><a href="../../sources/observation/">Observation shift</a></td>
+<td><code>gauss</code>, <code>uniform</code>, <code>relative</code>, <code>bias</code>, <code>shift</code>, <code>adversarial</code></td>
+</tr>
+<tr>
+<td><a href="../../sources/action/">Action shift</a></td>
+<td><code>gauss</code>, <code>uniform</code>, <code>shift</code>, <code>adversarial</code>, <code>oppose</code>, <code>rotate</code>, <code>oppose_goal</code></td>
+</tr>
+<tr>
+<td><a href="../../sources/reward-cost/">Reward/cost shift</a></td>
+<td><code>gauss</code>, <code>uniform</code>, <code>shift</code></td>
+</tr>
+<tr>
+<td><a href="../../sources/latency/">Latency shift</a></td>
+<td><code>fixed</code>, <code>buffer</code>, <code>substep</code>, <code>interp</code>, <code>delay</code></td>
+</tr>
+<tr>
+<td><a href="../../sources/semantic/">Semantic shift</a></td>
+<td><code>hue</code>, <code>tint</code>, <code>swap</code>, <code>scale</code>, <code>set</code>, <code>translate</code>, <code>gauss</code>, <code>uniform</code>, <code>loguniform</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="declare-the-mode">Declare the mode<a class="headerlink" href="#declare-the-mode" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">robustrllib</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_robust</span><span class="p">,</span> <span class="n">ShiftSpec</span>
+
+<span class="n">env</span> <span class="o">=</span> <span class="n">make_robust</span><span class="p">(</span><span class="s2">"Hopper-v5"</span><span class="p">,</span> <span class="n">shifts</span><span class="o">=</span><span class="p">[</span>
+    <span class="n">ShiftSpec</span><span class="p">(</span><span class="s2">"dynamics"</span><span class="p">,</span> <span class="s2">"scale"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"param"</span><span class="p">:</span> <span class="s2">"gravity"</span><span class="p">,</span> <span class="s2">"factor"</span><span class="p">:</span> <span class="mf">1.2</span><span class="p">}),</span>
+    <span class="n">ShiftSpec</span><span class="p">(</span><span class="s2">"dynamics"</span><span class="p">,</span> <span class="s2">"scale"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"param"</span><span class="p">:</span> <span class="s2">"actuator_gear"</span><span class="p">,</span> <span class="s2">"index"</span><span class="p">:</span> <span class="s2">"all"</span><span class="p">,</span> <span class="s2">"factor"</span><span class="p">:</span> <span class="mf">0.8</span><span class="p">}),</span>
+    <span class="n">ShiftSpec</span><span class="p">(</span><span class="s2">"latency"</span><span class="p">,</span> <span class="s2">"fixed"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"steps"</span><span class="p">:</span> <span class="mi">1</span><span class="p">}),</span>
+    <span class="n">ShiftSpec</span><span class="p">(</span><span class="s2">"observation"</span><span class="p">,</span> <span class="s2">"gauss"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"sigma"</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">}),</span>
+<span class="p">],</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>&lt;ObservationShift&lt;LatencyShift&lt;DynamicsShift&lt;DynamicsShift&lt;RobustCoreWrapper&lt;TimeLimit&lt;OrderEnforcing&lt;PassiveEnvChecker&lt;HopperEnv&lt;Hopper-v5&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+</code></pre></div>
+<p>The same composition as a condition of an evaluation grid:</p>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gravity_gear_delay_noise</span>
+<span class="w">  </span><span class="nt">shifts</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="nv">dynamics</span><span class="p p-Indicator">,</span><span class="nt"> mode</span><span class="p">:</span><span class="w"> </span><span class="nv">scale</span><span class="p p-Indicator">,</span><span class="nt"> params</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">param</span><span class="p">:</span><span class="w"> </span><span class="nv">gravity</span><span class="p p-Indicator">,</span><span class="nt"> factor</span><span class="p">:</span><span class="w"> </span><span class="nv">1.2</span><span class="p p-Indicator">}}</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="nv">dynamics</span><span class="p p-Indicator">,</span><span class="nt"> mode</span><span class="p">:</span><span class="w"> </span><span class="nv">scale</span><span class="p p-Indicator">,</span><span class="nt"> params</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">param</span><span class="p">:</span><span class="w"> </span><span class="nv">actuator_gear</span><span class="p p-Indicator">,</span><span class="nt"> index</span><span class="p">:</span><span class="w"> </span><span class="nv">all</span><span class="p p-Indicator">,</span><span class="nt"> factor</span><span class="p">:</span><span class="w"> </span><span class="nv">0.8</span><span class="p p-Indicator">}}</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="nv">latency</span><span class="p p-Indicator">,</span><span class="nt"> mode</span><span class="p">:</span><span class="w"> </span><span class="nv">fixed</span><span class="p p-Indicator">,</span><span class="nt"> params</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">steps</span><span class="p">:</span><span class="w"> </span><span class="nv">1</span><span class="p p-Indicator">}}</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="nv">observation</span><span class="p p-Indicator">,</span><span class="nt"> mode</span><span class="p">:</span><span class="w"> </span><span class="nv">gauss</span><span class="p p-Indicator">,</span><span class="nt"> params</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">sigma</span><span class="p">:</span><span class="w"> </span><span class="nv">0.05</span><span class="p p-Indicator">}}</span>
+</code></pre></div>
+<p>A composition of a Semantic shift and a displacement crosses two axes in one condition.</p>
+<div class="highlight"><pre><span></span><code><span class="n">crossed</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">ShiftSpec</span><span class="p">(</span><span class="s2">"appearance"</span><span class="p">,</span> <span class="s2">"hue"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"geom"</span><span class="p">:</span> <span class="s2">"torso_geom"</span><span class="p">,</span> <span class="s2">"degrees"</span><span class="p">:</span> <span class="mi">120</span><span class="p">}),</span>
+    <span class="n">ShiftSpec</span><span class="p">(</span><span class="s2">"dynamics"</span><span class="p">,</span> <span class="s2">"translate"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"param"</span><span class="p">:</span> <span class="s2">"body_pos_xyz"</span><span class="p">,</span> <span class="s2">"index"</span><span class="p">:</span> <span class="s2">"foot"</span><span class="p">,</span>
+                                        <span class="s2">"offset"</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.06</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]}),</span>
+<span class="p">]</span>
+<span class="n">env</span> <span class="o">=</span> <span class="n">make_robust</span><span class="p">(</span><span class="s2">"Hopper-v5"</span><span class="p">,</span> <span class="n">shifts</span><span class="o">=</span><span class="n">crossed</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</code></pre></div>
+<p>Two Dynamic shifts on the same parameter and index do not multiply. <strong>Each sets the parameter
+from its nominal value, and the later one wins</strong>; the pipeline emits a <code>UserWarning</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="n">env</span> <span class="o">=</span> <span class="n">make_robust</span><span class="p">(</span><span class="s2">"Hopper-v5"</span><span class="p">,</span> <span class="n">shifts</span><span class="o">=</span><span class="p">[</span>
+    <span class="n">ShiftSpec</span><span class="p">(</span><span class="s2">"dynamics"</span><span class="p">,</span> <span class="s2">"scale"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"param"</span><span class="p">:</span> <span class="s2">"gravity"</span><span class="p">,</span> <span class="s2">"factor"</span><span class="p">:</span> <span class="mf">1.2</span><span class="p">}),</span>
+    <span class="n">ShiftSpec</span><span class="p">(</span><span class="s2">"dynamics"</span><span class="p">,</span> <span class="s2">"scale"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"param"</span><span class="p">:</span> <span class="s2">"gravity"</span><span class="p">,</span> <span class="s2">"factor"</span><span class="p">:</span> <span class="mf">1.5</span><span class="p">}),</span>
+<span class="p">],</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">gravity_z</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">unwrapped</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">gravity</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span> <span class="mi">3</span><span class="p">)</span>
+</code></pre></div>
+<p>Gravity ends at -14.715, which is 1.5 times its nominal value and not 1.8 times.</p>
+<h2 id="stacking-order">Stacking order<a class="headerlink" href="#stacking-order" title="Permanent link">&para;</a></h2>
+<p>A call to <code>step</code> enters at the outermost wrapper and travels inward; the observation travels
+back outward.</p>
+<table>
+<thead>
+<tr>
+<th>Direction</th>
+<th>Processed first</th>
+<th>Consequence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>The action, inward</td>
+<td>The last shift in the list</td>
+<td><code>[latency, action]</code> delays the noisy command; <code>[action, latency]</code> adds noise to the delayed command</td>
+</tr>
+<tr>
+<td>The observation, outward</td>
+<td>The first shift in the list</td>
+<td>A later shift sees the output of the earlier ones</td>
+</tr>
+<tr>
+<td><code>reset</code></td>
+<td>The Dynamic shift recomputes the first observation</td>
+<td>The output of the wrappers inside it is replaced</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><span class="n">gravity</span> <span class="o">=</span> <span class="n">ShiftSpec</span><span class="p">(</span><span class="s2">"dynamics"</span><span class="p">,</span> <span class="s2">"scale"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"param"</span><span class="p">:</span> <span class="s2">"gravity"</span><span class="p">,</span> <span class="s2">"factor"</span><span class="p">:</span> <span class="mf">1.3</span><span class="p">})</span>
+<span class="n">noise</span> <span class="o">=</span> <span class="n">ShiftSpec</span><span class="p">(</span><span class="s2">"observation"</span><span class="p">,</span> <span class="s2">"gauss"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"sigma"</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">})</span>
+
+<span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">shifts</span> <span class="ow">in</span> <span class="p">[(</span><span class="s2">"dynamics, observation"</span><span class="p">,</span> <span class="p">[</span><span class="n">gravity</span><span class="p">,</span> <span class="n">noise</span><span class="p">]),</span>
+                      <span class="p">(</span><span class="s2">"observation, dynamics"</span><span class="p">,</span> <span class="p">[</span><span class="n">noise</span><span class="p">,</span> <span class="n">gravity</span><span class="p">])]:</span>
+    <span class="n">env</span> <span class="o">=</span> <span class="n">make_robust</span><span class="p">(</span><span class="s2">"Hopper-v5"</span><span class="p">,</span> <span class="n">shifts</span><span class="o">=</span><span class="n">shifts</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">obs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">noisy_reset</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">obs</span><span class="p">,</span> <span class="n">env</span><span class="o">.</span><span class="n">unwrapped</span><span class="o">.</span><span class="n">_get_obs</span><span class="p">())</span>
+    <span class="n">obs</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+    <span class="n">noisy_step</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">obs</span><span class="p">,</span> <span class="n">env</span><span class="o">.</span><span class="n">unwrapped</span><span class="o">.</span><span class="n">_get_obs</span><span class="p">())</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">label</span><span class="si">:</span><span class="s2">24s</span><span class="si">}</span><span class="s2">reset noisy: </span><span class="si">{</span><span class="n">noisy_reset</span><span class="si">}</span><span class="s2">   step noisy: </span><span class="si">{</span><span class="n">noisy_step</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>dynamics, observation   reset noisy: True   step noisy: True
+observation, dynamics   reset noisy: False   step noisy: True
+</code></pre></div>
+<p>With the Observation shift listed first, <strong>the first observation of every episode reaches the
+policy without noise</strong>.</p>
+<h2 id="seeding-and-reproducibility">Seeding and reproducibility<a class="headerlink" href="#seeding-and-reproducibility" title="Permanent link">&para;</a></h2>
+<p>Every shift wrapper owns a random generator.</p>
+<table>
+<thead>
+<tr>
+<th>Seed</th>
+<th>Set by</th>
+<th>Takes effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pipeline seed</td>
+<td><code>make_robust(..., seed=s)</code></td>
+<td>At construction, for shifts without a seed of their own</td>
+</tr>
+<tr>
+<td>Per-shift seed</td>
+<td><code>ShiftSpec(..., seed=s)</code></td>
+<td>At construction, for that shift</td>
+</tr>
+<tr>
+<td>Reset seed</td>
+<td><code>env.reset(seed=s)</code></td>
+<td>At that reset, for the task and every wrapper; overrides both</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">trace</span><span class="p">(</span><span class="n">pipeline_seed</span><span class="p">,</span> <span class="n">reset_seed</span><span class="p">,</span> <span class="n">spec_seed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+    <span class="n">env</span> <span class="o">=</span> <span class="n">make_robust</span><span class="p">(</span><span class="s2">"Hopper-v5"</span><span class="p">,</span> <span class="n">shifts</span><span class="o">=</span><span class="p">[</span>
+        <span class="n">ShiftSpec</span><span class="p">(</span><span class="s2">"observation"</span><span class="p">,</span> <span class="s2">"gauss"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"sigma"</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">},</span> <span class="n">seed</span><span class="o">=</span><span class="n">spec_seed</span><span class="p">),</span>
+    <span class="p">],</span> <span class="n">seed</span><span class="o">=</span><span class="n">pipeline_seed</span><span class="p">)</span>
+    <span class="n">obs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="n">reset_seed</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="p">[</span><span class="n">obs</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">steps</span><span class="p">):</span>
+        <span class="n">obs</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span>
+    <span class="n">env</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"same seeds              "</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">trace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">trace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"pipeline seed differs   "</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">trace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">7</span><span class="p">),</span> <span class="n">trace</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"per-shift seed differs  "</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">trace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="n">spec_seed</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">trace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="n">spec_seed</span><span class="o">=</span><span class="mi">2</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"reset seed differs      "</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">trace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">7</span><span class="p">),</span> <span class="n">trace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">8</span><span class="p">)))</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>same seeds               True
+pipeline seed differs    True
+per-shift seed differs   True
+reset seed differs       False
+</code></pre></div>
+<p>Once <code>reset</code> receives a seed, that seed alone determines the rollout. An evaluator that resets
+an episode with the same seed under every condition obtains paired conditions.</p>
+<p>The generator of a wrapper is seeded with the seed and a salt. The salt is a hash of the target,
+the mode name and the <code>param</code> and <code>index</code> entries of the parameters, and it is stable across
+processes, so different shifts draw independently from one seed.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>The action space has a generator of its own. A rollout that uses
+<code>env.action_space.sample()</code> calls <code>env.action_space.seed(s)</code> first.</p>
+</div>
+<h2 id="rules">Rules<a class="headerlink" href="#rules" title="Permanent link">&para;</a></h2>
+<ul>
+<li>The list order is the stacking order; the first shift sits closest to the task.</li>
+<li>Dynamic shifts are listed before Observation shifts.</li>
+<li>One physical parameter and index is addressed by one shift only.</li>
+<li><strong>Two shifts with the same target, mode name, parameter and index share a salt</strong>; listing the
+  same noise shift twice adds the same noise twice.</li>
+<li>Every rollout that is compared with another is reset with a seed.</li>
+<li>A per-shift seed separates two shifts only as long as <code>reset</code> is called without a seed.</li>
+</ul>
+      </main>
+
+      <footer class="bk-footer">
+        <nav class="bk-related" aria-label="Previous and next page">
+          <a class="bk-prev" href="../non-stationary/">
+            <span class="fa fa-arrow-left" aria-hidden="true"></span>
+            <span class="bk-related-text"><span class="bk-related-label">Previous</span><span class="bk-related-title">Non-stationary</span></span>
+          </a>
+          <a class="bk-next" href="../../add-a-backend/">
+            <span class="bk-related-text"><span class="bk-related-label">Next</span><span class="bk-related-title">Add a Backend</span></span>
+            <span class="fa fa-arrow-right" aria-hidden="true"></span>
+          </a>
+        </nav>
+        <p class="bk-footnote">RobustRLlib · Anonymous submission under double-blind review.</p>
+      </footer>
+    </div>
+
+    <aside class="bk-toc-drawer" id="bk-toc" aria-label="Contents of this page">
+      <div class="bk-toc">
+        <p class="bk-toc-title">On this page</p>
+        <nav class="bk-toc-tree" aria-label="Sections">
+          <ul class="bk-toc-list bk-toc-depth-1">
+  <li><a class="bk-toc-link" href="#properties">Properties</a>
+  </li>
+  <li><a class="bk-toc-link" href="#supported-shifts">Supported shifts</a>
+  </li>
+  <li><a class="bk-toc-link" href="#declare-the-mode">Declare the mode</a>
+  </li>
+  <li><a class="bk-toc-link" href="#stacking-order">Stacking order</a>
+  </li>
+  <li><a class="bk-toc-link" href="#seeding-and-reproducibility">Seeding and reproducibility</a>
+  </li>
+  <li><a class="bk-toc-link" href="#rules">Rules</a>
+  </li>
+</ul>
+        </nav>
+      </div>
+    </aside>
+  </div>
+
+</div>
+
+<div class="bk-backdrop" id="bk-backdrop" hidden></div>
+<div class="bk-search" id="bk-search" role="dialog" aria-modal="true" aria-label="Search the tutorial" hidden>
+  <div class="bk-search-panel">
+    <div class="bk-search-field">
+      <span class="fa fa-search" aria-hidden="true"></span>
+      <input type="search" id="mkdocs-search-query" name="q" placeholder="Search the tutorial" aria-label="Search the tutorial" autocomplete="off" spellcheck="false">
+      <button type="button" class="bk-icon-button" id="bk-search-close" aria-label="Close the search"><span class="fa fa-times" aria-hidden="true"></span></button>
+    </div>
+    <div class="bk-search-results" id="mkdocs-search-results" data-no-results-text="Nothing found"></div>
+  </div>
+</div>
+
+<script>var base_url = "../../..";</script>
+<script src="../../../js/site.js"></script>
+<script src="../../../search/main.js"></script>
+</body>
+</html>

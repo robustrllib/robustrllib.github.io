@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <meta name="description" content="A unified library and benchmark for robust reinforcement learning algorithms.">
+  <title>Overview - RobustRLlib Tutorial</title>
+  <link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="../../assets/favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../../assets/apple-touch-icon.png">
+  <link rel="stylesheet" href="../../css/site.css">
+  <link rel="stylesheet" href="../../assets/pygments.css">
+  <link rel="stylesheet" href="../../assets/rl.css">
+  <link rel="stylesheet" href="../../assets/book.css">
+</head>
+<body class="bk">
+<a class="bk-skip" href="#bk-content">Skip to the text</a>
+
+<header class="bk-topbar">
+  <div class="bk-topbar-inner">
+    <button type="button" class="bk-icon-button bk-topbar-menu" id="bk-toggle-nav" aria-controls="bk-sidebar" aria-label="Show or hide the pages" title="Pages">
+      <span class="fa fa-bars" aria-hidden="true"></span>
+    </button>
+    <a class="bk-brand" href="../..">
+  <svg class="mark" viewBox="0 0 44 40" width="30" height="27" aria-hidden="true">
+        <g transform="translate(22,9)">
+        <rect x="-19" y="-3" width="8" height="6" rx="1.5" transform="rotate(-16 -15 0)" fill="#eb8787" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="-9" y="-7" width="8" height="6" rx="1.5" transform="rotate(-5 -5 -4)" fill="#cde4be" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="1" y="-7" width="8" height="6" rx="1.5" transform="rotate(5 5 -4)" fill="#bcd6eb" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="11" y="-3" width="8" height="6" rx="1.5" transform="rotate(16 15 0)" fill="#d5c8ed" stroke="#5e5d59" stroke-width="1.1"/>
+        </g>
+        <path d="M4 16 L3 34 L22 38 L41 34 L40 16 L22 20 Z" fill="#c96442" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M22 20 L41 16 L40 16 L41 34 L22 38 Z" fill="#d97757" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M6 13 Q14 11 22 17 L22 35 Q14 30 5 31 Z" fill="#faf9f5" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M38 13 Q30 11 22 17 L22 35 Q30 30 39 31 Z" fill="#faf9f5" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        </svg>
+  <span class="bk-brand-name"><span class="bk-brand-mark">Robust</span>RLlib</span>
+  <span class="bk-brand-kind">Tutorial</span>
+</a>
+    <span class="bk-topbar-space"></span>
+    <a class="bk-topbar-link" href="/">Project Page</a>
+  </div>
+</header>
+
+<div class="bk-page">
+
+  <aside class="bk-sidebar-drawer" id="bk-sidebar" aria-label="Pages of the tutorial">
+    <div class="bk-sidebar">
+      <a class="bk-brand" href="../..">
+  <svg class="mark" viewBox="0 0 44 40" width="30" height="27" aria-hidden="true">
+        <g transform="translate(22,9)">
+        <rect x="-19" y="-3" width="8" height="6" rx="1.5" transform="rotate(-16 -15 0)" fill="#eb8787" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="-9" y="-7" width="8" height="6" rx="1.5" transform="rotate(-5 -5 -4)" fill="#cde4be" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="1" y="-7" width="8" height="6" rx="1.5" transform="rotate(5 5 -4)" fill="#bcd6eb" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="11" y="-3" width="8" height="6" rx="1.5" transform="rotate(16 15 0)" fill="#d5c8ed" stroke="#5e5d59" stroke-width="1.1"/>
+        </g>
+        <path d="M4 16 L3 34 L22 38 L41 34 L40 16 L22 20 Z" fill="#c96442" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M22 20 L41 16 L40 16 L41 34 L22 38 Z" fill="#d97757" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M6 13 Q14 11 22 17 L22 35 Q14 30 5 31 Z" fill="#faf9f5" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M38 13 Q30 11 22 17 L22 35 Q30 30 39 31 Z" fill="#faf9f5" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        </svg>
+  <span class="bk-brand-name"><span class="bk-brand-mark">Robust</span>RLlib</span>
+  <span class="bk-brand-kind">Tutorial</span>
+</a>
+      <button type="button" class="bk-search-button" id="bk-search-open" aria-haspopup="dialog">
+        <span class="fa fa-search" aria-hidden="true"></span>
+        <span class="bk-search-label">Search</span>
+      </button>
+      <nav class="bk-nav" aria-label="Pages">
+        <ul class="bk-nav-list bk-nav-depth-0">
+  <li><a class="bk-nav-link" href="../..">Home</a></li>
+</ul>
+        <p class="bk-caption">Getting Started</p>
+        <ul class="bk-nav-list bk-nav-depth-1">
+  <li><a class="bk-nav-link" href="../../getting-started/overview/">Overview</a></li>
+  <li><a class="bk-nav-link" href="../../getting-started/quick-start/">Quick Start</a></li>
+</ul>
+        <p class="bk-caption">Algorithms</p>
+        <ul class="bk-nav-list bk-nav-depth-1">
+  <li><a class="bk-nav-link" href="../">All Methods</a></li>
+  <li class="bk-nav-group">
+    <details open>
+      <summary>Standard</summary>
+      <ul class="bk-nav-list bk-nav-depth-2">
+  <li><a class="bk-nav-link is-active" href="./" aria-current="page">Overview</a></li>
+  <li><a class="bk-nav-link" href="iql/">IQL</a></li>
+  <li><a class="bk-nav-link" href="td3bc/">TD3+BC</a></li>
+  <li><a class="bk-nav-link" href="mopo/">MOPO</a></li>
+  <li><a class="bk-nav-link" href="synther/">SynthER</a></li>
+  <li><a class="bk-nav-link" href="ppo/">PPO</a></li>
+  <li><a class="bk-nav-link" href="sac/">SAC</a></li>
+</ul>
+    </details>
+  </li>
+  <li class="bk-nav-group">
+    <details>
+      <summary>Robust Online</summary>
+      <ul class="bk-nav-list bk-nav-depth-2">
+  <li><a class="bk-nav-link" href="../robust-online/">Overview</a></li>
+  <li><a class="bk-nav-link" href="../robust-online/atla/">ATLA</a></li>
+  <li><a class="bk-nav-link" href="../robust-online/atla-sa/">ATLA-SA</a></li>
+  <li><a class="bk-nav-link" href="../robust-online/rsc/">RSC</a></li>
+  <li><a class="bk-nav-link" href="../robust-online/rarl/">RARL</a></li>
+  <li><a class="bk-nav-link" href="../robust-online/dr/">DR</a></li>
+</ul>
+    </details>
+  </li>
+  <li class="bk-nav-group">
+    <details>
+      <summary>Robust Offline</summary>
+      <ul class="bk-nav-list bk-nav-depth-2">
+  <li><a class="bk-nav-link" href="../robust-offline/">Overview</a></li>
+  <li><a class="bk-nav-link" href="../robust-offline/rfqi/">RFQI</a></li>
+  <li><a class="bk-nav-link" href="../robust-offline/rorl/">RORL</a></li>
+  <li><a class="bk-nav-link" href="../robust-offline/atla-iql/">ATLA-IQL</a></li>
+  <li><a class="bk-nav-link" href="../robust-offline/rsc-iql/">RSC-IQL</a></li>
+  <li><a class="bk-nav-link" href="../robust-offline/rambo/">RAMBO</a></li>
+  <li><a class="bk-nav-link" href="../robust-offline/romb/">ROMB</a></li>
+  <li><a class="bk-nav-link" href="../robust-offline/fwm/">FWM</a></li>
+  <li><a class="bk-nav-link" href="../robust-offline/plr-pvl/">PLR-PVL</a></li>
+</ul>
+    </details>
+  </li>
+  <li class="bk-nav-group">
+    <details>
+      <summary>Robust Safe</summary>
+      <ul class="bk-nav-list bk-nav-depth-2">
+  <li><a class="bk-nav-link" href="../robust-safe/">Overview</a></li>
+  <li><a class="bk-nav-link" href="../robust-safe/ramu/">RAMU</a></li>
+  <li><a class="bk-nav-link" href="../robust-safe/spidr/">SPiDR</a></li>
+</ul>
+    </details>
+  </li>
+  <li><a class="bk-nav-link" href="../run-a-method/">Run a Method</a></li>
+  <li><a class="bk-nav-link" href="../add-an-algorithm/">Add an Algorithm</a></li>
+</ul>
+        <p class="bk-caption">Shift Sources and Modes</p>
+        <ul class="bk-nav-list bk-nav-depth-1">
+  <li><a class="bk-nav-link" href="../../shifts/">Overview</a></li>
+  <li class="bk-nav-group">
+    <details>
+      <summary>Shift Sources</summary>
+      <ul class="bk-nav-list bk-nav-depth-2">
+  <li><a class="bk-nav-link" href="../../shifts/sources/dynamic/">Dynamic shift</a></li>
+  <li><a class="bk-nav-link" href="../../shifts/sources/observation/">Observation shift</a></li>
+  <li><a class="bk-nav-link" href="../../shifts/sources/action/">Action shift</a></li>
+  <li><a class="bk-nav-link" href="../../shifts/sources/reward-cost/">Reward/cost shift</a></li>
+  <li><a class="bk-nav-link" href="../../shifts/sources/latency/">Latency shift</a></li>
+  <li><a class="bk-nav-link" href="../../shifts/sources/semantic/">Semantic shift</a></li>
+</ul>
+    </details>
+  </li>
+  <li class="bk-nav-group">
+    <details>
+      <summary>Shift Modes</summary>
+      <ul class="bk-nav-list bk-nav-depth-2">
+  <li><a class="bk-nav-link" href="../../shifts/modes/stochastic/">Stochastic</a></li>
+  <li><a class="bk-nav-link" href="../../shifts/modes/adversarial/">Adversarial</a></li>
+  <li><a class="bk-nav-link" href="../../shifts/modes/parametric/">Parametric</a></li>
+  <li><a class="bk-nav-link" href="../../shifts/modes/non-stationary/">Non-stationary</a></li>
+  <li><a class="bk-nav-link" href="../../shifts/modes/composition/">Composition</a></li>
+</ul>
+    </details>
+  </li>
+  <li><a class="bk-nav-link" href="../../shifts/add-a-backend/">Add a Backend</a></li>
+</ul>
+        <p class="bk-caption">Evaluation</p>
+        <ul class="bk-nav-list bk-nav-depth-1">
+  <li><a class="bk-nav-link" href="../../evaluation/protocol/">Evaluation Protocol</a></li>
+</ul>
+      </nav>
+    </div>
+  </aside>
+
+  <div class="bk-main">
+    <div class="bk-content">
+      <div class="bk-tools">
+        <button type="button" class="bk-icon-button" id="bk-toggle-toc" aria-controls="bk-toc" aria-label="Show or hide the contents of this page" title="On this page">
+          <span class="fa fa-list-ul" aria-hidden="true"></span>
+        </button>
+      </div>
+
+      <main class="bk-article" id="bk-content">
+        <h1 id="standard-algorithms">Standard Algorithms<a class="headerlink" href="#standard-algorithms" title="Permanent link">&para;</a></h1>
+<p>Standard algorithms carry no robustness mechanism. They are the base learners that the robust methods are built on, and the reference that every robust method is measured against. The library holds four offline and two online standard algorithms.</p>
+<h2 id="features">Features<a class="headerlink" href="#features" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Standard Algorithms</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Role</td>
+<td>Base learner of the robust methods, and reference for comparison</td>
+</tr>
+<tr>
+<td>Interface</td>
+<td>One experiment file per run, launched with a training script</td>
+</tr>
+<tr>
+<td>Method selection</td>
+<td>The <code>algorithm</code> card named by the experiment file</td>
+</tr>
+<tr>
+<td>Training</td>
+<td>On the nominal task, with the native recipe of each algorithm</td>
+</tr>
+<tr>
+<td>Evaluation</td>
+<td>The frozen last checkpoint, on the grid named by the <code>eval</code> card</td>
+</tr>
+</tbody>
+</table>
+<h2 id="supported-methods">Supported methods<a class="headerlink" href="#supported-methods" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Family</th>
+<th>Setting</th>
+<th>Base</th>
+<th>Claimed<br>robustness</th>
+<th style="text-align: center;">Shifted-env<br>rollout</th>
+<th style="text-align: center;">Adversarial<br>network</th>
+<th style="text-align: center;">Learned<br>model</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="iql/"><strong>IQL</strong></a></td>
+<td><span class="rl-badge rl-fam-standard">Standard reference</span></td>
+<td>Offline</td>
+<td>—</td>
+<td>—</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><a href="td3bc/"><strong>TD3+BC</strong></a></td>
+<td><span class="rl-badge rl-fam-standard">Standard reference</span></td>
+<td>Offline</td>
+<td>—</td>
+<td>—</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><a href="mopo/"><strong>MOPO</strong></a></td>
+<td><span class="rl-badge rl-fam-standard">Standard reference</span></td>
+<td>Offline</td>
+<td>SAC</td>
+<td>—</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><a href="synther/"><strong>SynthER</strong></a></td>
+<td><span class="rl-badge rl-fam-standard">Standard reference</span></td>
+<td>Offline</td>
+<td>IQL</td>
+<td>—</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><a href="ppo/"><strong>PPO</strong></a></td>
+<td><span class="rl-badge rl-fam-standard">Standard reference</span></td>
+<td>Online</td>
+<td>—</td>
+<td>—</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr>
+<td><a href="sac/"><strong>SAC</strong></a></td>
+<td><span class="rl-badge rl-fam-standard">Standard reference</span></td>
+<td>Online</td>
+<td>—</td>
+<td>—</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+</tbody>
+</table>
+<h2 id="run-a-method">Run a method<a class="headerlink" href="#run-a-method" title="Permanent link">&para;</a></h2>
+<p>Every method is launched from an experiment file. IQL on Hopper:</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>baselines/iql/train_iql.py<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-c<span class="w"> </span>robustrllib/configs/experiment/iql_hopper.yaml<span class="w"> </span>--seed<span class="w"> </span><span class="m">0</span>
+</code></pre></div>
+<p>Every method page gives the command for that method. <a href="../run-a-method/">Run a Method</a> explains the experiment file, the overrides and the run directory.</p>
+<h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Implementation</th>
+<th>Experiment file</th>
+<th>Training budget</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="iql/">IQL</a></td>
+<td><code>baselines/iql</code></td>
+<td><code>iql_hopper.yaml</code></td>
+<td>1M updates, batch 256</td>
+</tr>
+<tr>
+<td><a href="td3bc/">TD3+BC</a></td>
+<td><code>baselines/td3bc</code></td>
+<td><code>td3bc_hopper.yaml</code></td>
+<td>1M updates, batch 256</td>
+</tr>
+<tr>
+<td><a href="mopo/">MOPO</a></td>
+<td><code>baselines/mopo</code></td>
+<td><code>mopo_hopper.yaml</code></td>
+<td>1M updates, batch 256</td>
+</tr>
+<tr>
+<td><a href="synther/">SynthER</a></td>
+<td><code>baselines/synther</code></td>
+<td><code>iql_hopper_synther.yaml</code></td>
+<td>1M updates, batch 256</td>
+</tr>
+<tr>
+<td><a href="ppo/">PPO</a></td>
+<td><code>robustrllib.algos</code></td>
+<td><code>ppo_hopper.yaml</code></td>
+<td>2M environment steps</td>
+</tr>
+<tr>
+<td><a href="sac/">SAC</a></td>
+<td><code>robustrllib.algos</code></td>
+<td><code>sac_hopper.yaml</code></td>
+<td>1M environment steps</td>
+</tr>
+</tbody>
+</table>
+<p>Experiment files are in <code>robustrllib/configs/experiment/</code>. Each names the algorithm card, the task card and the evaluation grid of the run. <strong>Every method keeps its native training recipe and budget</strong>; what is shared is the evaluation.</p>
+<h2 id="robust-performance">Robust performance<a class="headerlink" href="#robust-performance" title="Permanent link">&para;</a></h2>
+<p>Normalized score of the frozen last checkpoint. Q1 to Q4 are the severity quartiles of each perturbation ladder, ordered by displacement from the nominal setting, and <em>All</em> covers every shifted condition.</p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th style="text-align: right;">Nominal</th>
+<th style="text-align: right;">Q1</th>
+<th style="text-align: right;">Q2</th>
+<th style="text-align: right;">Q3</th>
+<th style="text-align: right;">Q4</th>
+<th style="text-align: right;">All</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="iql/">IQL</a></td>
+<td style="text-align: right;">102.5</td>
+<td style="text-align: right;">77.5</td>
+<td style="text-align: right;">57.0</td>
+<td style="text-align: right;">42.1</td>
+<td style="text-align: right;">35.4</td>
+<td style="text-align: right;">53.1</td>
+</tr>
+<tr>
+<td><a href="td3bc/">TD3+BC</a></td>
+<td style="text-align: right;">89.4</td>
+<td style="text-align: right;">70.5</td>
+<td style="text-align: right;">57.1</td>
+<td style="text-align: right;">44.5</td>
+<td style="text-align: right;">32.9</td>
+<td style="text-align: right;">51.3</td>
+</tr>
+<tr>
+<td><a href="mopo/">MOPO</a></td>
+<td style="text-align: right;">24.6</td>
+<td style="text-align: right;">20.2</td>
+<td style="text-align: right;">13.8</td>
+<td style="text-align: right;">12.6</td>
+<td style="text-align: right;">9.6</td>
+<td style="text-align: right;">14.0</td>
+</tr>
+<tr>
+<td><a href="synther/">SynthER</a></td>
+<td style="text-align: right;">104.0</td>
+<td style="text-align: right;">74.2</td>
+<td style="text-align: right;">56.2</td>
+<td style="text-align: right;">43.5</td>
+<td style="text-align: right;">38.5</td>
+<td style="text-align: right;">53.2</td>
+</tr>
+<tr>
+<td><a href="ppo/">PPO</a></td>
+<td style="text-align: right;">71.2</td>
+<td style="text-align: right;">58.8</td>
+<td style="text-align: right;">47.7</td>
+<td style="text-align: right;">41.2</td>
+<td style="text-align: right;">37.2</td>
+<td style="text-align: right;">46.2</td>
+</tr>
+<tr>
+<td><a href="sac/">SAC</a></td>
+<td style="text-align: right;">78.6</td>
+<td style="text-align: right;">70.6</td>
+<td style="text-align: right;">64.6</td>
+<td style="text-align: right;">49.0</td>
+<td style="text-align: right;">43.0</td>
+<td style="text-align: right;">56.7</td>
+</tr>
+</tbody>
+</table>
+<p>Scores are not clipped: 0 and 100 are reference points, not bounds. The protocol is described in <a href="../../evaluation/protocol/">Evaluation Protocol</a>.</p>
+<h2 id="method-pages">Method pages<a class="headerlink" href="#method-pages" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="iql/">IQL</a>: Expectile-regression value learning that never queries out-of-distribution actions.</li>
+<li><a href="td3bc/">TD3+BC</a>: TD3 with a behaviour-cloning term balanced against the critic.</li>
+<li><a href="mopo/">MOPO</a>: SAC on real and model data, with rollout rewards penalised by model uncertainty.</li>
+<li><a href="synther/">SynthER</a>: A diffusion model enlarges the dataset; the offline learner itself is unchanged.</li>
+<li><a href="ppo/">PPO</a>: The on-policy reference: a clipped probability-ratio surrogate with GAE.</li>
+<li><a href="sac/">SAC</a>: The off-policy reference: twin critics and an entropy-regularised stochastic actor.</li>
+</ul>
+      </main>
+
+      <footer class="bk-footer">
+        <nav class="bk-related" aria-label="Previous and next page">
+          <a class="bk-prev" href="../">
+            <span class="fa fa-arrow-left" aria-hidden="true"></span>
+            <span class="bk-related-text"><span class="bk-related-label">Previous</span><span class="bk-related-title">All Methods</span></span>
+          </a>
+          <a class="bk-next" href="iql/">
+            <span class="bk-related-text"><span class="bk-related-label">Next</span><span class="bk-related-title">IQL</span></span>
+            <span class="fa fa-arrow-right" aria-hidden="true"></span>
+          </a>
+        </nav>
+        <p class="bk-footnote">RobustRLlib · Anonymous submission under double-blind review.</p>
+      </footer>
+    </div>
+
+    <aside class="bk-toc-drawer" id="bk-toc" aria-label="Contents of this page">
+      <div class="bk-toc">
+        <p class="bk-toc-title">On this page</p>
+        <nav class="bk-toc-tree" aria-label="Sections">
+          <ul class="bk-toc-list bk-toc-depth-1">
+  <li><a class="bk-toc-link" href="#features">Features</a>
+  </li>
+  <li><a class="bk-toc-link" href="#supported-methods">Supported methods</a>
+  </li>
+  <li><a class="bk-toc-link" href="#run-a-method">Run a method</a>
+  </li>
+  <li><a class="bk-toc-link" href="#configuration">Configuration</a>
+  </li>
+  <li><a class="bk-toc-link" href="#robust-performance">Robust performance</a>
+  </li>
+  <li><a class="bk-toc-link" href="#method-pages">Method pages</a>
+  </li>
+</ul>
+        </nav>
+      </div>
+    </aside>
+  </div>
+
+</div>
+
+<div class="bk-backdrop" id="bk-backdrop" hidden></div>
+<div class="bk-search" id="bk-search" role="dialog" aria-modal="true" aria-label="Search the tutorial" hidden>
+  <div class="bk-search-panel">
+    <div class="bk-search-field">
+      <span class="fa fa-search" aria-hidden="true"></span>
+      <input type="search" id="mkdocs-search-query" name="q" placeholder="Search the tutorial" aria-label="Search the tutorial" autocomplete="off" spellcheck="false">
+      <button type="button" class="bk-icon-button" id="bk-search-close" aria-label="Close the search"><span class="fa fa-times" aria-hidden="true"></span></button>
+    </div>
+    <div class="bk-search-results" id="mkdocs-search-results" data-no-results-text="Nothing found"></div>
+  </div>
+</div>
+
+<script>var base_url = "../..";</script>
+<script src="../../js/site.js"></script>
+<script src="../../search/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-label="A lander descending between two flags">
+  <rect width="320" height="180" rx="12" fill="#ecebe3"/>
+  <g fill="none" stroke="#3d3d3a" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+
+    <path d="M20 150 h60 l20 -14 h40 l20 14 h60 l20 -10 h60" fill="none"/>
+    <path d="M100 136 v-40 M200 136 v-40" stroke="#c96442"/><path d="M100 96 h18 l-18 8 M200 96 h18 l-18 8" fill="#c96442" stroke="#c96442"/>
+    <path d="M140 60 l20 -22 l20 22 v20 h-40 z" fill="#faf9f5"/>
+    <path d="M140 80 l-14 22 M180 80 l14 22 M120 102 h14 M186 102 h14"/>
+    <path d="M152 84 l8 22 l8 -22" fill="#e0865f" stroke="#e0865f"/>
+  </g>
+</svg>

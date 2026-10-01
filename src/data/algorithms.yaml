@@ -1,0 +1,599 @@
+# Single source of truth for the algorithm pages.
+# tools/gen_algorithms.py turns every entry into content/algorithms/<slug>.md and
+# builds the overview table from the same records. Numbers are never typed here:
+# they are read from data/results/*.csv by the `keys` of each variant.
+#
+# family:  standard | learner | data | generative | environment | safe
+# claimed: dynamic | observation | semantics | none
+# traits:  rollout   = trains on rollouts from a shifted environment
+#          adversary = trains an adversarial network
+#          model     = trains a learned dynamics / generative model
+
+families:
+  standard:    {label: "Standard reference",        blurb: "No robustness mechanism. The reference each mechanism is measured against."}
+  learner:     {label: "Learner-centric",           blurb: "Changes how experience is interpreted or optimised: the objective, the backup, or the regulariser."}
+  data:        {label: "Data-centric",              blurb: "Reshapes the training distribution the base learner consumes."}
+  generative:  {label: "Data-centric · generative", short: "Generative", blurb: "Learns an explicit model of transitions or futures and trains the base learner on what it produces."}
+  environment: {label: "Environment-centric",       blurb: "Collects training rollouts in an environment that is itself perturbed."}
+  safe:        {label: "Robust safe",               blurb: "Adds a cost constraint and makes it hold under shifted dynamics."}
+
+regimes:
+  offline: {label: "Offline", blurb: "Learns from a fixed dataset without environment interaction."}
+  online:  {label: "Online",  blurb: "Learns through continued environment interaction."}
+  safe:    {label: "Safe",    blurb: "Online, with a cost budget. Evaluated on the Isaac Lab track."}
+
+algorithms:
+
+  # ------------------------------------------------------------ offline / standard
+  - slug: iql
+    name: IQL
+    title: Implicit Q-Learning
+    regime: offline
+    family: standard
+    base: null
+    claimed: none
+    traits: {rollout: false, adversary: false, model: false}
+    budget: "1M updates, batch 256"
+    tagline: "Expectile-regression value learning that never queries out-of-distribution actions."
+    mechanism: |
+      IQL avoids querying out-of-distribution actions altogether. A value function is fitted to the
+      critic by expectile regression, the twin critics bootstrap from that value function, and the
+      actor is extracted by advantage-weighted regression.
+
+      IQL is the backbone of five mechanisms in the library (ATLA-IQL, RSC-IQL, ROMB, FWM and
+      PLR-PVL). Each of them changes one component and keeps the rest of this recipe.
+    ref: {key: kostrikov2021offline}
+    code:
+      dir: baselines/iql
+      config: robustrllib/configs/algorithm/iql.yaml
+      experiment: robustrllib/configs/experiment/iql_hopper.yaml
+      run:
+        - "python baselines/iql/train_iql.py -c robustrllib/configs/experiment/iql_hopper.yaml --seed 0"
+    variants:
+      - {label: IQL, part1: [offline, IQL], part3: [[hopper_offline, IQL]]}
+
+  - slug: td3bc
+    name: TD3+BC
+    title: TD3 with Behaviour Cloning
+    regime: offline
+    family: standard
+    base: null
+    claimed: none
+    traits: {rollout: false, adversary: false, model: false}
+    budget: "1M updates, batch 256"
+    tagline: "TD3 with a behaviour-cloning term balanced against the critic."
+    mechanism: |
+      TD3+BC adds a behaviour-cloning term to the TD3 actor loss and normalises states. The term is
+      balanced against the critic by dividing by the mean absolute Q-value over the batch.
+    ref: {key: fujimoto2021minimalist}
+    code:
+      dir: baselines/td3bc
+      config: robustrllib/configs/algorithm/td3bc.yaml
+      experiment: robustrllib/configs/experiment/td3bc_hopper.yaml
+      run:
+        - "python baselines/td3bc/train_td3bc.py -c robustrllib/configs/experiment/td3bc_hopper.yaml --seed 0"
+    variants:
+      - {label: TD3+BC, part1: [offline, "TD3+BC"], part3: [[hopper_offline, "TD3+BC"]]}
+
+  - slug: mopo
+    name: MOPO
+    title: Model-based Offline Policy Optimization
+    regime: offline
+    family: standard
+    base: SAC
+    claimed: none
+    traits: {rollout: false, adversary: false, model: true}
+    budget: "1M updates, batch 256"
+    tagline: "SAC on real and model data, with rollout rewards penalised by model uncertainty."
+    mechanism: |
+      MOPO learns an ensemble dynamics model, branches short rollouts from dataset states, and
+      penalises the rollout reward by the model's predicted uncertainty before running SAC on the
+      mixture of real and model data.
+    ref: {key: yu2020mopo}
+    code:
+      dir: baselines/mopo
+      config: robustrllib/configs/algorithm/mopo.yaml
+      experiment: robustrllib/configs/experiment/mopo_hopper.yaml
+      run:
+        - "python baselines/mopo/train_mopo.py -c robustrllib/configs/experiment/mopo_hopper.yaml --seed 0"
+    variants:
+      - {label: MOPO, part1: [offline, MOPO], part3: [[hopper_offline, MOPO]]}
+
+  - slug: synther
+    name: SynthER
+    title: Synthetic Experience Replay
+    regime: offline
+    family: standard
+    base: IQL
+    claimed: none
+    traits: {rollout: false, adversary: false, model: true}
+    budget: "1M updates, batch 256"
+    tagline: "A diffusion model enlarges the dataset; the offline learner itself is unchanged."
+    mechanism: |
+      SynthER fits a diffusion model to logged transitions and trains an unmodified offline learner
+      on a much larger sample from it.
+
+      The library counts it as data augmentation rather than a generative mechanism: it samples
+      individual transitions to enlarge the dataset, where FWM and PLR-PVL sample multi-step
+      futures conditioned on the current state and turn them into critic targets.
+    ref: {key: lu2023synthetic}
+    code:
+      dir: baselines/synther
+      config: robustrllib/configs/algorithm/synther_iql.yaml
+      experiment: robustrllib/configs/experiment/iql_hopper_synther.yaml
+      run:
+        - "# 1. fit the diffusion model on the logged data and sample the synthetic dataset the task card reads"
+        - "python baselines/synther/train_diffuser.py --task hopper --quality medium --results_folder runs/synther/hopper_medium --save_samples"
+        - "# 2. train the unmodified IQL learner on the synthetic dataset"
+        - "python baselines/iql/train_iql.py -c robustrllib/configs/experiment/iql_hopper_synther.yaml --seed 0"
+    variants:
+      - {label: SynthER, part1: [offline, SynthER], part3: [[hopper_offline, SynthER]]}
+
+  # ------------------------------------------------------------ offline / learner-centric
+  - slug: rfqi
+    name: RFQI
+    title: Robust Fitted Q-Iteration
+    regime: offline
+    family: learner
+    base: FQI
+    claimed: dynamic
+    traits: {rollout: false, adversary: false, model: false}
+    budget: "500k updates, batch 1000"
+    tagline: "Worst-case Bellman update over a total-variation uncertainty set."
+    mechanism: |
+      RFQI replaces the fitted-Q target by a worst-case Bellman backup over a total-variation
+      uncertainty set of a fixed radius around the empirical transitions. The inner maximisation is
+      solved through a dual variable fitted per batch, and the actor and critic follow the
+      BCQ-style architecture of the original release.
+
+      RFQI is a standalone recipe rather than a mechanism added to a shared base algorithm.
+    ref: {key: panaganti2022robust}
+    code:
+      dir: baselines/rfqi
+      config: robustrllib/configs/algorithm/rfqi.yaml
+      experiment: robustrllib/configs/experiment/rfqi_hopper.yaml
+      run:
+        - "python baselines/rfqi/train_rfqi.py -c robustrllib/configs/experiment/rfqi_hopper.yaml --seed 0"
+    variants:
+      - {label: RFQI, part1: [offline, RFQI], part2: [offline, RFQI], part3: [[hopper_offline, RFQI]]}
+
+  - slug: rorl
+    name: RORL
+    title: Robust Offline RL via Conservative Smoothing
+    regime: offline
+    family: learner
+    base: SAC
+    claimed: observation
+    traits: {rollout: false, adversary: false, model: false}
+    budget: "3M updates on MuJoCo and Door, 1M elsewhere"
+    tagline: "Local policy and value smoothing, with an ensemble penalty at perturbed states."
+    mechanism: |
+      RORL makes an SAC learner conservative through smoothing. The critic and the policy are
+      regularised to vary little within a small ball around dataset states, and Q-values at
+      perturbed states are penalised by the disagreement of a ten-critic ensemble.
+
+      RORL is a standalone recipe rather than a mechanism added to a shared base algorithm.
+    ref: {key: yang2022rorl}
+    code:
+      dir: baselines/rorl
+      config: robustrllib/configs/algorithm/rorl.yaml
+      experiment: robustrllib/configs/experiment/rorl_hopper_bcreg_full.yaml
+      run:
+        - "python baselines/rorl/train_rorl.py -c robustrllib/configs/experiment/rorl_hopper_bcreg_full.yaml --seed 0"
+    variants:
+      - {label: RORL, part1: [offline, RORL], part2: [offline, RORL], part3: [[hopper_offline, RORL]]}
+
+  - slug: atla-iql
+    name: ATLA-IQL
+    title: Offline adaptation of ATLA on an IQL backbone
+    regime: offline
+    family: learner
+    base: IQL
+    claimed: observation
+    traits: {rollout: false, adversary: true, model: false}
+    budget: "1M updates, batch 256"
+    tagline: "A learned observation adversary, trained through the critic instead of by RL."
+    mechanism: |
+      The offline adaptation keeps ATLA's principle, a learned observation adversary alternated
+      with the learner. Since no environment is available, the adversary is not trained by RL: it
+      is trained by a differentiable objective on the critic, minimising the minimum Q-value at the
+      policy's action under the perturbed state.
+    ref: {key: zhang2021robust}
+    code:
+      dir: baselines/offline_atla_iql
+      config: robustrllib/configs/algorithm/offline_atla_iql.yaml
+      experiment: robustrllib/configs/experiment/offline_atla_iql_hopper.yaml
+      run:
+        - "python baselines/run_baseline.py -c robustrllib/configs/experiment/offline_atla_iql_hopper.yaml -- --seed 0"
+    variants:
+      - {label: ATLA-IQL, part1: [offline, ATLA_off], part2: [offline, ATLA-IQL], part3: [[hopper_offline, ATLA-IQL]], backbone: IQL}
+
+  # ------------------------------------------------------------ offline / data-centric
+  - slug: rsc-iql
+    name: RSC-IQL
+    title: Causal counterfactual rewriting on an IQL backbone
+    regime: offline
+    family: data
+    base: IQL
+    claimed: semantics
+    traits: {rollout: false, adversary: false, model: true}
+    budget: "1M updates, batch 256"
+    tagline: "Rewrites logged transitions along the dimensions a causal mask marks as non-causal."
+    mechanism: |
+      RSC-IQL applies RSC's counterfactual rewriting to logged data. A causal mask over state
+      dimensions is fitted from the dataset, and transitions are rewritten by permuting or
+      perturbing the dimensions the mask marks as non-causal.
+    ref: {key: ding2023seeing}
+    code:
+      dir: baselines/causaldro_iql
+      config: robustrllib/configs/algorithm/causaldro_iql.yaml
+      experiment: robustrllib/configs/experiment/causaldro_iql_hopper.yaml
+      run:
+        - "# 1. fit the causal mask the experiment card names under mask_path"
+        - "python baselines/causaldro_iql/fit_causal_mask.py -c robustrllib/configs/experiment/causaldro_iql_hopper.yaml --out runs/causaldro_iql/masks/hopper_medium_seed0_sw05.npz --seed 0"
+        - "# 2. train"
+        - "python baselines/run_baseline.py -c robustrllib/configs/experiment/causaldro_iql_hopper.yaml -- --seed 0"
+    variants:
+      - {label: RSC-IQL, part1: [offline, RSC], part2: [offline, RSC-IQL], part3: [[hopper_offline, RSC-IQL]], backbone: IQL}
+
+  - slug: rambo
+    name: RAMBO
+    title: Robust Adversarial Model-Based Offline RL
+    regime: offline
+    family: data
+    base: SAC
+    claimed: dynamic
+    traits: {rollout: false, adversary: true, model: true}
+    budget: "2M updates on MuJoCo and Door, 1M elsewhere"
+    tagline: "Model rollouts from an ensemble that is trained adversarially against the policy."
+    mechanism: |
+      RAMBO augments the dataset with short rollouts from a learned dynamics ensemble and replaces
+      the uncertainty penalty by adversarial training of the model. The ensemble is updated to
+      lower the critic's value of the policy's transitions while a maximum-likelihood term keeps
+      it close to the data. The policy is behaviour-cloned before the first epoch.
+
+      RAMBO is a standalone recipe rather than a mechanism added to a shared base algorithm.
+    ref: {key: rigter2022rambo}
+    code:
+      dir: baselines/rambo
+      config: robustrllib/configs/algorithm/rambo.yaml
+      experiment: robustrllib/configs/experiment/rambo_hopper.yaml
+      run:
+        - "python baselines/rambo/train_rambo.py -c robustrllib/configs/experiment/rambo_hopper.yaml --seed 0"
+    variants:
+      - {label: RAMBO, part1: [offline, RAMBO], part2: [offline, RAMBO], part3: [[hopper_offline, RAMBO]]}
+
+  # ------------------------------------------------------------ offline / generative
+  - slug: romb
+    name: ROMB
+    title: Policy-driven world-model adaptation
+    regime: offline
+    family: generative
+    base: IQL
+    claimed: dynamic
+    traits: {rollout: false, adversary: true, model: true}
+    budget: "1M updates, batch 256"
+    tagline: "A world model adapted against the policy under a constrained maximin objective."
+    mechanism: |
+      ROMB adapts a learned world model against the policy under a constrained maximin objective.
+      The model is pushed toward transitions that lower the policy's value while a supervised loss
+      keeps it on the data, and the policy is trained on rollouts from the adapted model.
+    ref: {key: chen2025policy}
+    code:
+      dir: baselines/romb_iql
+      config: robustrllib/configs/algorithm/romb_iql.yaml
+      experiment: robustrllib/configs/experiment/romb_iql_hopper.yaml
+      run:
+        - "python baselines/run_baseline.py -c robustrllib/configs/experiment/romb_iql_hopper.yaml -- --seed 0"
+    variants:
+      - {label: ROMB, part1: [offline, ROMB], part2: [offline, ROMB-IQL], part3: [[hopper_offline, ROMB-IQL]], backbone: IQL}
+
+  - slug: fwm
+    name: FWM
+    title: Flow-matching World Model
+    regime: offline
+    family: generative
+    base: IQL
+    claimed: dynamic
+    traits: {rollout: false, adversary: false, model: true}
+    budget: "1M updates, batch 256"
+    tagline: "Multi-step critic targets whose future is sampled from a flow-matching world model."
+    mechanism: |
+      FWM transfers the multi-step future modelling of the Diffusion World Model to a flow-matching
+      world model. Instead of a one-step bootstrap, the critic regresses a multi-step return whose
+      future is sampled from the generative model, conditioned on the current state, action and
+      return-to-go. The replacement is confined to how that future is produced.
+
+      The model is trained on windows of states and rewards. It learns the velocity that carries
+      a noise sample to a data window along a straight line, which replaces the denoising
+      objective of the diffusion model. The return-to-go condition is dropped with probability
+      0.2 during training, so that one network carries both the conditional and the
+      unconditional velocity. Sampling integrates the learned velocity from noise to data in
+      five midpoint steps, with a guidance weight of 2.0 between the conditional and the
+      unconditional velocity.
+    ref: {key: ding2024diffusion, extra: [lipman2022flow]}
+    code:
+      dir: baselines/fwm_iql
+      config: robustrllib/configs/algorithm/fwm_iql.yaml
+      experiment: robustrllib/configs/experiment/fwm_iql_hopper.yaml
+      run:
+        - "# 1. pretrain the flow-matching world model (shared with PLR-PVL)"
+        - "python baselines/fwm_iql/pretrain_fm.py --dataset mujoco/hopper/medium-v0 --fm-seeds 0"
+        - "# 2. train the policy"
+        - "python baselines/fwm_iql/train_fwm_iql.py -c robustrllib/configs/experiment/fwm_iql_hopper.yaml"
+    variants:
+      - {label: FWM, part1: [offline, FWM], part2: [offline, FWM-IQL], part3: [[hopper_offline, FWM-IQL]], backbone: IQL}
+
+  - slug: plr-pvl
+    name: PLR-PVL
+    title: Prioritised world-model selection by positive value loss
+    regime: offline
+    family: generative
+    base: IQL
+    claimed: dynamic
+    traits: {rollout: false, adversary: false, model: true}
+    budget: "1M updates, batch 256"
+    tagline: "An ensemble of world models, prioritised per sample by the value loss they induce."
+    mechanism: |
+      PLR-PVL trains a collection of world models consistent with the offline data, treats each as
+      a level in the sense of unsupervised environment design, and prioritises them during policy
+      learning by the value loss they induce.
+
+      The library replaces the original world model with the flow-matching model of
+      [FWM](fwm.md). The ensemble consists of flow models that differ only in training seed,
+      each proposing one multi-step future for the same conditioning. The critic target is
+      taken per sample from the model whose rollout carries the largest positive value loss,
+      measured by the generalised-advantage residual of the current critic along that rollout.
+    notes:
+      - "The selection rule is a learning-potential criterion, not a worst-case-return criterion: it picks the model the critic currently explains worst."
+      - "The flow models are frozen during policy learning. No network is trained adversarially."
+    ref: {key: berdica2024robust}
+    code:
+      dir: baselines/fmgan_iql
+      config: robustrllib/configs/algorithm/fmgan_iql.yaml
+      experiment: robustrllib/configs/experiment/fmgan_iql_hopper.yaml
+      run:
+        - "# 1. pretrain the flow-matching ensemble (seed 0 is shared with FWM)"
+        - "python baselines/fwm_iql/pretrain_fm.py --dataset mujoco/hopper/medium-v0 --fm-seeds 0 42 3047"
+        - "# 2. train the policy"
+        - "python baselines/run_baseline.py -c robustrllib/configs/experiment/fmgan_iql_hopper.yaml -- --seed 0"
+    variants:
+      - {label: PLR-PVL, part1: [offline, FMGAN], part2: [offline, FMGAN-IQL], part3: [[hopper_offline, FMGAN-IQL]], backbone: IQL}
+
+  # ------------------------------------------------------------ online / standard
+  - slug: ppo
+    name: PPO
+    title: Proximal Policy Optimization
+    regime: online
+    family: standard
+    base: null
+    claimed: none
+    traits: {rollout: false, adversary: false, model: false}
+    budget: "2M environment steps"
+    tagline: "The on-policy reference: a clipped probability-ratio surrogate with GAE."
+    mechanism: |
+      PPO is the on-policy reference: a clipped probability-ratio surrogate on trajectories from
+      the current policy, with generalised advantage estimation. The library uses the
+      Stable-Baselines3 implementation.
+
+      PPO is the backbone of ATLA, ATLA-SA and RARL-PPO.
+    ref: {key: schulman2017proximal, extra: [raffin2021stable]}
+    code:
+      dir: robustrllib.algos (Stable-Baselines3 adapter)
+      config: robustrllib/configs/algorithm/ppo_hopper.yaml
+      experiment: robustrllib/configs/experiment/ppo_hopper.yaml
+      run:
+        - "# the paper's checkpoints: Stable-Baselines3 defaults, 2M steps"
+        - "python experiments/sb3_default_runs/train.py --algorithm ppo --task hopper --seed 0 --total-steps 2000000"
+        - "# the same learner through the library runner"
+        - "python examples/run_experiment.py -c robustrllib/configs/experiment/ppo_hopper.yaml"
+    variants:
+      - {label: PPO, part1: [online, PPO], part3: [[hopper_online, PPO], [pusher, PPO]]}
+
+  - slug: sac
+    name: SAC
+    title: Soft Actor-Critic
+    regime: online
+    family: standard
+    base: null
+    claimed: none
+    traits: {rollout: false, adversary: false, model: false}
+    budget: "1M environment steps"
+    tagline: "The off-policy reference: twin critics and an entropy-regularised stochastic actor."
+    mechanism: |
+      SAC is the off-policy reference: twin critics with a clipped double-Q target and a
+      stochastic actor whose objective adds an entropy bonus with automatically tuned temperature.
+      The library uses the Stable-Baselines3 implementation.
+
+      SAC is the backbone of DR-SAC and RSC-SAC.
+    ref: {key: haarnoja2018soft, extra: [raffin2021stable]}
+    code:
+      dir: robustrllib.algos (Stable-Baselines3 adapter)
+      config: robustrllib/configs/algorithm/sac.yaml
+      experiment: robustrllib/configs/experiment/sac_hopper.yaml
+      run:
+        - "# the paper's checkpoints: Stable-Baselines3 defaults, 1M steps"
+        - "python experiments/sb3_default_runs/train.py --algorithm sac --task hopper --seed 0 --total-steps 1000000"
+        - "# the same learner through the library runner"
+        - "python examples/run_experiment.py -c robustrllib/configs/experiment/sac_hopper.yaml"
+    variants:
+      - {label: SAC, part1: [online, SAC], part3: [[hopper_online, SAC], [pusher, SAC]]}
+
+  # ------------------------------------------------------------ online / learner-centric
+  - slug: atla
+    name: ATLA
+    title: Alternating Training with Learned Adversaries
+    regime: online
+    family: learner
+    base: PPO
+    claimed: observation
+    traits: {rollout: false, adversary: true, model: false}
+    budget: "About 5M environment steps (2441 iterations of 2048 steps)"
+    tagline: "A policy trained against an observation adversary that is itself an RL agent."
+    mechanism: |
+      ATLA trains a policy against an *optimal* observation adversary in the state-adversarial MDP.
+      The adversary is itself an RL agent that outputs a bounded perturbation of the observation,
+      is rewarded by the protagonist's negative return, and is updated in alternation with the
+      protagonist.
+    ref: {key: zhang2021robust, extra: [zhang2020robust]}
+    code:
+      dir: baselines/atla
+      config: robustrllib/configs/algorithm/atla_ppo_mlp.yaml
+      experiment: robustrllib/configs/experiment/atla_online_hopper.yaml
+      run:
+        - "python baselines/atla/train_atla.py -c robustrllib/configs/experiment/atla_online_hopper.yaml --seed 0"
+    variants:
+      - {label: ATLA, part1: [online, ATLA], part2: [online, ATLA-PPO], part3: [[hopper_online, ATLA-PPO]], backbone: PPO}
+
+  - slug: atla-sa
+    name: ATLA-SA
+    title: ATLA with state-adversarial regularisation and a recurrent policy
+    regime: online
+    family: learner
+    base: PPO
+    base_note: "LSTM policy"
+    claimed: observation
+    traits: {rollout: false, adversary: true, model: false}
+    budget: "About 5M environment steps (2441 iterations of 2048 steps)"
+    tagline: "ATLA plus a state-adversarial KL regulariser and a 100-step recurrent policy."
+    mechanism: |
+      ATLA-SA adds the SA-PPO regulariser to ATLA: a KL penalty between the policy at a state and
+      at the worst-case neighbour found by stochastic gradient Langevin dynamics. It also uses a
+      recurrent (LSTM) policy with a 100-step history, so that the agent can infer a persistent
+      perturbation from context.
+    notes:
+      - "Gradient-based observation attacks are not applicable to this method: a recurrent policy has no differentiable feed-forward actor to attack."
+    ref: {key: zhang2021robust, extra: [zhang2020robust]}
+    code:
+      dir: baselines/atla
+      config: robustrllib/configs/algorithm/atla_ppo_lstm_sa.yaml
+      experiment: robustrllib/configs/experiment/atla_lstm_sa_hopper.yaml
+      run:
+        - "python baselines/atla/train_atla.py -c robustrllib/configs/experiment/atla_lstm_sa_hopper.yaml --seed 0"
+    variants:
+      - {label: ATLA-SA, part1: [online, ATLA-SA], part2: [online, ATLA-SA-PPO], part3: [[hopper_online, ATLA-SA-PPO], [pusher, ATLA-SA-PPO]], backbone: PPO}
+
+  - slug: rsc
+    name: RSC
+    title: Robust RL against Spurious Correlation
+    regime: online
+    family: learner
+    base: SAC
+    claimed: semantics
+    traits: {rollout: false, adversary: false, model: true}
+    budget: "1M environment steps"
+    tagline: "Causal counterfactual replay that removes correlations a policy would exploit."
+    mechanism: |
+      RSC learns a causal graph and a dynamics model over the state variables from replayed
+      experience, then generates counterfactual transitions by intervening on the variables the
+      graph marks as non-causal for the reward. Mixing these into replay removes the spurious
+      correlations a policy would otherwise exploit.
+    ref: {key: ding2023seeing}
+    code:
+      dir: baselines/causaldro_online
+      config: robustrllib/configs/algorithm/causaldro_online.yaml
+      experiment: robustrllib/configs/experiment/causaldro_online_hopper.yaml
+      run:
+        - "python baselines/causaldro_online/train_causaldro.py --config robustrllib/configs/experiment/causaldro_online_hopper.yaml --seed 0"
+    variants:
+      - {label: RSC-SAC, part1: [online, RSC-SAC], part2: [online, RSC-SAC], part3: [[hopper_online, RSC-SAC]], backbone: SAC}
+
+  # ------------------------------------------------------------ online / environment-centric
+  - slug: rarl
+    name: RARL
+    title: Robust Adversarial Reinforcement Learning
+    regime: online
+    family: environment
+    base: "PPO / TRPO"
+    claimed: dynamic
+    traits: {rollout: true, adversary: true, model: false}
+    budget: "2M environment steps"
+    tagline: "A two-player zero-sum game against an adversary that applies external forces."
+    mechanism: |
+      RARL casts robustness as a two-player zero-sum game. An adversary applies bounded external
+      forces to the robot and is trained to minimise the protagonist's return, and the two are
+      updated in alternating blocks.
+
+      The library provides two variants that differ only in the policy optimiser. TRPO appears in
+      the library only as the base of RARL-TRPO.
+    ref: {key: pinto2017robust}
+    code:
+      dir: baselines/rarl_hopper
+      config: null
+      experiment: null
+      run:
+        - "python experiments/rarl_hopper_v5/train.py --algo ppo  --env Hopper-v5 --seed 0 --total-steps 2000000"
+        - "python experiments/rarl_hopper_v5/train.py --algo trpo --env Hopper-v5 --seed 0 --total-steps 2000000"
+        - "# the same recipe on Pusher-v5s: baselines/rarl_pusher/train.py"
+    variants:
+      - {label: RARL-PPO,  part1: [online, RARL-PPO],  part2: [online, RARL-PPO],  part3: [[hopper_online, RARL-PPO], [pusher, RARL]], backbone: PPO}
+      - {label: RARL-TRPO, part1: [online, RARL-TRPO], part2: [online, RARL-TRPO], part3: [[hopper_online, RARL-TRPO]], base: TRPO}
+
+  - slug: dr
+    name: DR
+    title: Domain Randomization
+    regime: online
+    family: environment
+    base: "SAC / PPO"
+    claimed: dynamic
+    traits: {rollout: true, adversary: false, model: false}
+    budget: "1M environment steps (DR-SAC)"
+    tagline: "Simulator parameters resampled every episode from fixed ranges."
+    mechanism: |
+      Domain randomisation samples simulator parameters from fixed ranges at every episode, so
+      that the policy meets a distribution of dynamics during training.
+
+      DR-SAC is the variant used on the standard control tasks. On the locomotion tasks it
+      randomises gravity, morphology and actuator gear, each drawn uniformly between
+      0.9 and 1.1 times its nominal value at every reset. That is half the width of the
+      evaluation grid on the same three axes, so the outer half of the grid lies outside the
+      training range. DR-PPO is used on the Isaac Lab tasks.
+    ref: {key: tobin2017domain, extra: [peng2018sim]}
+    code:
+      dir: baselines/dr
+      config: robustrllib/configs/algorithm/sac_dr.yaml
+      experiment: robustrllib/configs/experiment/dr_hopper_axis_narrow.yaml
+      randomization: robustrllib/configs/dr/mujoco_axis_narrow.yaml
+      run:
+        - "python baselines/dr/train_dr.py -c robustrllib/configs/experiment/dr_hopper_axis_narrow.yaml --seed 0"
+        - "# the isolated-shift rows of the paper: the SB3 trainer of the online methods"
+        - "python experiments/dr_sac_mujoco_v5/train.py --env Hopper-v5 --seed 0 --total-steps 1000000"
+    variants:
+      - {label: DR-SAC, part1: [online, DR-SAC], part2: [online, DR-SAC], part3: [[hopper_online, DR-SAC], [pusher, DR-SAC]], backbone: SAC}
+
+  # ------------------------------------------------------------ robust safe
+  - slug: ramu
+    name: RAMU
+    title: Risk-Averse Model Uncertainty
+    regime: safe
+    family: safe
+    base: PPO
+    claimed: dynamic
+    traits: {rollout: false, adversary: false, model: false}
+    budget: "Isaac Lab recipe"
+    tagline: "A risk measure over sampled next-state perturbations, applied to reward and cost targets."
+    mechanism: |
+      RAMU applies a risk measure over sampled next-state perturbations to both the reward and the
+      cost targets. The original method is defined for TD learners; the library's row is a PPO
+      adaptation that applies the same transform to PPO's value targets.
+    ref: {key: queeney2023risk}
+    code: {dir: null, config: null, experiment: null, run: []}
+    variants: []
+
+  - slug: spidr
+    name: SPiDR
+    title: Zero-shot safety under domain randomisation
+    regime: safe
+    family: safe
+    base: PPO
+    claimed: dynamic
+    traits: {rollout: true, adversary: false, model: true}
+    budget: "Isaac Lab recipe"
+    tagline: "Constrained learning under domain randomisation with a pessimistic cost penalty."
+    mechanism: |
+      SPiDR trains a constrained policy under domain randomisation and adds a pessimistic cost
+      penalty proportional to the disagreement of next-state predictions across sampled dynamics.
+      It runs with the original solver and a joint-limit cost budget.
+    ref: {key: as2026spidr}
+    code: {dir: null, config: null, experiment: null, run: []}
+    variants: []

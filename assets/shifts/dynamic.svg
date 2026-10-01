@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 220" role="img" aria-label="A quadruped robot walking over rough ground under a stronger gravity">
+  <rect width="360" height="220" rx="16" fill="#eef3ff"/>
+  <g fill="none" stroke="#14305e" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M0 176 L40 176 Q60 150 84 172 Q104 190 126 166 Q146 148 168 172 Q186 192 210 168 Q232 146 256 170 Q276 190 300 168 Q320 152 360 176 L360 220 L0 220 Z" fill="#d9e2f5"/>
+    <path d="M60 205 h36 M150 208 h50 M256 206 h40" stroke="#8a94a6" stroke-width="4"/>
+    <circle cx="118" cy="188" r="7" fill="#ffffff"/><circle cx="238" cy="190" r="5" fill="#ffffff"/>
+    <g transform="translate(190,120) scale(0.95)">
+      <rect x="-46" y="-22" width="92" height="34" rx="10" fill="#ffffff"/>
+      <rect x="40" y="-32" width="26" height="22" rx="6" fill="#ffffff"/>
+      <circle cx="56" cy="-21" r="3.5" fill="#14305e" stroke="none"/>
+      <path d="M-34 12 L-40 40 L-30 60 M-14 12 L-10 40 L-20 60 M14 12 L20 40 L10 60 M34 12 L40 40 L30 60"/>
+      <path d="M-46 -2 L-60 -14" />
+    </g>
+    <path d="M300 60 L300 96 M290 86 L300 98 L310 86" stroke="#2f6bff"/>
+    <text x="284" y="52" font-family="sans-serif" font-size="15" font-weight="700" fill="#2f6bff" stroke="none">g × 1.3</text>
+  </g>
+</svg>

@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <meta name="description" content="A unified library and benchmark for robust reinforcement learning algorithms.">
+  <title>Semantic shift - RobustRLlib Tutorial</title>
+  <link rel="icon" type="image/svg+xml" href="../../../assets/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="../../../assets/favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../../../assets/apple-touch-icon.png">
+  <link rel="stylesheet" href="../../../css/site.css">
+  <link rel="stylesheet" href="../../../assets/pygments.css">
+  <link rel="stylesheet" href="../../../assets/rl.css">
+  <link rel="stylesheet" href="../../../assets/book.css">
+</head>
+<body class="bk">
+<a class="bk-skip" href="#bk-content">Skip to the text</a>
+
+<header class="bk-topbar">
+  <div class="bk-topbar-inner">
+    <button type="button" class="bk-icon-button bk-topbar-menu" id="bk-toggle-nav" aria-controls="bk-sidebar" aria-label="Show or hide the pages" title="Pages">
+      <span class="fa fa-bars" aria-hidden="true"></span>
+    </button>
+    <a class="bk-brand" href="../../..">
+  <svg class="mark" viewBox="0 0 44 40" width="30" height="27" aria-hidden="true">
+        <g transform="translate(22,9)">
+        <rect x="-19" y="-3" width="8" height="6" rx="1.5" transform="rotate(-16 -15 0)" fill="#eb8787" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="-9" y="-7" width="8" height="6" rx="1.5" transform="rotate(-5 -5 -4)" fill="#cde4be" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="1" y="-7" width="8" height="6" rx="1.5" transform="rotate(5 5 -4)" fill="#bcd6eb" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="11" y="-3" width="8" height="6" rx="1.5" transform="rotate(16 15 0)" fill="#d5c8ed" stroke="#5e5d59" stroke-width="1.1"/>
+        </g>
+        <path d="M4 16 L3 34 L22 38 L41 34 L40 16 L22 20 Z" fill="#c96442" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M22 20 L41 16 L40 16 L41 34 L22 38 Z" fill="#d97757" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M6 13 Q14 11 22 17 L22 35 Q14 30 5 31 Z" fill="#faf9f5" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M38 13 Q30 11 22 17 L22 35 Q30 30 39 31 Z" fill="#faf9f5" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        </svg>
+  <span class="bk-brand-name"><span class="bk-brand-mark">Robust</span>RLlib</span>
+  <span class="bk-brand-kind">Tutorial</span>
+</a>
+    <span class="bk-topbar-space"></span>
+    <a class="bk-topbar-link" href="/">Project Page</a>
+  </div>
+</header>
+
+<div class="bk-page">
+
+  <aside class="bk-sidebar-drawer" id="bk-sidebar" aria-label="Pages of the tutorial">
+    <div class="bk-sidebar">
+      <a class="bk-brand" href="../../..">
+  <svg class="mark" viewBox="0 0 44 40" width="30" height="27" aria-hidden="true">
+        <g transform="translate(22,9)">
+        <rect x="-19" y="-3" width="8" height="6" rx="1.5" transform="rotate(-16 -15 0)" fill="#eb8787" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="-9" y="-7" width="8" height="6" rx="1.5" transform="rotate(-5 -5 -4)" fill="#cde4be" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="1" y="-7" width="8" height="6" rx="1.5" transform="rotate(5 5 -4)" fill="#bcd6eb" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="11" y="-3" width="8" height="6" rx="1.5" transform="rotate(16 15 0)" fill="#d5c8ed" stroke="#5e5d59" stroke-width="1.1"/>
+        </g>
+        <path d="M4 16 L3 34 L22 38 L41 34 L40 16 L22 20 Z" fill="#c96442" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M22 20 L41 16 L40 16 L41 34 L22 38 Z" fill="#d97757" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M6 13 Q14 11 22 17 L22 35 Q14 30 5 31 Z" fill="#faf9f5" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M38 13 Q30 11 22 17 L22 35 Q30 30 39 31 Z" fill="#faf9f5" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        </svg>
+  <span class="bk-brand-name"><span class="bk-brand-mark">Robust</span>RLlib</span>
+  <span class="bk-brand-kind">Tutorial</span>
+</a>
+      <button type="button" class="bk-search-button" id="bk-search-open" aria-haspopup="dialog">
+        <span class="fa fa-search" aria-hidden="true"></span>
+        <span class="bk-search-label">Search</span>
+      </button>
+      <nav class="bk-nav" aria-label="Pages">
+        <ul class="bk-nav-list bk-nav-depth-0">
+  <li><a class="bk-nav-link" href="../../..">Home</a></li>
+</ul>
+        <p class="bk-caption">Getting Started</p>
+        <ul class="bk-nav-list bk-nav-depth-1">
+  <li><a class="bk-nav-link" href="../../../getting-started/overview/">Overview</a></li>
+  <li><a class="bk-nav-link" href="../../../getting-started/quick-start/">Quick Start</a></li>
+</ul>
+        <p class="bk-caption">Algorithms</p>
+        <ul class="bk-nav-list bk-nav-depth-1">
+  <li><a class="bk-nav-link" href="../../../algorithms/">All Methods</a></li>
+  <li class="bk-nav-group">
+    <details>
+      <summary>Standard</summary>
+      <ul class="bk-nav-list bk-nav-depth-2">
+  <li><a class="bk-nav-link" href="../../../algorithms/standard/">Overview</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/standard/iql/">IQL</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/standard/td3bc/">TD3+BC</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/standard/mopo/">MOPO</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/standard/synther/">SynthER</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/standard/ppo/">PPO</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/standard/sac/">SAC</a></li>
+</ul>
+    </details>
+  </li>
+  <li class="bk-nav-group">
+    <details>
+      <summary>Robust Online</summary>
+      <ul class="bk-nav-list bk-nav-depth-2">
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-online/">Overview</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-online/atla/">ATLA</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-online/atla-sa/">ATLA-SA</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-online/rsc/">RSC</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-online/rarl/">RARL</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-online/dr/">DR</a></li>
+</ul>
+    </details>
+  </li>
+  <li class="bk-nav-group">
+    <details>
+      <summary>Robust Offline</summary>
+      <ul class="bk-nav-list bk-nav-depth-2">
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-offline/">Overview</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-offline/rfqi/">RFQI</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-offline/rorl/">RORL</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-offline/atla-iql/">ATLA-IQL</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-offline/rsc-iql/">RSC-IQL</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-offline/rambo/">RAMBO</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-offline/romb/">ROMB</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-offline/fwm/">FWM</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-offline/plr-pvl/">PLR-PVL</a></li>
+</ul>
+    </details>
+  </li>
+  <li class="bk-nav-group">
+    <details>
+      <summary>Robust Safe</summary>
+      <ul class="bk-nav-list bk-nav-depth-2">
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-safe/">Overview</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-safe/ramu/">RAMU</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-safe/spidr/">SPiDR</a></li>
+</ul>
+    </details>
+  </li>
+  <li><a class="bk-nav-link" href="../../../algorithms/run-a-method/">Run a Method</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/add-an-algorithm/">Add an Algorithm</a></li>
+</ul>
+        <p class="bk-caption">Shift Sources and Modes</p>
+        <ul class="bk-nav-list bk-nav-depth-1">
+  <li><a class="bk-nav-link" href="../../">Overview</a></li>
+  <li class="bk-nav-group">
+    <details open>
+      <summary>Shift Sources</summary>
+      <ul class="bk-nav-list bk-nav-depth-2">
+  <li><a class="bk-nav-link" href="../dynamic/">Dynamic shift</a></li>
+  <li><a class="bk-nav-link" href="../observation/">Observation shift</a></li>
+  <li><a class="bk-nav-link" href="../action/">Action shift</a></li>
+  <li><a class="bk-nav-link" href="../reward-cost/">Reward/cost shift</a></li>
+  <li><a class="bk-nav-link" href="../latency/">Latency shift</a></li>
+  <li><a class="bk-nav-link is-active" href="./" aria-current="page">Semantic shift</a></li>
+</ul>
+    </details>
+  </li>
+  <li class="bk-nav-group">
+    <details>
+      <summary>Shift Modes</summary>
+      <ul class="bk-nav-list bk-nav-depth-2">
+  <li><a class="bk-nav-link" href="../../modes/stochastic/">Stochastic</a></li>
+  <li><a class="bk-nav-link" href="../../modes/adversarial/">Adversarial</a></li>
+  <li><a class="bk-nav-link" href="../../modes/parametric/">Parametric</a></li>
+  <li><a class="bk-nav-link" href="../../modes/non-stationary/">Non-stationary</a></li>
+  <li><a class="bk-nav-link" href="../../modes/composition/">Composition</a></li>
+</ul>
+    </details>
+  </li>
+  <li><a class="bk-nav-link" href="../../add-a-backend/">Add a Backend</a></li>
+</ul>
+        <p class="bk-caption">Evaluation</p>
+        <ul class="bk-nav-list bk-nav-depth-1">
+  <li><a class="bk-nav-link" href="../../../evaluation/protocol/">Evaluation Protocol</a></li>
+</ul>
+      </nav>
+    </div>
+  </aside>
+
+  <div class="bk-main">
+    <div class="bk-content">
+      <div class="bk-tools">
+        <button type="button" class="bk-icon-button" id="bk-toggle-toc" aria-controls="bk-toc" aria-label="Show or hide the contents of this page" title="On this page">
+          <span class="fa fa-list-ul" aria-hidden="true"></span>
+        </button>
+      </div>
+
+      <main class="bk-article" id="bk-content">
+        <h1 id="semantic-shift">Semantic shift<a class="headerlink" href="#semantic-shift" title="Permanent link">&para;</a></h1>
+<p>A Semantic shift changes what the scene looks like and where things are. It edits the colour of
+objects, the lights and the cameras, and it displaces objects and cameras by a position offset.</p>
+<p><img alt="The loop between agent and environment, with the Semantic shift highlighted" src="../../../assets/figures/shift-loop-semantic.svg" width="760" /></p>
+<p><em>The Semantic shift acts on the scene, and through it on the observation, the transition and the reward.</em></p>
+<p><img alt="Three renderings of a manipulation scene: nominal, with changed object colours, and with a displaced object" src="../../../assets/figures/semantic.png" width="720" /></p>
+<p><em>A nominal scene, an appearance change and a displacement.</em></p>
+<h2 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Semantic shift</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Perturbs</td>
+<td>Geom colours, lights, cameras, and the position of objects and cameras</td>
+</tr>
+<tr>
+<td>Targets in code</td>
+<td><code>appearance</code>; <code>dynamics</code> with the mode name <code>translate</code> for position offsets</td>
+</tr>
+<tr>
+<td>Modes</td>
+<td>Stochastic, Parametric, Non-stationary, Composition</td>
+</tr>
+<tr>
+<td>Applied</td>
+<td>At every <code>reset</code>; with a schedule before every step</td>
+</tr>
+<tr>
+<td>Acts on a frozen policy</td>
+<td>Yes, for policies that read rendered images or object positions</td>
+</tr>
+<tr>
+<td>Backends</td>
+<td>MuJoCo</td>
+</tr>
+</tbody>
+</table>
+<h2 id="supported-modes">Supported modes<a class="headerlink" href="#supported-modes" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Mode name in code</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../../modes/parametric/">Parametric</a></td>
+<td><code>hue</code></td>
+<td>Rotates the colour of a geom in hue and keeps saturation and brightness</td>
+</tr>
+<tr>
+<td><a href="../../modes/parametric/">Parametric</a></td>
+<td><code>tint</code></td>
+<td>Sets the colour of a geom to a saturated hue</td>
+</tr>
+<tr>
+<td><a href="../../modes/parametric/">Parametric</a></td>
+<td><code>swap</code></td>
+<td>Exchanges the colours of two geoms</td>
+</tr>
+<tr>
+<td><a href="../../modes/parametric/">Parametric</a></td>
+<td><code>scale</code>, <code>set</code></td>
+<td>Scales or sets a light or camera parameter</td>
+</tr>
+<tr>
+<td><a href="../../modes/parametric/">Parametric</a></td>
+<td><code>translate</code></td>
+<td>Adds an offset in metres to the position of an object, a camera or a light</td>
+</tr>
+<tr>
+<td><a href="../../modes/stochastic/">Stochastic</a></td>
+<td><code>gauss</code>, <code>uniform</code>, <code>loguniform</code></td>
+<td>Draws a factor on a light or camera parameter once per episode</td>
+</tr>
+<tr>
+<td><a href="../../modes/non-stationary/">Non-stationary</a></td>
+<td><code>schedule</code> on <code>hue</code>, <code>tint</code>, <code>swap</code>, <code>scale</code> and <code>translate</code></td>
+<td>Varies the rotation, the blend or the offset within the episode</td>
+</tr>
+<tr>
+<td><a href="../../modes/composition/">Composition</a></td>
+<td>Several shifts in one list</td>
+<td>Crosses an appearance change with a displacement</td>
+</tr>
+</tbody>
+</table>
+<p>The Adversarial mode is not defined for this shift.</p>
+<h2 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">&para;</a></h2>
+<p>Colour mode names on the target <code>appearance</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Mode name</th>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>hue</code>, <code>tint</code></td>
+<td><code>geom_prefix</code></td>
+<td>str or list</td>
+<td>none</td>
+<td>Every visible geom whose name starts with the prefix</td>
+</tr>
+<tr>
+<td></td>
+<td><code>geoms</code></td>
+<td>list</td>
+<td>none</td>
+<td>Geoms by name or position</td>
+</tr>
+<tr>
+<td></td>
+<td><code>geom</code></td>
+<td>str or int</td>
+<td>none</td>
+<td>One geom</td>
+</tr>
+<tr>
+<td><code>hue</code></td>
+<td><code>degrees</code></td>
+<td>float</td>
+<td><code>0.0</code></td>
+<td>Rotation of the hue</td>
+</tr>
+<tr>
+<td><code>tint</code></td>
+<td><code>degrees</code></td>
+<td>float</td>
+<td><code>0.0</code></td>
+<td>Hue of the colour that is set, as an angle</td>
+</tr>
+<tr>
+<td></td>
+<td><code>saturation</code></td>
+<td>float</td>
+<td><code>0.85</code></td>
+<td>Saturation of that colour</td>
+</tr>
+<tr>
+<td></td>
+<td><code>value</code></td>
+<td>float</td>
+<td><code>1.0</code></td>
+<td>Brightness of that colour</td>
+</tr>
+<tr>
+<td><code>swap</code></td>
+<td><code>geom_a</code>, <code>geom_b</code></td>
+<td>str or int</td>
+<td>required</td>
+<td>The two geoms that exchange colours</td>
+</tr>
+</tbody>
+</table>
+<p>One of <code>geom_prefix</code>, <code>geoms</code> and <code>geom</code> is required; the first one present in this order is
+used.</p>
+<p>Lights, cameras and positions:</p>
+<table>
+<thead>
+<tr>
+<th>Mode name</th>
+<th>Target</th>
+<th>Parameter</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>scale</code>, <code>set</code>, <code>gauss</code>, <code>uniform</code>, <code>loguniform</code></td>
+<td><code>appearance</code></td>
+<td><code>param</code>, <code>index</code> and the parameters of the mode name</td>
+<td>As for the <a href="../dynamic/">Dynamic shift</a>, on the names below</td>
+</tr>
+<tr>
+<td><code>translate</code></td>
+<td><code>appearance</code></td>
+<td><code>param</code>, <code>index</code>, <code>offset</code></td>
+<td>Offset on <code>light_pos</code> or <code>cam_pos</code></td>
+</tr>
+<tr>
+<td><code>translate</code></td>
+<td><code>dynamics</code></td>
+<td><code>param</code>, <code>index</code>, <code>offset</code></td>
+<td>Offset on <code>cam_pos</code>, <code>body_pos_xyz</code> or <code>freejoint_pos</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th><code>param</code></th>
+<th>Edits</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>geom_rgba</code>, <code>mat_rgba</code></td>
+<td>Colour of a geom or of a material</td>
+</tr>
+<tr>
+<td><code>light_diffuse</code>, <code>light_ambient</code>, <code>light_pos</code></td>
+<td>Colour and position of a light</td>
+</tr>
+<tr>
+<td><code>cam_pos</code>, <code>cam_quat</code>, <code>cam_fovy</code></td>
+<td>Position, orientation and field of view of a camera</td>
+</tr>
+<tr>
+<td><code>body_pos_xyz</code></td>
+<td>Position of a body that is fixed to its parent</td>
+</tr>
+<tr>
+<td><code>freejoint_pos</code></td>
+<td>Position of a free-floating object</td>
+</tr>
+</tbody>
+</table>
+<h2 id="declare-the-shift">Declare the shift<a class="headerlink" href="#declare-the-shift" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">robustrllib</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_robust</span><span class="p">,</span> <span class="n">ShiftSpec</span>
+
+<span class="n">BODY</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"torso_geom"</span><span class="p">,</span> <span class="s2">"thigh_geom"</span><span class="p">,</span> <span class="s2">"leg_geom"</span><span class="p">,</span> <span class="s2">"foot_geom"</span><span class="p">]</span>
+
+<span class="n">PARAMETRIC</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"hue"</span><span class="p">:</span>   <span class="n">ShiftSpec</span><span class="p">(</span><span class="s2">"appearance"</span><span class="p">,</span> <span class="s2">"hue"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"geoms"</span><span class="p">:</span> <span class="n">BODY</span><span class="p">,</span> <span class="s2">"degrees"</span><span class="p">:</span> <span class="mi">60</span><span class="p">}),</span>
+    <span class="s2">"tint"</span><span class="p">:</span>  <span class="n">ShiftSpec</span><span class="p">(</span><span class="s2">"appearance"</span><span class="p">,</span> <span class="s2">"tint"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"geom"</span><span class="p">:</span> <span class="s2">"torso_geom"</span><span class="p">,</span> <span class="s2">"degrees"</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span> <span class="s2">"saturation"</span><span class="p">:</span> <span class="mf">0.85</span><span class="p">}),</span>
+    <span class="s2">"swap"</span><span class="p">:</span>  <span class="n">ShiftSpec</span><span class="p">(</span><span class="s2">"appearance"</span><span class="p">,</span> <span class="s2">"swap"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"geom_a"</span><span class="p">:</span> <span class="s2">"torso_geom"</span><span class="p">,</span> <span class="s2">"geom_b"</span><span class="p">:</span> <span class="s2">"floor"</span><span class="p">}),</span>
+    <span class="s2">"scale"</span><span class="p">:</span> <span class="n">ShiftSpec</span><span class="p">(</span><span class="s2">"appearance"</span><span class="p">,</span> <span class="s2">"scale"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"param"</span><span class="p">:</span> <span class="s2">"light_diffuse"</span><span class="p">,</span> <span class="s2">"index"</span><span class="p">:</span> <span class="s2">"all"</span><span class="p">,</span> <span class="s2">"factor"</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">}),</span>
+    <span class="s2">"set"</span><span class="p">:</span>   <span class="n">ShiftSpec</span><span class="p">(</span><span class="s2">"appearance"</span><span class="p">,</span> <span class="s2">"set"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"param"</span><span class="p">:</span> <span class="s2">"cam_fovy"</span><span class="p">,</span> <span class="s2">"index"</span><span class="p">:</span> <span class="s2">"track"</span><span class="p">,</span> <span class="s2">"value"</span><span class="p">:</span> <span class="mf">60.0</span><span class="p">}),</span>
+<span class="p">}</span>
+<span class="n">STOCHASTIC</span> <span class="o">=</span> <span class="n">ShiftSpec</span><span class="p">(</span><span class="s2">"appearance"</span><span class="p">,</span> <span class="s2">"uniform"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"param"</span><span class="p">:</span> <span class="s2">"light_diffuse"</span><span class="p">,</span> <span class="s2">"index"</span><span class="p">:</span> <span class="s2">"all"</span><span class="p">,</span>
+                                                 <span class="s2">"low"</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s2">"high"</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">})</span>
+</code></pre></div>
+<p>Position offsets, as the semantic grids write them:</p>
+<div class="highlight"><pre><span></span><code><span class="n">DISPLACEMENT</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"camera"</span><span class="p">:</span> <span class="n">ShiftSpec</span><span class="p">(</span><span class="s2">"dynamics"</span><span class="p">,</span> <span class="s2">"translate"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"param"</span><span class="p">:</span> <span class="s2">"cam_pos"</span><span class="p">,</span> <span class="s2">"index"</span><span class="p">:</span> <span class="s2">"track"</span><span class="p">,</span>
+                                                  <span class="s2">"offset"</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.02</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]}),</span>
+    <span class="s2">"body"</span><span class="p">:</span>   <span class="n">ShiftSpec</span><span class="p">(</span><span class="s2">"dynamics"</span><span class="p">,</span> <span class="s2">"translate"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"param"</span><span class="p">:</span> <span class="s2">"body_pos_xyz"</span><span class="p">,</span> <span class="s2">"index"</span><span class="p">:</span> <span class="s2">"foot"</span><span class="p">,</span>
+                                                  <span class="s2">"offset"</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.06</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]}),</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Non-stationary, with a colour that changes gradually within the episode:</p>
+<div class="highlight"><pre><span></span><code><span class="n">NON_STATIONARY</span> <span class="o">=</span> <span class="n">ShiftSpec</span><span class="p">(</span>
+    <span class="s2">"appearance"</span><span class="p">,</span> <span class="s2">"hue"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"geoms"</span><span class="p">:</span> <span class="n">BODY</span><span class="p">,</span> <span class="s2">"degrees"</span><span class="p">:</span> <span class="mi">120</span><span class="p">},</span>
+    <span class="n">schedule</span><span class="o">=</span><span class="p">{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"linear"</span><span class="p">,</span> <span class="s2">"start"</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">"end"</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s2">"t0"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">"t1"</span><span class="p">:</span> <span class="mi">500</span><span class="p">},</span>
+<span class="p">)</span>
+</code></pre></div>
+<p>Composition of an appearance change and a displacement:</p>
+<div class="highlight"><pre><span></span><code><span class="n">COMPOSITION</span> <span class="o">=</span> <span class="p">[</span><span class="n">PARAMETRIC</span><span class="p">[</span><span class="s2">"hue"</span><span class="p">],</span> <span class="n">DISPLACEMENT</span><span class="p">[</span><span class="s2">"body"</span><span class="p">]]</span>
+<span class="n">env</span> <span class="o">=</span> <span class="n">make_robust</span><span class="p">(</span><span class="s2">"Hopper-v5"</span><span class="p">,</span> <span class="n">shifts</span><span class="o">=</span><span class="n">COMPOSITION</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</code></pre></div>
+<p>The colour of a geom is read from the model.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="n">nominal</span> <span class="o">=</span> <span class="n">make_robust</span><span class="p">(</span><span class="s2">"Hopper-v5"</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">nominal</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">shifted</span> <span class="o">=</span> <span class="n">make_robust</span><span class="p">(</span><span class="s2">"Hopper-v5"</span><span class="p">,</span> <span class="n">shifts</span><span class="o">=</span><span class="p">[</span><span class="n">ShiftSpec</span><span class="p">(</span>
+    <span class="s2">"appearance"</span><span class="p">,</span> <span class="s2">"hue"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"geom"</span><span class="p">:</span> <span class="s2">"torso_geom"</span><span class="p">,</span> <span class="s2">"degrees"</span><span class="p">:</span> <span class="mi">180</span><span class="p">})],</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">shifted</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">torso</span> <span class="o">=</span> <span class="mi">1</span>          <span class="c1"># position of torso_geom in the model</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">nominal</span><span class="o">.</span><span class="n">unwrapped</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">geom_rgba</span><span class="p">[</span><span class="n">torso</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">],</span> <span class="mi">2</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">shifted</span><span class="o">.</span><span class="n">unwrapped</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">geom_rgba</span><span class="p">[</span><span class="n">torso</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">],</span> <span class="mi">2</span><span class="p">))</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>[0.8 0.6 0.4]
+[0.4 0.6 0.8]
+</code></pre></div>
+<p>On a task whose object changes between resets, a prefix names the object instead of its geoms.
+The grid entries below tint two objects of a manipulation scene.</p>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="nv">appearance</span><span class="p p-Indicator">,</span><span class="nt"> mode</span><span class="p">:</span><span class="w"> </span><span class="nv">tint</span><span class="p p-Indicator">,</span><span class="nt"> params</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">geom_prefix</span><span class="p">:</span><span class="w"> </span><span class="nv">obj_0</span><span class="p p-Indicator">,</span><span class="nt"> degrees</span><span class="p">:</span><span class="w"> </span><span class="nv">210</span><span class="p p-Indicator">}}</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="nv">appearance</span><span class="p p-Indicator">,</span><span class="nt"> mode</span><span class="p">:</span><span class="w"> </span><span class="nv">tint</span><span class="p p-Indicator">,</span><span class="nt"> params</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">geom_prefix</span><span class="p">:</span><span class="w"> </span><span class="nv">obj_1</span><span class="p p-Indicator">,</span><span class="nt"> degrees</span><span class="p">:</span><span class="w"> </span><span class="nv">30</span><span class="p p-Indicator">}}</span>
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The observation of <code>Hopper-v5</code> is a state vector, so a colour change does not alter it. The
+shift matters for policies that read rendered images.</p>
+</div>
+<h2 id="rules">Rules<a class="headerlink" href="#rules" title="Permanent link">&para;</a></h2>
+<ul>
+<li><code>hue</code> is written for geoms whose own colour is rendered; <code>tint</code> for geoms whose colour comes
+  from a texture.</li>
+<li><strong>A colour shift that cannot change the rendered colour raises <code>ValueError</code></strong>: <code>hue</code> on a
+  white, grey or black geom, and <code>swap</code> between two geoms of the same colour.</li>
+<li><code>swap</code> is written when the instruction names a colour and two objects should exchange theirs.</li>
+<li>A displacement is an offset in metres, written with <code>translate</code>; a scale factor cannot express
+  it.</li>
+<li>The offset is added to the position the task gave the entity in the current episode.</li>
+<li><code>geom_prefix</code> is written for objects whose number of geoms changes between resets.</li>
+</ul>
+      </main>
+
+      <footer class="bk-footer">
+        <nav class="bk-related" aria-label="Previous and next page">
+          <a class="bk-prev" href="../latency/">
+            <span class="fa fa-arrow-left" aria-hidden="true"></span>
+            <span class="bk-related-text"><span class="bk-related-label">Previous</span><span class="bk-related-title">Latency shift</span></span>
+          </a>
+          <a class="bk-next" href="../../modes/stochastic/">
+            <span class="bk-related-text"><span class="bk-related-label">Next</span><span class="bk-related-title">Stochastic</span></span>
+            <span class="fa fa-arrow-right" aria-hidden="true"></span>
+          </a>
+        </nav>
+        <p class="bk-footnote">RobustRLlib · Anonymous submission under double-blind review.</p>
+      </footer>
+    </div>
+
+    <aside class="bk-toc-drawer" id="bk-toc" aria-label="Contents of this page">
+      <div class="bk-toc">
+        <p class="bk-toc-title">On this page</p>
+        <nav class="bk-toc-tree" aria-label="Sections">
+          <ul class="bk-toc-list bk-toc-depth-1">
+  <li><a class="bk-toc-link" href="#properties">Properties</a>
+  </li>
+  <li><a class="bk-toc-link" href="#supported-modes">Supported modes</a>
+  </li>
+  <li><a class="bk-toc-link" href="#parameters">Parameters</a>
+  </li>
+  <li><a class="bk-toc-link" href="#declare-the-shift">Declare the shift</a>
+  </li>
+  <li><a class="bk-toc-link" href="#rules">Rules</a>
+  </li>
+</ul>
+        </nav>
+      </div>
+    </aside>
+  </div>
+
+</div>
+
+<div class="bk-backdrop" id="bk-backdrop" hidden></div>
+<div class="bk-search" id="bk-search" role="dialog" aria-modal="true" aria-label="Search the tutorial" hidden>
+  <div class="bk-search-panel">
+    <div class="bk-search-field">
+      <span class="fa fa-search" aria-hidden="true"></span>
+      <input type="search" id="mkdocs-search-query" name="q" placeholder="Search the tutorial" aria-label="Search the tutorial" autocomplete="off" spellcheck="false">
+      <button type="button" class="bk-icon-button" id="bk-search-close" aria-label="Close the search"><span class="fa fa-times" aria-hidden="true"></span></button>
+    </div>
+    <div class="bk-search-results" id="mkdocs-search-results" data-no-results-text="Nothing found"></div>
+  </div>
+</div>
+
+<script>var base_url = "../../..";</script>
+<script src="../../../js/site.js"></script>
+<script src="../../../search/main.js"></script>
+</body>
+</html>

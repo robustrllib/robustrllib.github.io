@@ -1,0 +1,9 @@
+{% extends "main.html" %}
+
+{% block title %}Page not found - {{ config.site_name }}{% endblock %}
+
+{% block content %}
+<h1>Page not found</h1>
+<p>There is no page at this address.</p>
+<p><a href="{{ nav.homepage.url|url if nav.homepage else base_url }}">Go to the start of the tutorial</a></p>
+{% endblock %}

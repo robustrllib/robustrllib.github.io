@@ -1,0 +1,249 @@
+# The shift toolbox of the landing page: six sources, five modes, and what each
+# source offers in each mode. tools/sync_landing.py writes the toolbox from this file.
+# The mode names and the examples follow the tutorial pages under content/shifts/.
+#
+# example.image is a drawing that stands in for a rendered scene; replace the file
+# (or the path) when a rendering is ready, and keep the caption in step with it.
+
+modes:
+  - key: stochastic
+    name: Stochastic
+    blurb: Drawn from the seeded random generator of the wrapper.
+    page: docs/shifts/modes/stochastic/
+  - key: adversarial
+    name: Adversarial
+    blurb: Computed from the current observation or action to counter the policy.
+    page: docs/shifts/modes/adversarial/
+  - key: parametric
+    name: Parametric
+    blurb: Fixed by its parameters.
+    page: docs/shifts/modes/parametric/
+  - key: non-stationary
+    name: Non-stationary
+    blurb: A stationary shift whose intensity follows a schedule within the episode.
+    page: docs/shifts/modes/non-stationary/
+  - key: composition
+    name: Composition
+    blurb: Several shifts acting at once; the order of the list is the order of stacking.
+    page: docs/shifts/modes/composition/
+
+sources:
+  - key: dynamic
+    name: Dynamic shift
+    target: dynamics
+    blurb: Physical parameters, external forces, the simulator state.
+    page: docs/shifts/sources/dynamic/
+    example:
+      image: assets/shifts/dynamic.svg
+      caption: A legged robot on ground that is rougher than the ground it was trained on.
+    modes:
+      stochastic:
+        names: [gauss, uniform, loguniform, push]
+        note: A new value of the parameter is drawn at every reset; a push is an intermittent force.
+        code: |-
+          ShiftSpec("dynamics", "uniform",
+                    {"param": "gravity",
+                    "low": 0.8, "high": 1.2})
+      parametric:
+        names: [scale, set, translate]
+        note: One assignment, scale or offset of a physical parameter, held for the episode.
+        code: |-
+          ShiftSpec("dynamics", "scale",
+                    {"param": "gravity", "factor": 1.3})
+      non-stationary:
+        names: [scale, translate, push]
+        note: The factor, the offset or the force follows a schedule within the episode.
+        code: |-
+          ShiftSpec("dynamics", "scale",
+                    {"param": "gravity", "factor": 1.0},
+                    schedule={"type": "linear", "start": 1.0,
+                              "end": 1.2, "t0": 0, "t1": 200})
+      composition:
+        note: A physical parameter and a control delay, stacked in the order of the list.
+        code: |-
+          [ShiftSpec("dynamics", "scale",
+                     {"param": "gravity", "factor": 1.2}),
+           ShiftSpec("latency", "fixed", {"steps": 1})]
+
+  - key: observation
+    name: Observation shift
+    target: observation
+    blurb: The observation returned to the policy.
+    page: docs/shifts/sources/observation/
+    example:
+      image: assets/shifts/observation.svg
+      caption: The sensors report a scene that is noisier than the one the policy learned from.
+    modes:
+      stochastic:
+        names: [gauss, uniform, relative, bias]
+        note: Noise on the observation at every step, or a bias drawn once per episode.
+        code: 'ShiftSpec("observation", "gauss", {"sigma": 0.05})'
+      adversarial:
+        names: [adversarial]
+        note: A bounded perturbation of the observation, computed against the policy that is bound to the wrapper.
+        code: |-
+          ShiftSpec("observation", "adversarial",
+                    {"eps": 0.05, "steps": 10,
+                    "actor": actor})
+      parametric:
+        names: [shift]
+        note: A fixed offset of every observed value.
+        code: 'ShiftSpec("observation", "shift", {"shift": 0.01})'
+      non-stationary:
+        names: [gauss, uniform, shift, relative, bias, adversarial]
+        note: The noise level or the offset follows a schedule within the episode.
+        code: |-
+          ShiftSpec("observation", "gauss", {"sigma": 0.1},
+                    schedule={"type": "step", "start": 0.0,
+                              "end": 1.0, "t1": 100})
+      composition:
+        note: Observation noise on top of a shifted dynamic.
+        code: |-
+          [ShiftSpec("dynamics", "scale",
+                     {"param": "gravity", "factor": 1.3}),
+           ShiftSpec("observation", "gauss", {"sigma": 0.05})]
+
+  - key: action
+    name: Action shift
+    target: action
+    blurb: The action between policy and simulator.
+    page: docs/shifts/sources/action/
+    example:
+      image: assets/shifts/action.svg
+      caption: The arm was told one motion and executed another.
+    modes:
+      stochastic:
+        names: [gauss, uniform]
+        note: Noise on the executed action at every step.
+        code: |-
+          ShiftSpec("action", "gauss",
+                    {"sigma": 0.10, "clip_first": True})
+      adversarial:
+        names: [adversarial, oppose, rotate, oppose_goal]
+        note: The executed action is turned against the policy, within a bound.
+        code: |-
+          ShiftSpec("action", "oppose",
+                    {"eps": 0.2, "clip_first": True})
+      parametric:
+        names: [shift]
+        note: A fixed offset of every action.
+        code: |-
+          ShiftSpec("action", "shift",
+                    {"shift": 0.05, "clip_first": True})
+      non-stationary:
+        names: [gauss, uniform, shift, oppose, rotate, oppose_goal, adversarial]
+        note: The noise level, the offset or the bound follows a schedule within the episode.
+        code: |-
+          ShiftSpec("action", "oppose",
+                    {"eps": 0.2, "clip_first": True},
+                    schedule={"type": "sine", "start": 0.0,
+                              "end": 1.0, "period": 200})
+      composition:
+        note: Actuator noise on top of an observation shift.
+        code: |-
+          [ShiftSpec("observation", "gauss", {"sigma": 0.05}),
+           ShiftSpec("action", "gauss",
+                     {"sigma": 0.10, "clip_first": True})]
+
+  - key: reward-cost
+    name: Reward/cost shift
+    target: reward
+    blurb: The reward, or the cost of a constrained task.
+    page: docs/shifts/sources/reward-cost/
+    example:
+      image: assets/shifts/reward-cost.svg
+      caption: The learning signal arrives with noise, or with an offset the policy never saw.
+    modes:
+      stochastic:
+        names: [gauss, uniform]
+        note: Noise on the reward, or on a cost field of the info dictionary.
+        code: 'ShiftSpec("reward", "gauss", {"sigma": 0.5})'
+      parametric:
+        names: [shift]
+        note: A fixed offset of the reward.
+        code: 'ShiftSpec("reward", "shift", {"shift": -0.5})'
+      non-stationary:
+        names: [gauss, uniform, shift]
+        note: The noise level or the offset follows a schedule within the episode.
+        code: |-
+          ShiftSpec("reward", "gauss", {"sigma": 0.5},
+                    schedule={"type": "linear", "start": 0.0,
+                              "end": 1.0, "t0": 0, "t1": 500})
+      composition:
+        note: Reward noise on top of a dynamic shift.
+        code: |-
+          [ShiftSpec("dynamics", "scale",
+                     {"param": "gravity", "factor": 1.2}),
+           ShiftSpec("reward", "gauss", {"sigma": 0.5})]
+
+  - key: latency
+    name: Latency shift
+    target: latency
+    blurb: When actions, observations and rewards arrive.
+    page: docs/shifts/sources/latency/
+    example:
+      image: assets/shifts/latency.svg
+      caption: A command issued now takes effect two control steps later.
+    modes:
+      stochastic:
+        names: [buffer, substep, interp]
+        note: A delay drawn per episode, a control period drawn per step, or an interpolated observation delay.
+        code: 'ShiftSpec("latency", "buffer", {"low": 0, "high": 2})'
+      parametric:
+        names: [fixed, delay]
+        note: A fixed action delay, or a reward paid a fixed number of steps late.
+        code: 'ShiftSpec("latency", "fixed", {"steps": 2})'
+      non-stationary:
+        names: [substep, interp]
+        note: The excess of the control period or the delay follows a schedule within the episode.
+        code: |-
+          ShiftSpec("latency", "interp",
+                    {"low": 0.004, "high": 0.004},
+                    schedule={"type": "linear", "start": 0.0,
+                              "end": 1.0, "t0": 0, "t1": 300})
+      composition:
+        note: A delay on top of a dynamic shift and observation noise.
+        code: |-
+          [ShiftSpec("dynamics", "scale",
+                     {"param": "gravity", "factor": 1.2}),
+           ShiftSpec("observation", "gauss", {"sigma": 0.05}),
+           ShiftSpec("latency", "fixed", {"steps": 1})]
+
+  - key: semantic
+    name: Semantic shift
+    target: appearance
+    blurb: Colours, lights, cameras and object positions.
+    page: docs/shifts/sources/semantic/
+    example:
+      image: assets/shifts/semantic.svg
+      caption: The same room, with the lights and the colours the policy did not see in training.
+    modes:
+      stochastic:
+        names: [gauss, uniform, loguniform]
+        note: A lighting or camera parameter drawn at every reset.
+        code: |-
+          ShiftSpec("appearance", "uniform",
+                    {"param": "light_diffuse", "index": "all",
+                    "low": 0.5, "high": 1.0})
+      parametric:
+        names: [hue, tint, swap, scale, set, translate]
+        note: A colour, a light, a camera or an object position, set for the episode.
+        code: |-
+          ShiftSpec("appearance", "hue",
+                    {"geom": "torso_geom", "degrees": 120})
+      non-stationary:
+        names: [hue, tint, swap, scale, translate]
+        note: The angle, the blend or the factor follows a schedule within the episode.
+        code: |-
+          ShiftSpec("appearance", "scale",
+                    {"param": "light_diffuse",
+                    "index": "all", "factor": 0.5},
+                    schedule={"type": "linear", "start": 1.0,
+                              "end": 0.0, "t0": 0, "t1": 400})
+      composition:
+        note: A changed appearance on top of a dynamic shift.
+        code: |-
+          [ShiftSpec("dynamics", "scale",
+                     {"param": "gravity", "factor": 1.2}),
+           ShiftSpec("appearance", "hue",
+                     {"geom": "torso_geom", "degrees": 120})]

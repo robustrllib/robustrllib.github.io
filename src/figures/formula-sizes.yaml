@@ -1,0 +1,19 @@
+# written by tools/render_figures.py: width and height of each formula, in pixels
+action:
+- 125
+- 21
+dynamic:
+- 119
+- 21
+latency:
+- 381
+- 25
+observation:
+- 104
+- 21
+reward-cost:
+- 224
+- 21
+semantic:
+- 435
+- 21

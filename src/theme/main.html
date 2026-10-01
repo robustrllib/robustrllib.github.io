@@ -1,0 +1,195 @@
+{#- The page of the documentation: a bar across the top, the pages on the left, the
+    text in the middle, the sections of the page on the right.
+
+    The paper is under double-blind review. This template prints no repository link,
+    no edit link, no author, no date and no link that leaves the site. -#}
+{%- macro nav_list(items, depth) -%}
+<ul class="bk-nav-list bk-nav-depth-{{ depth }}">
+{%- for item in items %}
+  {%- if item.is_section %}
+  <li class="bk-nav-group">
+    <details{% if item.active %} open{% endif %}>
+      <summary>{{ item.title }}</summary>
+      {{ nav_list(item.children, depth + 1) }}
+    </details>
+  </li>
+  {%- elif item.is_link %}
+  <li><a class="bk-nav-link" href="{{ item.url }}">{{ item.title }}</a></li>
+  {%- else %}
+  <li><a class="bk-nav-link{% if item.active %} is-active{% endif %}" href="{{ item.url|url }}"{% if item.active %} aria-current="page"{% endif %}>{{ item.title }}</a></li>
+  {%- endif %}
+{%- endfor %}
+</ul>
+{%- endmacro -%}
+
+{%- macro toc_list(items, depth) -%}
+<ul class="bk-toc-list bk-toc-depth-{{ depth }}">
+{%- for item in items %}
+  <li><a class="bk-toc-link" href="{{ item.url }}">{{ item.title }}</a>
+  {%- if item.children and depth < 2 %}
+    {{ toc_list(item.children, depth + 1) }}
+  {%- endif %}
+  </li>
+{%- endfor %}
+</ul>
+{%- endmacro -%}
+
+{#- The name of the site, written as on the project page. -#}
+{%- macro brand() -%}
+<a class="bk-brand" href="{{ nav.homepage.url|url if nav.homepage else base_url }}">
+  <svg class="mark" viewBox="0 0 44 40" width="30" height="27" aria-hidden="true">
+        <g transform="translate(22,9)">
+        <rect x="-19" y="-3" width="8" height="6" rx="1.5" transform="rotate(-16 -15 0)" fill="#eb8787" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="-9" y="-7" width="8" height="6" rx="1.5" transform="rotate(-5 -5 -4)" fill="#cde4be" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="1" y="-7" width="8" height="6" rx="1.5" transform="rotate(5 5 -4)" fill="#bcd6eb" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="11" y="-3" width="8" height="6" rx="1.5" transform="rotate(16 15 0)" fill="#d5c8ed" stroke="#5e5d59" stroke-width="1.1"/>
+        </g>
+        <path d="M4 16 L3 34 L22 38 L41 34 L40 16 L22 20 Z" fill="#c96442" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M22 20 L41 16 L40 16 L41 34 L22 38 Z" fill="#d97757" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M6 13 Q14 11 22 17 L22 35 Q14 30 5 31 Z" fill="#faf9f5" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M38 13 Q30 11 22 17 L22 35 Q30 30 39 31 Z" fill="#faf9f5" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        </svg>
+  <span class="bk-brand-name"><span class="bk-brand-mark">Robust</span>RLlib</span>
+  <span class="bk-brand-kind">Tutorial</span>
+</a>
+{%- endmacro -%}
+
+{%- set has_search = 'search' in config.plugins -%}
+{%- set sections = [] -%}
+{%- if page and page.toc -%}
+  {%- set top = page.toc|list -%}
+  {%- if top|length == 1 and top[0].level == 1 -%}
+    {%- set sections = top[0].children -%}
+  {%- else -%}
+    {%- set sections = top -%}
+  {%- endif -%}
+{%- endif -%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  {%- if config.site_description %}
+  <meta name="description" content="{{ config.site_description }}">
+  {%- endif %}
+  <title>{% block title %}{% if page and page.title and not page.is_homepage %}{{ page.title|striptags }} - {% endif %}{{ config.site_name }}{% endblock %}</title>
+  <link rel="icon" type="image/svg+xml" href="{{ 'assets/favicon.svg'|url }}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ 'assets/favicon-32.png'|url }}">
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ 'assets/apple-touch-icon.png'|url }}">
+  <link rel="stylesheet" href="{{ 'css/site.css'|url }}">
+  {%- for path in config.extra_css %}
+  <link rel="stylesheet" href="{{ path|url }}">
+  {%- endfor %}
+</head>
+<body class="bk">
+<a class="bk-skip" href="#bk-content">Skip to the text</a>
+
+<header class="bk-topbar">
+  <div class="bk-topbar-inner">
+    <button type="button" class="bk-icon-button bk-topbar-menu" id="bk-toggle-nav" aria-controls="bk-sidebar" aria-label="Show or hide the pages" title="Pages">
+      <span class="fa fa-bars" aria-hidden="true"></span>
+    </button>
+    {{ brand() }}
+    <span class="bk-topbar-space"></span>
+    {%- for item in nav if item.is_link %}
+    <a class="bk-topbar-link" href="{{ item.url }}">{{ item.title }}</a>
+    {%- endfor %}
+  </div>
+</header>
+
+<div class="bk-page">
+
+  <aside class="bk-sidebar-drawer" id="bk-sidebar" aria-label="Pages of the tutorial">
+    <div class="bk-sidebar">
+      {{ brand() }}
+      {%- if has_search %}
+      <button type="button" class="bk-search-button" id="bk-search-open" aria-haspopup="dialog">
+        <span class="fa fa-search" aria-hidden="true"></span>
+        <span class="bk-search-label">Search</span>
+      </button>
+      {%- endif %}
+      <nav class="bk-nav" aria-label="Pages">
+      {%- for item in nav %}
+        {%- if item.is_section %}
+        <p class="bk-caption">{{ item.title }}</p>
+        {{ nav_list(item.children, 1) }}
+        {%- elif not item.is_link %}
+        {{ nav_list([item], 0) }}
+        {%- endif %}
+      {%- endfor %}
+      </nav>
+    </div>
+  </aside>
+
+  <div class="bk-main">
+    <div class="bk-content">
+      <div class="bk-tools">
+        <button type="button" class="bk-icon-button" id="bk-toggle-toc" aria-controls="bk-toc" aria-label="Show or hide the contents of this page" title="On this page">
+          <span class="fa fa-list-ul" aria-hidden="true"></span>
+        </button>
+      </div>
+
+      <main class="bk-article" id="bk-content">
+        {%- block content %}
+        {{ page.content }}
+        {%- endblock %}
+      </main>
+
+      <footer class="bk-footer">
+        {%- if page and (page.previous_page or page.next_page) %}
+        <nav class="bk-related" aria-label="Previous and next page">
+          {%- if page.previous_page %}
+          <a class="bk-prev" href="{{ page.previous_page.url|url }}">
+            <span class="fa fa-arrow-left" aria-hidden="true"></span>
+            <span class="bk-related-text"><span class="bk-related-label">Previous</span><span class="bk-related-title">{{ page.previous_page.title }}</span></span>
+          </a>
+          {%- endif %}
+          {%- if page.next_page %}
+          <a class="bk-next" href="{{ page.next_page.url|url }}">
+            <span class="bk-related-text"><span class="bk-related-label">Next</span><span class="bk-related-title">{{ page.next_page.title }}</span></span>
+            <span class="fa fa-arrow-right" aria-hidden="true"></span>
+          </a>
+          {%- endif %}
+        </nav>
+        {%- endif %}
+        <p class="bk-footnote">RobustRLlib · Anonymous submission under double-blind review.</p>
+      </footer>
+    </div>
+
+    <aside class="bk-toc-drawer" id="bk-toc" aria-label="Contents of this page">
+      <div class="bk-toc">
+        {%- if sections %}
+        <p class="bk-toc-title">On this page</p>
+        <nav class="bk-toc-tree" aria-label="Sections">
+          {{ toc_list(sections, 1) }}
+        </nav>
+        {%- endif %}
+      </div>
+    </aside>
+  </div>
+
+</div>
+
+<div class="bk-backdrop" id="bk-backdrop" hidden></div>
+
+{%- if has_search %}
+<div class="bk-search" id="bk-search" role="dialog" aria-modal="true" aria-label="Search the tutorial" hidden>
+  <div class="bk-search-panel">
+    <div class="bk-search-field">
+      <span class="fa fa-search" aria-hidden="true"></span>
+      <input type="search" id="mkdocs-search-query" name="q" placeholder="Search the tutorial" aria-label="Search the tutorial" autocomplete="off" spellcheck="false">
+      <button type="button" class="bk-icon-button" id="bk-search-close" aria-label="Close the search"><span class="fa fa-times" aria-hidden="true"></span></button>
+    </div>
+    <div class="bk-search-results" id="mkdocs-search-results" data-no-results-text="Nothing found"></div>
+  </div>
+</div>
+{%- endif %}
+
+<script>var base_url = {{ base_url|tojson }};</script>
+<script src="{{ 'js/site.js'|url }}"></script>
+{%- for script in config.extra_javascript %}
+{{ script|script_tag }}
+{%- endfor %}
+</body>
+</html>

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-label="A car on a curving track seen from above">
+  <rect width="320" height="180" rx="12" fill="#ecebe3"/>
+  <g fill="none" stroke="#3d3d3a" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+
+    <path d="M30 140 C60 60 120 40 180 70 S280 120 290 60" stroke="#87867f" stroke-width="26"/>
+    <path d="M30 140 C60 60 120 40 180 70 S280 120 290 60" stroke="#faf9f5" stroke-width="3" stroke-dasharray="10 10"/>
+    <g transform="translate(150,58) rotate(20)">
+      <rect x="-16" y="-9" width="32" height="18" rx="4" fill="#c96442"/>
+      <rect x="-13" y="-13" width="7" height="5" fill="#3d3d3a" stroke="none"/><rect x="6" y="-13" width="7" height="5" fill="#3d3d3a" stroke="none"/>
+      <rect x="-13" y="8" width="7" height="5" fill="#3d3d3a" stroke="none"/><rect x="6" y="8" width="7" height="5" fill="#3d3d3a" stroke="none"/>
+    </g>
+  </g>
+</svg>

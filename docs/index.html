@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <meta name="description" content="A unified library and benchmark for robust reinforcement learning algorithms.">
+  <title>RobustRLlib Tutorial</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+  <link rel="stylesheet" href="css/site.css">
+  <link rel="stylesheet" href="assets/pygments.css">
+  <link rel="stylesheet" href="assets/rl.css">
+  <link rel="stylesheet" href="assets/book.css">
+</head>
+<body class="bk">
+<a class="bk-skip" href="#bk-content">Skip to the text</a>
+
+<header class="bk-topbar">
+  <div class="bk-topbar-inner">
+    <button type="button" class="bk-icon-button bk-topbar-menu" id="bk-toggle-nav" aria-controls="bk-sidebar" aria-label="Show or hide the pages" title="Pages">
+      <span class="fa fa-bars" aria-hidden="true"></span>
+    </button>
+    <a class="bk-brand" href=".">
+  <svg class="mark" viewBox="0 0 44 40" width="30" height="27" aria-hidden="true">
+        <g transform="translate(22,9)">
+        <rect x="-19" y="-3" width="8" height="6" rx="1.5" transform="rotate(-16 -15 0)" fill="#eb8787" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="-9" y="-7" width="8" height="6" rx="1.5" transform="rotate(-5 -5 -4)" fill="#cde4be" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="1" y="-7" width="8" height="6" rx="1.5" transform="rotate(5 5 -4)" fill="#bcd6eb" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="11" y="-3" width="8" height="6" rx="1.5" transform="rotate(16 15 0)" fill="#d5c8ed" stroke="#5e5d59" stroke-width="1.1"/>
+        </g>
+        <path d="M4 16 L3 34 L22 38 L41 34 L40 16 L22 20 Z" fill="#c96442" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M22 20 L41 16 L40 16 L41 34 L22 38 Z" fill="#d97757" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M6 13 Q14 11 22 17 L22 35 Q14 30 5 31 Z" fill="#faf9f5" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M38 13 Q30 11 22 17 L22 35 Q30 30 39 31 Z" fill="#faf9f5" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        </svg>
+  <span class="bk-brand-name"><span class="bk-brand-mark">Robust</span>RLlib</span>
+  <span class="bk-brand-kind">Tutorial</span>
+</a>
+    <span class="bk-topbar-space"></span>
+    <a class="bk-topbar-link" href="/">Project Page</a>
+  </div>
+</header>
+
+<div class="bk-page">
+
+  <aside class="bk-sidebar-drawer" id="bk-sidebar" aria-label="Pages of the tutorial">
+    <div class="bk-sidebar">
+      <a class="bk-brand" href=".">
+  <svg class="mark" viewBox="0 0 44 40" width="30" height="27" aria-hidden="true">
+        <g transform="translate(22,9)">
+        <rect x="-19" y="-3" width="8" height="6" rx="1.5" transform="rotate(-16 -15 0)" fill="#eb8787" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="-9" y="-7" width="8" height="6" rx="1.5" transform="rotate(-5 -5 -4)" fill="#cde4be" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="1" y="-7" width="8" height="6" rx="1.5" transform="rotate(5 5 -4)" fill="#bcd6eb" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="11" y="-3" width="8" height="6" rx="1.5" transform="rotate(16 15 0)" fill="#d5c8ed" stroke="#5e5d59" stroke-width="1.1"/>
+        </g>
+        <path d="M4 16 L3 34 L22 38 L41 34 L40 16 L22 20 Z" fill="#c96442" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M22 20 L41 16 L40 16 L41 34 L22 38 Z" fill="#d97757" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M6 13 Q14 11 22 17 L22 35 Q14 30 5 31 Z" fill="#faf9f5" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M38 13 Q30 11 22 17 L22 35 Q30 30 39 31 Z" fill="#faf9f5" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        </svg>
+  <span class="bk-brand-name"><span class="bk-brand-mark">Robust</span>RLlib</span>
+  <span class="bk-brand-kind">Tutorial</span>
+</a>
+      <button type="button" class="bk-search-button" id="bk-search-open" aria-haspopup="dialog">
+        <span class="fa fa-search" aria-hidden="true"></span>
+        <span class="bk-search-label">Search</span>
+      </button>
+      <nav class="bk-nav" aria-label="Pages">
+        <ul class="bk-nav-list bk-nav-depth-0">
+  <li><a class="bk-nav-link is-active" href="." aria-current="page">Home</a></li>
+</ul>
+        <p class="bk-caption">Getting Started</p>
+        <ul class="bk-nav-list bk-nav-depth-1">
+  <li><a class="bk-nav-link" href="getting-started/overview/">Overview</a></li>
+  <li><a class="bk-nav-link" href="getting-started/quick-start/">Quick Start</a></li>
+</ul>
+        <p class="bk-caption">Algorithms</p>
+        <ul class="bk-nav-list bk-nav-depth-1">
+  <li><a class="bk-nav-link" href="algorithms/">All Methods</a></li>
+  <li class="bk-nav-group">
+    <details>
+      <summary>Standard</summary>
+      <ul class="bk-nav-list bk-nav-depth-2">
+  <li><a class="bk-nav-link" href="algorithms/standard/">Overview</a></li>
+  <li><a class="bk-nav-link" href="algorithms/standard/iql/">IQL</a></li>
+  <li><a class="bk-nav-link" href="algorithms/standard/td3bc/">TD3+BC</a></li>
+  <li><a class="bk-nav-link" href="algorithms/standard/mopo/">MOPO</a></li>
+  <li><a class="bk-nav-link" href="algorithms/standard/synther/">SynthER</a></li>
+  <li><a class="bk-nav-link" href="algorithms/standard/ppo/">PPO</a></li>
+  <li><a class="bk-nav-link" href="algorithms/standard/sac/">SAC</a></li>
+</ul>
+    </details>
+  </li>
+  <li class="bk-nav-group">
+    <details>
+      <summary>Robust Online</summary>
+      <ul class="bk-nav-list bk-nav-depth-2">
+  <li><a class="bk-nav-link" href="algorithms/robust-online/">Overview</a></li>
+  <li><a class="bk-nav-link" href="algorithms/robust-online/atla/">ATLA</a></li>
+  <li><a class="bk-nav-link" href="algorithms/robust-online/atla-sa/">ATLA-SA</a></li>
+  <li><a class="bk-nav-link" href="algorithms/robust-online/rsc/">RSC</a></li>
+  <li><a class="bk-nav-link" href="algorithms/robust-online/rarl/">RARL</a></li>
+  <li><a class="bk-nav-link" href="algorithms/robust-online/dr/">DR</a></li>
+</ul>
+    </details>
+  </li>
+  <li class="bk-nav-group">
+    <details>
+      <summary>Robust Offline</summary>
+      <ul class="bk-nav-list bk-nav-depth-2">
+  <li><a class="bk-nav-link" href="algorithms/robust-offline/">Overview</a></li>
+  <li><a class="bk-nav-link" href="algorithms/robust-offline/rfqi/">RFQI</a></li>
+  <li><a class="bk-nav-link" href="algorithms/robust-offline/rorl/">RORL</a></li>
+  <li><a class="bk-nav-link" href="algorithms/robust-offline/atla-iql/">ATLA-IQL</a></li>
+  <li><a class="bk-nav-link" href="algorithms/robust-offline/rsc-iql/">RSC-IQL</a></li>
+  <li><a class="bk-nav-link" href="algorithms/robust-offline/rambo/">RAMBO</a></li>
+  <li><a class="bk-nav-link" href="algorithms/robust-offline/romb/">ROMB</a></li>
+  <li><a class="bk-nav-link" href="algorithms/robust-offline/fwm/">FWM</a></li>
+  <li><a class="bk-nav-link" href="algorithms/robust-offline/plr-pvl/">PLR-PVL</a></li>
+</ul>
+    </details>
+  </li>
+  <li class="bk-nav-group">
+    <details>
+      <summary>Robust Safe</summary>
+      <ul class="bk-nav-list bk-nav-depth-2">
+  <li><a class="bk-nav-link" href="algorithms/robust-safe/">Overview</a></li>
+  <li><a class="bk-nav-link" href="algorithms/robust-safe/ramu/">RAMU</a></li>
+  <li><a class="bk-nav-link" href="algorithms/robust-safe/spidr/">SPiDR</a></li>
+</ul>
+    </details>
+  </li>
+  <li><a class="bk-nav-link" href="algorithms/run-a-method/">Run a Method</a></li>
+  <li><a class="bk-nav-link" href="algorithms/add-an-algorithm/">Add an Algorithm</a></li>
+</ul>
+        <p class="bk-caption">Shift Sources and Modes</p>
+        <ul class="bk-nav-list bk-nav-depth-1">
+  <li><a class="bk-nav-link" href="shifts/">Overview</a></li>
+  <li class="bk-nav-group">
+    <details>
+      <summary>Shift Sources</summary>
+      <ul class="bk-nav-list bk-nav-depth-2">
+  <li><a class="bk-nav-link" href="shifts/sources/dynamic/">Dynamic shift</a></li>
+  <li><a class="bk-nav-link" href="shifts/sources/observation/">Observation shift</a></li>
+  <li><a class="bk-nav-link" href="shifts/sources/action/">Action shift</a></li>
+  <li><a class="bk-nav-link" href="shifts/sources/reward-cost/">Reward/cost shift</a></li>
+  <li><a class="bk-nav-link" href="shifts/sources/latency/">Latency shift</a></li>
+  <li><a class="bk-nav-link" href="shifts/sources/semantic/">Semantic shift</a></li>
+</ul>
+    </details>
+  </li>
+  <li class="bk-nav-group">
+    <details>
+      <summary>Shift Modes</summary>
+      <ul class="bk-nav-list bk-nav-depth-2">
+  <li><a class="bk-nav-link" href="shifts/modes/stochastic/">Stochastic</a></li>
+  <li><a class="bk-nav-link" href="shifts/modes/adversarial/">Adversarial</a></li>
+  <li><a class="bk-nav-link" href="shifts/modes/parametric/">Parametric</a></li>
+  <li><a class="bk-nav-link" href="shifts/modes/non-stationary/">Non-stationary</a></li>
+  <li><a class="bk-nav-link" href="shifts/modes/composition/">Composition</a></li>
+</ul>
+    </details>
+  </li>
+  <li><a class="bk-nav-link" href="shifts/add-a-backend/">Add a Backend</a></li>
+</ul>
+        <p class="bk-caption">Evaluation</p>
+        <ul class="bk-nav-list bk-nav-depth-1">
+  <li><a class="bk-nav-link" href="evaluation/protocol/">Evaluation Protocol</a></li>
+</ul>
+      </nav>
+    </div>
+  </aside>
+
+  <div class="bk-main">
+    <div class="bk-content">
+      <div class="bk-tools">
+        <button type="button" class="bk-icon-button" id="bk-toggle-toc" aria-controls="bk-toc" aria-label="Show or hide the contents of this page" title="On this page">
+          <span class="fa fa-list-ul" aria-hidden="true"></span>
+        </button>
+      </div>
+
+      <main class="bk-article" id="bk-content">
+        <h1 id="robustrllib-a-library-for-robust-reinforcement-learning">RobustRLlib: a library for robust reinforcement learning<a class="headerlink" href="#robustrllib-a-library-for-robust-reinforcement-learning" title="Permanent link">&para;</a></h1>
+<p>Robust reinforcement learning is critical for reliable real-world deployment, where policies
+may fail under diverse shifts and disruptions. <strong>RobustRLlib</strong> is an algorithm-centric library
+and benchmark. It integrates 16 representative robust online, offline and safe RL methods and
+6 standard algorithms under a unified interface, together with a toolbox that declares
+deployment shifts and one evaluation protocol for all methods.</p>
+<p><img alt="Overview of RobustRLlib: an algorithm library, a shift toolbox and a shared evaluation platform" src="assets/figures/figure1.png" width="820" /></p>
+<p><em>The overview of RobustRLlib.</em></p>
+<h2 id="first-time-here">First time here?<a class="headerlink" href="#first-time-here" title="Permanent link">&para;</a></h2>
+<dl>
+<dt><a href="getting-started/overview/">Overview</a></dt>
+<dd>What the library covers, how the algorithms are organised, and how it compares with
+  related benchmarks.</dd>
+<dt><a href="getting-started/quick-start/">Quick Start</a></dt>
+<dd>Install the library, build a first shifted environment, train a first method and
+  evaluate it.</dd>
+</dl>
+<h2 id="algorithms">Algorithms<a class="headerlink" href="#algorithms" title="Permanent link">&para;</a></h2>
+<dl>
+<dt><a href="algorithms/">All Methods</a></dt>
+<dd>The 22 algorithms of the library in one table.</dd>
+<dt><a href="algorithms/standard/">Standard Algorithms</a></dt>
+<dd>The base learners and references: <a href="algorithms/standard/iql/">IQL</a>, <a href="algorithms/standard/td3bc/">TD3+BC</a>, <a href="algorithms/standard/mopo/">MOPO</a>, <a href="algorithms/standard/synther/">SynthER</a>, <a href="algorithms/standard/ppo/">PPO</a>, <a href="algorithms/standard/sac/">SAC</a>.</dd>
+<dt><a href="algorithms/robust-online/">Robust Online Algorithms</a></dt>
+<dd><a href="algorithms/robust-online/atla/">ATLA</a>, <a href="algorithms/robust-online/atla-sa/">ATLA-SA</a>, <a href="algorithms/robust-online/rsc/">RSC</a>, <a href="algorithms/robust-online/rarl/">RARL</a>, <a href="algorithms/robust-online/dr/">DR</a>.</dd>
+<dt><a href="algorithms/robust-offline/">Robust Offline Algorithms</a></dt>
+<dd><a href="algorithms/robust-offline/rfqi/">RFQI</a>, <a href="algorithms/robust-offline/rorl/">RORL</a>, <a href="algorithms/robust-offline/atla-iql/">ATLA-IQL</a>, <a href="algorithms/robust-offline/rsc-iql/">RSC-IQL</a>, <a href="algorithms/robust-offline/rambo/">RAMBO</a>, <a href="algorithms/robust-offline/romb/">ROMB</a>, <a href="algorithms/robust-offline/fwm/">FWM</a>, <a href="algorithms/robust-offline/plr-pvl/">PLR-PVL</a>.</dd>
+<dt><a href="algorithms/robust-safe/">Robust Safe Algorithms</a></dt>
+<dd><a href="algorithms/robust-safe/ramu/">RAMU</a>, <a href="algorithms/robust-safe/spidr/">SPiDR</a>.</dd>
+<dt><a href="algorithms/run-a-method/">Run a Method</a></dt>
+<dd>The configuration files, the launch commands and the run directory.</dd>
+<dt><a href="algorithms/add-an-algorithm/">Add an Algorithm</a></dt>
+<dd>Implement the algorithm interface and register a method of your own.</dd>
+</dl>
+<h2 id="shift-sources-and-modes">Shift sources and modes<a class="headerlink" href="#shift-sources-and-modes" title="Permanent link">&para;</a></h2>
+<dl>
+<dt><a href="shifts/">Overview</a></dt>
+<dd>How a shift is declared, and which shift sources accept which modes.</dd>
+<dt>Shift sources</dt>
+<dd><a href="shifts/sources/dynamic/">Dynamic shift</a>, <a href="shifts/sources/observation/">Observation shift</a>,
+  <a href="shifts/sources/action/">Action shift</a>, <a href="shifts/sources/reward-cost/">Reward/cost shift</a>,
+  <a href="shifts/sources/latency/">Latency shift</a>, <a href="shifts/sources/semantic/">Semantic shift</a>.</dd>
+<dt>Shift modes</dt>
+<dd><a href="shifts/modes/stochastic/">Stochastic</a>, <a href="shifts/modes/adversarial/">Adversarial</a>,
+  <a href="shifts/modes/parametric/">Parametric</a>, <a href="shifts/modes/non-stationary/">Non-stationary</a>,
+  <a href="shifts/modes/composition/">Composition</a>.</dd>
+<dt><a href="shifts/add-a-backend/">Add a Backend</a></dt>
+<dd>Carry the shifts to a simulator of your own.</dd>
+</dl>
+<h2 id="evaluation">Evaluation<a class="headerlink" href="#evaluation" title="Permanent link">&para;</a></h2>
+<dl>
+<dt><a href="evaluation/protocol/">Evaluation Protocol</a></dt>
+<dd>Evaluate a frozen checkpoint on a perturbation grid and report the result.</dd>
+</dl>
+      </main>
+
+      <footer class="bk-footer">
+        <nav class="bk-related" aria-label="Previous and next page">
+          <a class="bk-next" href="getting-started/overview/">
+            <span class="bk-related-text"><span class="bk-related-label">Next</span><span class="bk-related-title">Overview</span></span>
+            <span class="fa fa-arrow-right" aria-hidden="true"></span>
+          </a>
+        </nav>
+        <p class="bk-footnote">RobustRLlib · Anonymous submission under double-blind review.</p>
+      </footer>
+    </div>
+
+    <aside class="bk-toc-drawer" id="bk-toc" aria-label="Contents of this page">
+      <div class="bk-toc">
+        <p class="bk-toc-title">On this page</p>
+        <nav class="bk-toc-tree" aria-label="Sections">
+          <ul class="bk-toc-list bk-toc-depth-1">
+  <li><a class="bk-toc-link" href="#first-time-here">First time here?</a>
+  </li>
+  <li><a class="bk-toc-link" href="#algorithms">Algorithms</a>
+  </li>
+  <li><a class="bk-toc-link" href="#shift-sources-and-modes">Shift sources and modes</a>
+  </li>
+  <li><a class="bk-toc-link" href="#evaluation">Evaluation</a>
+  </li>
+</ul>
+        </nav>
+      </div>
+    </aside>
+  </div>
+
+</div>
+
+<div class="bk-backdrop" id="bk-backdrop" hidden></div>
+<div class="bk-search" id="bk-search" role="dialog" aria-modal="true" aria-label="Search the tutorial" hidden>
+  <div class="bk-search-panel">
+    <div class="bk-search-field">
+      <span class="fa fa-search" aria-hidden="true"></span>
+      <input type="search" id="mkdocs-search-query" name="q" placeholder="Search the tutorial" aria-label="Search the tutorial" autocomplete="off" spellcheck="false">
+      <button type="button" class="bk-icon-button" id="bk-search-close" aria-label="Close the search"><span class="fa fa-times" aria-hidden="true"></span></button>
+    </div>
+    <div class="bk-search-results" id="mkdocs-search-results" data-no-results-text="Nothing found"></div>
+  </div>
+</div>
+
+<script>var base_url = ".";</script>
+<script src="js/site.js"></script>
+<script src="search/main.js"></script>
+</body>
+</html>

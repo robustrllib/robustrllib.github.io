@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <meta name="description" content="A unified library and benchmark for robust reinforcement learning algorithms.">
+  <title>Add a Backend - RobustRLlib Tutorial</title>
+  <link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="../../assets/favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../../assets/apple-touch-icon.png">
+  <link rel="stylesheet" href="../../css/site.css">
+  <link rel="stylesheet" href="../../assets/pygments.css">
+  <link rel="stylesheet" href="../../assets/rl.css">
+  <link rel="stylesheet" href="../../assets/book.css">
+</head>
+<body class="bk">
+<a class="bk-skip" href="#bk-content">Skip to the text</a>
+
+<header class="bk-topbar">
+  <div class="bk-topbar-inner">
+    <button type="button" class="bk-icon-button bk-topbar-menu" id="bk-toggle-nav" aria-controls="bk-sidebar" aria-label="Show or hide the pages" title="Pages">
+      <span class="fa fa-bars" aria-hidden="true"></span>
+    </button>
+    <a class="bk-brand" href="../..">
+  <svg class="mark" viewBox="0 0 44 40" width="30" height="27" aria-hidden="true">
+        <g transform="translate(22,9)">
+        <rect x="-19" y="-3" width="8" height="6" rx="1.5" transform="rotate(-16 -15 0)" fill="#eb8787" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="-9" y="-7" width="8" height="6" rx="1.5" transform="rotate(-5 -5 -4)" fill="#cde4be" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="1" y="-7" width="8" height="6" rx="1.5" transform="rotate(5 5 -4)" fill="#bcd6eb" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="11" y="-3" width="8" height="6" rx="1.5" transform="rotate(16 15 0)" fill="#d5c8ed" stroke="#5e5d59" stroke-width="1.1"/>
+        </g>
+        <path d="M4 16 L3 34 L22 38 L41 34 L40 16 L22 20 Z" fill="#c96442" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M22 20 L41 16 L40 16 L41 34 L22 38 Z" fill="#d97757" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M6 13 Q14 11 22 17 L22 35 Q14 30 5 31 Z" fill="#faf9f5" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M38 13 Q30 11 22 17 L22 35 Q30 30 39 31 Z" fill="#faf9f5" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        </svg>
+  <span class="bk-brand-name"><span class="bk-brand-mark">Robust</span>RLlib</span>
+  <span class="bk-brand-kind">Tutorial</span>
+</a>
+    <span class="bk-topbar-space"></span>
+    <a class="bk-topbar-link" href="/">Project Page</a>
+  </div>
+</header>
+
+<div class="bk-page">
+
+  <aside class="bk-sidebar-drawer" id="bk-sidebar" aria-label="Pages of the tutorial">
+    <div class="bk-sidebar">
+      <a class="bk-brand" href="../..">
+  <svg class="mark" viewBox="0 0 44 40" width="30" height="27" aria-hidden="true">
+        <g transform="translate(22,9)">
+        <rect x="-19" y="-3" width="8" height="6" rx="1.5" transform="rotate(-16 -15 0)" fill="#eb8787" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="-9" y="-7" width="8" height="6" rx="1.5" transform="rotate(-5 -5 -4)" fill="#cde4be" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="1" y="-7" width="8" height="6" rx="1.5" transform="rotate(5 5 -4)" fill="#bcd6eb" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="11" y="-3" width="8" height="6" rx="1.5" transform="rotate(16 15 0)" fill="#d5c8ed" stroke="#5e5d59" stroke-width="1.1"/>
+        </g>
+        <path d="M4 16 L3 34 L22 38 L41 34 L40 16 L22 20 Z" fill="#c96442" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M22 20 L41 16 L40 16 L41 34 L22 38 Z" fill="#d97757" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M6 13 Q14 11 22 17 L22 35 Q14 30 5 31 Z" fill="#faf9f5" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M38 13 Q30 11 22 17 L22 35 Q30 30 39 31 Z" fill="#faf9f5" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        </svg>
+  <span class="bk-brand-name"><span class="bk-brand-mark">Robust</span>RLlib</span>
+  <span class="bk-brand-kind">Tutorial</span>
+</a>
+      <button type="button" class="bk-search-button" id="bk-search-open" aria-haspopup="dialog">
+        <span class="fa fa-search" aria-hidden="true"></span>
+        <span class="bk-search-label">Search</span>
+      </button>
+      <nav class="bk-nav" aria-label="Pages">
+        <ul class="bk-nav-list bk-nav-depth-0">
+  <li><a class="bk-nav-link" href="../..">Home</a></li>
+</ul>
+        <p class="bk-caption">Getting Started</p>
+        <ul class="bk-nav-list bk-nav-depth-1">
+  <li><a class="bk-nav-link" href="../../getting-started/overview/">Overview</a></li>
+  <li><a class="bk-nav-link" href="../../getting-started/quick-start/">Quick Start</a></li>
+</ul>
+        <p class="bk-caption">Algorithms</p>
+        <ul class="bk-nav-list bk-nav-depth-1">
+  <li><a class="bk-nav-link" href="../../algorithms/">All Methods</a></li>
+  <li class="bk-nav-group">
+    <details>
+      <summary>Standard</summary>
+      <ul class="bk-nav-list bk-nav-depth-2">
+  <li><a class="bk-nav-link" href="../../algorithms/standard/">Overview</a></li>
+  <li><a class="bk-nav-link" href="../../algorithms/standard/iql/">IQL</a></li>
+  <li><a class="bk-nav-link" href="../../algorithms/standard/td3bc/">TD3+BC</a></li>
+  <li><a class="bk-nav-link" href="../../algorithms/standard/mopo/">MOPO</a></li>
+  <li><a class="bk-nav-link" href="../../algorithms/standard/synther/">SynthER</a></li>
+  <li><a class="bk-nav-link" href="../../algorithms/standard/ppo/">PPO</a></li>
+  <li><a class="bk-nav-link" href="../../algorithms/standard/sac/">SAC</a></li>
+</ul>
+    </details>
+  </li>
+  <li class="bk-nav-group">
+    <details>
+      <summary>Robust Online</summary>
+      <ul class="bk-nav-list bk-nav-depth-2">
+  <li><a class="bk-nav-link" href="../../algorithms/robust-online/">Overview</a></li>
+  <li><a class="bk-nav-link" href="../../algorithms/robust-online/atla/">ATLA</a></li>
+  <li><a class="bk-nav-link" href="../../algorithms/robust-online/atla-sa/">ATLA-SA</a></li>
+  <li><a class="bk-nav-link" href="../../algorithms/robust-online/rsc/">RSC</a></li>
+  <li><a class="bk-nav-link" href="../../algorithms/robust-online/rarl/">RARL</a></li>
+  <li><a class="bk-nav-link" href="../../algorithms/robust-online/dr/">DR</a></li>
+</ul>
+    </details>
+  </li>
+  <li class="bk-nav-group">
+    <details>
+      <summary>Robust Offline</summary>
+      <ul class="bk-nav-list bk-nav-depth-2">
+  <li><a class="bk-nav-link" href="../../algorithms/robust-offline/">Overview</a></li>
+  <li><a class="bk-nav-link" href="../../algorithms/robust-offline/rfqi/">RFQI</a></li>
+  <li><a class="bk-nav-link" href="../../algorithms/robust-offline/rorl/">RORL</a></li>
+  <li><a class="bk-nav-link" href="../../algorithms/robust-offline/atla-iql/">ATLA-IQL</a></li>
+  <li><a class="bk-nav-link" href="../../algorithms/robust-offline/rsc-iql/">RSC-IQL</a></li>
+  <li><a class="bk-nav-link" href="../../algorithms/robust-offline/rambo/">RAMBO</a></li>
+  <li><a class="bk-nav-link" href="../../algorithms/robust-offline/romb/">ROMB</a></li>
+  <li><a class="bk-nav-link" href="../../algorithms/robust-offline/fwm/">FWM</a></li>
+  <li><a class="bk-nav-link" href="../../algorithms/robust-offline/plr-pvl/">PLR-PVL</a></li>
+</ul>
+    </details>
+  </li>
+  <li class="bk-nav-group">
+    <details>
+      <summary>Robust Safe</summary>
+      <ul class="bk-nav-list bk-nav-depth-2">
+  <li><a class="bk-nav-link" href="../../algorithms/robust-safe/">Overview</a></li>
+  <li><a class="bk-nav-link" href="../../algorithms/robust-safe/ramu/">RAMU</a></li>
+  <li><a class="bk-nav-link" href="../../algorithms/robust-safe/spidr/">SPiDR</a></li>
+</ul>
+    </details>
+  </li>
+  <li><a class="bk-nav-link" href="../../algorithms/run-a-method/">Run a Method</a></li>
+  <li><a class="bk-nav-link" href="../../algorithms/add-an-algorithm/">Add an Algorithm</a></li>
+</ul>
+        <p class="bk-caption">Shift Sources and Modes</p>
+        <ul class="bk-nav-list bk-nav-depth-1">
+  <li><a class="bk-nav-link" href="../">Overview</a></li>
+  <li class="bk-nav-group">
+    <details>
+      <summary>Shift Sources</summary>
+      <ul class="bk-nav-list bk-nav-depth-2">
+  <li><a class="bk-nav-link" href="../sources/dynamic/">Dynamic shift</a></li>
+  <li><a class="bk-nav-link" href="../sources/observation/">Observation shift</a></li>
+  <li><a class="bk-nav-link" href="../sources/action/">Action shift</a></li>
+  <li><a class="bk-nav-link" href="../sources/reward-cost/">Reward/cost shift</a></li>
+  <li><a class="bk-nav-link" href="../sources/latency/">Latency shift</a></li>
+  <li><a class="bk-nav-link" href="../sources/semantic/">Semantic shift</a></li>
+</ul>
+    </details>
+  </li>
+  <li class="bk-nav-group">
+    <details>
+      <summary>Shift Modes</summary>
+      <ul class="bk-nav-list bk-nav-depth-2">
+  <li><a class="bk-nav-link" href="../modes/stochastic/">Stochastic</a></li>
+  <li><a class="bk-nav-link" href="../modes/adversarial/">Adversarial</a></li>
+  <li><a class="bk-nav-link" href="../modes/parametric/">Parametric</a></li>
+  <li><a class="bk-nav-link" href="../modes/non-stationary/">Non-stationary</a></li>
+  <li><a class="bk-nav-link" href="../modes/composition/">Composition</a></li>
+</ul>
+    </details>
+  </li>
+  <li><a class="bk-nav-link is-active" href="./" aria-current="page">Add a Backend</a></li>
+</ul>
+        <p class="bk-caption">Evaluation</p>
+        <ul class="bk-nav-list bk-nav-depth-1">
+  <li><a class="bk-nav-link" href="../../evaluation/protocol/">Evaluation Protocol</a></li>
+</ul>
+      </nav>
+    </div>
+  </aside>
+
+  <div class="bk-main">
+    <div class="bk-content">
+      <div class="bk-tools">
+        <button type="button" class="bk-icon-button" id="bk-toggle-toc" aria-controls="bk-toc" aria-label="Show or hide the contents of this page" title="On this page">
+          <span class="fa fa-list-ul" aria-hidden="true"></span>
+        </button>
+      </div>
+
+      <main class="bk-article" id="bk-content">
+        <h1 id="add-a-backend">Add a Backend<a class="headerlink" href="#add-a-backend" title="Permanent link">&para;</a></h1>
+<p>A backend is a simulator the shift wrappers can reach into. Most shifts act on what passes
+through <code>reset</code> and <code>step</code> and need nothing from it; the shifts that edit the simulator go
+through a dynamics adapter.</p>
+<h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Backend adapter</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Interface</td>
+<td>A subclass of <code>DynamicsAdapter</code> with <code>list_params</code>, <code>get_nominal</code> and <code>set_param</code></td>
+</tr>
+<tr>
+<td>Selection</td>
+<td><code>get_adapter(env)</code> inspects the attributes of <code>env.unwrapped</code></td>
+</tr>
+<tr>
+<td>Vocabulary</td>
+<td>Names of physical parameters, shared across backends</td>
+</tr>
+<tr>
+<td>Needed for</td>
+<td>The Dynamic shift and the Semantic shift</td>
+</tr>
+<tr>
+<td>Bundled</td>
+<td>Adapters for MuJoCo and Box2D, and a template</td>
+</tr>
+<tr>
+<td>Limits</td>
+<td><code>push</code> and the colour mode names use MuJoCo data structures directly</td>
+</tr>
+</tbody>
+</table>
+<h2 id="the-adapter-interface">The adapter interface<a class="headerlink" href="#the-adapter-interface" title="Permanent link">&para;</a></h2>
+<p><code>DynamicsAdapter</code> is defined in the module <code>robustrllib.adapters.base</code>. Three of its methods
+are abstract.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">robustrllib.adapters</span><span class="w"> </span><span class="kn">import</span> <span class="n">DynamicsAdapter</span><span class="p">,</span> <span class="n">get_adapter</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Kind</th>
+<th>Contract</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>list_params()</code></td>
+<td>Abstract</td>
+<td>The parameter names the adapter understands</td>
+</tr>
+<tr>
+<td><code>get_nominal(param, index=None)</code></td>
+<td>Abstract</td>
+<td>The value of the pristine model, cached at first touch</td>
+</tr>
+<tr>
+<td><code>set_param(param, value, index=None)</code></td>
+<td>Abstract</td>
+<td>Writes the value into the live model</td>
+</tr>
+<tr>
+<td><code>apply(param, *, factor=None, value=None, index=None)</code></td>
+<td>Provided</td>
+<td>Sets <code>value</code>, or the nominal value times <code>factor</code></td>
+</tr>
+<tr>
+<td><code>read(param, index=None)</code></td>
+<td>Optional</td>
+<td>The current value in the live model; needed by <code>translate</code></td>
+</tr>
+<tr>
+<td><code>reset_all()</code></td>
+<td>Optional</td>
+<td>Restores every touched parameter</td>
+</tr>
+<tr>
+<td><code>inject_state_noise(rng, q_sigma, v_sigma, scale)</code></td>
+<td>Optional</td>
+<td>Adds noise to the simulator state; needed by the target <code>transition</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="requirements-per-shift">Requirements per shift<a class="headerlink" href="#requirements-per-shift" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Shift</th>
+<th>Mode names</th>
+<th>Requirement on the backend</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Observation shift, Action shift, Reward/cost shift</td>
+<td>All</td>
+<td>None</td>
+</tr>
+<tr>
+<td>Latency shift</td>
+<td><code>fixed</code>, <code>buffer</code>, <code>interp</code>, <code>delay</code></td>
+<td>None</td>
+</tr>
+<tr>
+<td>Latency shift</td>
+<td><code>substep</code></td>
+<td><code>frame_skip</code> or <code>n_substeps</code>, and <code>model.opt.timestep</code></td>
+</tr>
+<tr>
+<td>Dynamic shift</td>
+<td>All on the target <code>dynamics</code> but <code>push</code></td>
+<td>An adapter; <code>read</code> for <code>translate</code></td>
+</tr>
+<tr>
+<td>Dynamic shift</td>
+<td><code>gauss</code> on the target <code>transition</code></td>
+<td>An adapter with <code>inject_state_noise</code></td>
+</tr>
+<tr>
+<td>Dynamic shift, Semantic shift</td>
+<td><code>push</code>; <code>hue</code>, <code>tint</code>, <code>swap</code></td>
+<td>A MuJoCo model</td>
+</tr>
+</tbody>
+</table>
+<p>The wrapper of a Dynamic shift reads the nominal value when it is constructed and calls <code>apply</code>
+after every <code>reset</code>. With a schedule it calls <code>apply</code> before every step as well.</p>
+<h3 id="bundled-adapters">Bundled adapters<a class="headerlink" href="#bundled-adapters" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Template</th>
+<th>MuJoCo adapter</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Parameter table</td>
+<td>Name to getter and setter</td>
+<td>Name to model attribute, entity kind and default component</td>
+</tr>
+<tr>
+<td>Parameters</td>
+<td>6</td>
+<td>21</td>
+</tr>
+<tr>
+<td>Names</td>
+<td>Compared with <code>joint.name</code></td>
+<td>Resolved by the simulator per entity kind</td>
+</tr>
+<tr>
+<td><code>index: all</code></td>
+<td>One value for all entities</td>
+<td>Every entity scaled from its own nominal value</td>
+</tr>
+<tr>
+<td>Derived quantities</td>
+<td>None</td>
+<td>Recomputed after edits to mass, inertia, body position or geom size</td>
+</tr>
+<tr>
+<td><code>read</code>, <code>inject_state_noise</code></td>
+<td>Not implemented</td>
+<td>Implemented</td>
+</tr>
+</tbody>
+</table>
+<p>The Box2D adapter in <code>robustrllib.adapters.box2d</code> uses the getter and setter table of the
+template.</p>
+<h2 id="implement-an-adapter">Implement an adapter<a class="headerlink" href="#implement-an-adapter" title="Permanent link">&para;</a></h2>
+<p>The module <code>robustrllib.adapters.template</code> is a worked example for a simulator that keeps its
+physics in plain attributes and in a list of joint objects. The command prints the location of
+the file.</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">"import robustrllib.adapters.template as m; print(m.__file__)"</span>
+</code></pre></div>
+<p>Everything specific to the simulator is in one table of getters and setters.</p>
+<div class="highlight"><pre><span></span><code><span class="n">_FIELDS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="c1"># --- scalar, whole-scene parameters ---</span>
+    <span class="s2">"gravity"</span><span class="p">:</span> <span class="p">(</span>
+        <span class="k">lambda</span> <span class="n">e</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="n">e</span><span class="o">.</span><span class="n">physics</span><span class="o">.</span><span class="n">gravity_z</span><span class="p">,</span>
+        <span class="k">lambda</span> <span class="n">e</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="nb">setattr</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">physics</span><span class="p">,</span> <span class="s2">"gravity_z"</span><span class="p">,</span> <span class="n">v</span><span class="p">),</span>
+    <span class="p">),</span>
+    <span class="o">...</span>
+    <span class="s2">"actuator_gear"</span><span class="p">:</span> <span class="p">(</span>
+        <span class="k">lambda</span> <span class="n">e</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="n">_resolve</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">i</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">torque_limit</span><span class="p">,</span>
+        <span class="k">lambda</span> <span class="n">e</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="p">[</span><span class="nb">setattr</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="s2">"torque_limit"</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">_resolve</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">i</span><span class="p">)],</span>
+    <span class="p">),</span>
+    <span class="o">...</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>index</code> is resolved to entities by position, by name, or as <code>"all"</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_resolve</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
+    <span class="n">joints</span> <span class="o">=</span> <span class="n">_joints</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="s2">"all"</span> <span class="ow">or</span> <span class="n">index</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">joints</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">joints</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">j</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">index</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">[</span><span class="n">j</span><span class="p">]</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"no joint named </span><span class="si">{</span><span class="n">index</span><span class="si">!r}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">joints</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">index</span><span class="p">)]]</span>
+</code></pre></div>
+<p>The class contains no simulator code.</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">TemplateDynamicsAdapter</span><span class="p">(</span><span class="n">DynamicsAdapter</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_env</span> <span class="o">=</span> <span class="n">env</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_nominal</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">list_params</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">_FIELDS</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_nominal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nominal</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_nominal</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">_FIELDS</span><span class="p">[</span><span class="n">param</span><span class="p">][</span><span class="mi">0</span><span class="p">](</span><span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="p">,</span> <span class="n">index</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nominal</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_param</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_nominal</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span>   <span class="c1"># cache nominal BEFORE the first write</span>
+        <span class="n">_FIELDS</span><span class="p">[</span><span class="n">param</span><span class="p">][</span><span class="mi">1</span><span class="p">](</span><span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">reset_all</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">index</span><span class="p">),</span> <span class="n">nominal</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nominal</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">_FIELDS</span><span class="p">[</span><span class="n">param</span><span class="p">][</span><span class="mi">1</span><span class="p">](</span><span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">nominal</span><span class="p">)</span>
+</code></pre></div>
+<p>The adapter runs without a simulator, on an object with the attributes the table expects.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">types</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimpleNamespace</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">robustrllib.adapters.template</span><span class="w"> </span><span class="kn">import</span> <span class="n">TemplateDynamicsAdapter</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">joint</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">torque</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">SimpleNamespace</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">torque_limit</span><span class="o">=</span><span class="n">torque</span><span class="p">,</span> <span class="n">damping</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+                           <span class="n">static_friction</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">link_mass</span><span class="o">=</span><span class="mf">2.0</span><span class="p">)</span>
+
+
+<span class="n">sim</span> <span class="o">=</span> <span class="n">SimpleNamespace</span><span class="p">(</span>
+    <span class="n">physics</span><span class="o">=</span><span class="n">SimpleNamespace</span><span class="p">(</span><span class="n">gravity_z</span><span class="o">=-</span><span class="mf">9.81</span><span class="p">,</span> <span class="n">dt</span><span class="o">=</span><span class="mf">0.002</span><span class="p">),</span>
+    <span class="n">robot</span><span class="o">=</span><span class="n">SimpleNamespace</span><span class="p">(</span><span class="n">joints</span><span class="o">=</span><span class="p">[</span><span class="n">joint</span><span class="p">(</span><span class="s2">"shoulder_pan"</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">),</span> <span class="n">joint</span><span class="p">(</span><span class="s2">"elbow"</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">)]),</span>
+<span class="p">)</span>
+<span class="n">adapter</span> <span class="o">=</span> <span class="n">TemplateDynamicsAdapter</span><span class="p">(</span><span class="n">sim</span><span class="p">)</span>
+
+<span class="n">adapter</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="s2">"gravity"</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mf">1.2</span><span class="p">)</span>
+<span class="n">adapter</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="s2">"actuator_gear"</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="s2">"elbow"</span><span class="p">)</span>
+<span class="n">adapter</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="s2">"actuator_gear"</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="s2">"elbow"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">physics</span><span class="o">.</span><span class="n">gravity_z</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">[</span><span class="n">j</span><span class="o">.</span><span class="n">torque_limit</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">sim</span><span class="o">.</span><span class="n">robot</span><span class="o">.</span><span class="n">joints</span><span class="p">])</span>
+
+<span class="n">adapter</span><span class="o">.</span><span class="n">reset_all</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">physics</span><span class="o">.</span><span class="n">gravity_z</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">[</span><span class="n">j</span><span class="o">.</span><span class="n">torque_limit</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">sim</span><span class="o">.</span><span class="n">robot</span><span class="o">.</span><span class="n">joints</span><span class="p">])</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>-11.772 [10.0, 3.0]
+-9.81 [10.0, 6.0]
+</code></pre></div>
+<p>The second <code>apply</code> on the elbow gives 0.5 times the nominal 6.0, not 0.5 times the scaled value:
+<strong>factors are relative to the nominal value and do not compound</strong>. For <code>index: all</code> the template
+keeps one nominal value per parameter, taken from the first entity; a model whose entities
+differ stores a vector of nominal values, as the MuJoCo adapter does.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The parameter names are the vocabulary of the evaluation grids. A grid that says
+<code>param: actuator_gear</code> runs on every backend that defines that name.</p>
+</div>
+<h2 id="register-an-adapter">Register an adapter<a class="headerlink" href="#register-an-adapter" title="Permanent link">&para;</a></h2>
+<p>The shift wrappers obtain their adapter from <code>get_adapter(env)</code> in the package
+<code>robustrllib.adapters</code>. The command prints the file that defines the function.</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">"import robustrllib.adapters as m; print(m.__file__)"</span>
+</code></pre></div>
+<p>A new branch recognises the environment by an attribute that only its stack has.</p>
+<div class="highlight"><pre><span></span><code><span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">inner</span><span class="p">,</span> <span class="s2">"robot"</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">inner</span><span class="p">,</span> <span class="s2">"physics"</span><span class="p">):</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">robustrllib.adapters.template</span><span class="w"> </span><span class="kn">import</span> <span class="n">TemplateDynamicsAdapter</span>
+    <span class="k">return</span> <span class="n">TemplateDynamicsAdapter</span><span class="p">(</span><span class="n">inner</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>The branch is placed before the more general ones.</strong> An environment that exposes <code>model</code> and
+<code>data</code> is otherwise taken by the MuJoCo adapter, and one that exposes <code>world</code> by the Box2D
+adapter.</p>
+<p>The environment itself is a subclass of <code>robustrllib.gym.Env</code>. A registered id is built with
+<code>make_robust</code>; an instance is wrapped with <code>build_pipeline</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">robustrllib</span><span class="w"> </span><span class="kn">import</span> <span class="n">ShiftSpec</span><span class="p">,</span> <span class="n">build_pipeline</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">robustrllib.gym</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gym</span>
+
+<span class="n">base</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">"Hopper-v5"</span><span class="p">)</span>
+<span class="n">env</span> <span class="o">=</span> <span class="n">build_pipeline</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="p">[</span><span class="n">ShiftSpec</span><span class="p">(</span><span class="s2">"observation"</span><span class="p">,</span> <span class="s2">"gauss"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"sigma"</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">})],</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</code></pre></div>
+<p>The pipeline passes the plain action to <code>step</code>, unless the first parameter of <code>step</code> is named
+<code>robust_input</code>, as in the tasks bundled with the library. <strong><code>robustrllib.gym.make</code> reads the
+command line</strong> when a task family is first created and exits on an argument it does not know;
+<code>make_robust</code> does not.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>If <code>env.unwrapped</code> has a <code>_get_obs()</code> method, the wrapper of a Dynamic shift calls it after
+the shift is applied at <code>reset</code>, so that the first observation describes the shifted model.</p>
+</div>
+<h2 id="verify-an-adapter">Verify an adapter<a class="headerlink" href="#verify-an-adapter" title="Permanent link">&para;</a></h2>
+<p>An adapter can be wrong without raising an error. The checks read the parameter from the
+simulator's own data structure.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">robustrllib</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_robust</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">robustrllib.adapters</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_adapter</span>
+
+<span class="n">env</span> <span class="o">=</span> <span class="n">make_robust</span><span class="p">(</span><span class="s2">"Hopper-v5"</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">adapter</span> <span class="o">=</span> <span class="n">get_adapter</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+<span class="n">gear</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">unwrapped</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">actuator_gear</span>
+
+<span class="n">adapter</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="s2">"actuator_gear"</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="s2">"all"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">gear</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">adapter</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="s2">"actuator_gear"</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="s2">"all"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">gear</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">adapter</span><span class="o">.</span><span class="n">reset_all</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">gear</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>[160. 160. 160.]
+[100. 100. 100.]
+[200. 200. 200.]
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Catches</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Apply a factor, then read the parameter from the simulator</td>
+<td>A setter that writes to an object read only at construction</td>
+</tr>
+<tr>
+<td>Apply two factors in sequence; expect the nominal value times the second</td>
+<td>A getter that returns the perturbed value, so that factors compound</td>
+</tr>
+<tr>
+<td>Reset several times under one shift and read the parameter each time</td>
+<td>A model that is rebuilt at <code>reset</code> without the shift being applied again</td>
+</tr>
+</tbody>
+</table>
+<p>The third check, through the wrapper of a Dynamic shift:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">robustrllib</span><span class="w"> </span><span class="kn">import</span> <span class="n">ShiftSpec</span>
+
+<span class="n">env</span> <span class="o">=</span> <span class="n">make_robust</span><span class="p">(</span><span class="s2">"Hopper-v5"</span><span class="p">,</span> <span class="n">shifts</span><span class="o">=</span><span class="p">[</span>
+    <span class="n">ShiftSpec</span><span class="p">(</span><span class="s2">"dynamics"</span><span class="p">,</span> <span class="s2">"scale"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"param"</span><span class="p">:</span> <span class="s2">"actuator_gear"</span><span class="p">,</span> <span class="s2">"index"</span><span class="p">:</span> <span class="s2">"all"</span><span class="p">,</span> <span class="s2">"factor"</span><span class="p">:</span> <span class="mf">0.8</span><span class="p">}),</span>
+<span class="p">],</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">values</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">seed</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+    <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+    <span class="n">values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">unwrapped</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">actuator_gear</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>[[160.0, 160.0, 160.0], [160.0, 160.0, 160.0], [160.0, 160.0, 160.0]]
+</code></pre></div>
+<h2 id="adapter-rules">Adapter rules<a class="headerlink" href="#adapter-rules" title="Permanent link">&para;</a></h2>
+<ul>
+<li><code>get_nominal</code> returns the value of the pristine model, cached before the first write.</li>
+<li><code>set_param</code> writes into the live model, the one the simulator steps.</li>
+<li><code>reset_all</code> restores every touched parameter exactly.</li>
+<li>A parameter name is reused whenever the physical meaning matches an existing one.</li>
+<li><code>index</code> accepts a position, a name and <code>"all"</code>.</li>
+<li><code>read</code> is implemented before <code>translate</code> is used, and <code>inject_state_noise</code> before the target
+  <code>transition</code>.</li>
+<li>The branch in <code>get_adapter</code> tests an attribute that only the new stack has.</li>
+<li>A new axis is checked on a trained policy before a grid relies on it, because an axis can
+  reach the model and still not matter for the task.</li>
+</ul>
+      </main>
+
+      <footer class="bk-footer">
+        <nav class="bk-related" aria-label="Previous and next page">
+          <a class="bk-prev" href="../modes/composition/">
+            <span class="fa fa-arrow-left" aria-hidden="true"></span>
+            <span class="bk-related-text"><span class="bk-related-label">Previous</span><span class="bk-related-title">Composition</span></span>
+          </a>
+          <a class="bk-next" href="../../evaluation/protocol/">
+            <span class="bk-related-text"><span class="bk-related-label">Next</span><span class="bk-related-title">Evaluation Protocol</span></span>
+            <span class="fa fa-arrow-right" aria-hidden="true"></span>
+          </a>
+        </nav>
+        <p class="bk-footnote">RobustRLlib · Anonymous submission under double-blind review.</p>
+      </footer>
+    </div>
+
+    <aside class="bk-toc-drawer" id="bk-toc" aria-label="Contents of this page">
+      <div class="bk-toc">
+        <p class="bk-toc-title">On this page</p>
+        <nav class="bk-toc-tree" aria-label="Sections">
+          <ul class="bk-toc-list bk-toc-depth-1">
+  <li><a class="bk-toc-link" href="#summary">Summary</a>
+  </li>
+  <li><a class="bk-toc-link" href="#the-adapter-interface">The adapter interface</a>
+    <ul class="bk-toc-list bk-toc-depth-2">
+  <li><a class="bk-toc-link" href="#requirements-per-shift">Requirements per shift</a>
+  </li>
+  <li><a class="bk-toc-link" href="#bundled-adapters">Bundled adapters</a>
+  </li>
+</ul>
+  </li>
+  <li><a class="bk-toc-link" href="#implement-an-adapter">Implement an adapter</a>
+  </li>
+  <li><a class="bk-toc-link" href="#register-an-adapter">Register an adapter</a>
+  </li>
+  <li><a class="bk-toc-link" href="#verify-an-adapter">Verify an adapter</a>
+  </li>
+  <li><a class="bk-toc-link" href="#adapter-rules">Adapter rules</a>
+  </li>
+</ul>
+        </nav>
+      </div>
+    </aside>
+  </div>
+
+</div>
+
+<div class="bk-backdrop" id="bk-backdrop" hidden></div>
+<div class="bk-search" id="bk-search" role="dialog" aria-modal="true" aria-label="Search the tutorial" hidden>
+  <div class="bk-search-panel">
+    <div class="bk-search-field">
+      <span class="fa fa-search" aria-hidden="true"></span>
+      <input type="search" id="mkdocs-search-query" name="q" placeholder="Search the tutorial" aria-label="Search the tutorial" autocomplete="off" spellcheck="false">
+      <button type="button" class="bk-icon-button" id="bk-search-close" aria-label="Close the search"><span class="fa fa-times" aria-hidden="true"></span></button>
+    </div>
+    <div class="bk-search-results" id="mkdocs-search-results" data-no-results-text="Nothing found"></div>
+  </div>
+</div>
+
+<script>var base_url = "../..";</script>
+<script src="../../js/site.js"></script>
+<script src="../../search/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <meta name="description" content="A unified library and benchmark for robust reinforcement learning algorithms.">
+  <title>Latency shift - RobustRLlib Tutorial</title>
+  <link rel="icon" type="image/svg+xml" href="../../../assets/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="../../../assets/favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../../../assets/apple-touch-icon.png">
+  <link rel="stylesheet" href="../../../css/site.css">
+  <link rel="stylesheet" href="../../../assets/pygments.css">
+  <link rel="stylesheet" href="../../../assets/rl.css">
+  <link rel="stylesheet" href="../../../assets/book.css">
+</head>
+<body class="bk">
+<a class="bk-skip" href="#bk-content">Skip to the text</a>
+
+<header class="bk-topbar">
+  <div class="bk-topbar-inner">
+    <button type="button" class="bk-icon-button bk-topbar-menu" id="bk-toggle-nav" aria-controls="bk-sidebar" aria-label="Show or hide the pages" title="Pages">
+      <span class="fa fa-bars" aria-hidden="true"></span>
+    </button>
+    <a class="bk-brand" href="../../..">
+  <svg class="mark" viewBox="0 0 44 40" width="30" height="27" aria-hidden="true">
+        <g transform="translate(22,9)">
+        <rect x="-19" y="-3" width="8" height="6" rx="1.5" transform="rotate(-16 -15 0)" fill="#eb8787" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="-9" y="-7" width="8" height="6" rx="1.5" transform="rotate(-5 -5 -4)" fill="#cde4be" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="1" y="-7" width="8" height="6" rx="1.5" transform="rotate(5 5 -4)" fill="#bcd6eb" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="11" y="-3" width="8" height="6" rx="1.5" transform="rotate(16 15 0)" fill="#d5c8ed" stroke="#5e5d59" stroke-width="1.1"/>
+        </g>
+        <path d="M4 16 L3 34 L22 38 L41 34 L40 16 L22 20 Z" fill="#c96442" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M22 20 L41 16 L40 16 L41 34 L22 38 Z" fill="#d97757" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M6 13 Q14 11 22 17 L22 35 Q14 30 5 31 Z" fill="#faf9f5" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M38 13 Q30 11 22 17 L22 35 Q30 30 39 31 Z" fill="#faf9f5" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        </svg>
+  <span class="bk-brand-name"><span class="bk-brand-mark">Robust</span>RLlib</span>
+  <span class="bk-brand-kind">Tutorial</span>
+</a>
+    <span class="bk-topbar-space"></span>
+    <a class="bk-topbar-link" href="/">Project Page</a>
+  </div>
+</header>
+
+<div class="bk-page">
+
+  <aside class="bk-sidebar-drawer" id="bk-sidebar" aria-label="Pages of the tutorial">
+    <div class="bk-sidebar">
+      <a class="bk-brand" href="../../..">
+  <svg class="mark" viewBox="0 0 44 40" width="30" height="27" aria-hidden="true">
+        <g transform="translate(22,9)">
+        <rect x="-19" y="-3" width="8" height="6" rx="1.5" transform="rotate(-16 -15 0)" fill="#eb8787" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="-9" y="-7" width="8" height="6" rx="1.5" transform="rotate(-5 -5 -4)" fill="#cde4be" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="1" y="-7" width="8" height="6" rx="1.5" transform="rotate(5 5 -4)" fill="#bcd6eb" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="11" y="-3" width="8" height="6" rx="1.5" transform="rotate(16 15 0)" fill="#d5c8ed" stroke="#5e5d59" stroke-width="1.1"/>
+        </g>
+        <path d="M4 16 L3 34 L22 38 L41 34 L40 16 L22 20 Z" fill="#c96442" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M22 20 L41 16 L40 16 L41 34 L22 38 Z" fill="#d97757" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M6 13 Q14 11 22 17 L22 35 Q14 30 5 31 Z" fill="#faf9f5" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M38 13 Q30 11 22 17 L22 35 Q30 30 39 31 Z" fill="#faf9f5" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        </svg>
+  <span class="bk-brand-name"><span class="bk-brand-mark">Robust</span>RLlib</span>
+  <span class="bk-brand-kind">Tutorial</span>
+</a>
+      <button type="button" class="bk-search-button" id="bk-search-open" aria-haspopup="dialog">
+        <span class="fa fa-search" aria-hidden="true"></span>
+        <span class="bk-search-label">Search</span>
+      </button>
+      <nav class="bk-nav" aria-label="Pages">
+        <ul class="bk-nav-list bk-nav-depth-0">
+  <li><a class="bk-nav-link" href="../../..">Home</a></li>
+</ul>
+        <p class="bk-caption">Getting Started</p>
+        <ul class="bk-nav-list bk-nav-depth-1">
+  <li><a class="bk-nav-link" href="../../../getting-started/overview/">Overview</a></li>
+  <li><a class="bk-nav-link" href="../../../getting-started/quick-start/">Quick Start</a></li>
+</ul>
+        <p class="bk-caption">Algorithms</p>
+        <ul class="bk-nav-list bk-nav-depth-1">
+  <li><a class="bk-nav-link" href="../../../algorithms/">All Methods</a></li>
+  <li class="bk-nav-group">
+    <details>
+      <summary>Standard</summary>
+      <ul class="bk-nav-list bk-nav-depth-2">
+  <li><a class="bk-nav-link" href="../../../algorithms/standard/">Overview</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/standard/iql/">IQL</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/standard/td3bc/">TD3+BC</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/standard/mopo/">MOPO</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/standard/synther/">SynthER</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/standard/ppo/">PPO</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/standard/sac/">SAC</a></li>
+</ul>
+    </details>
+  </li>
+  <li class="bk-nav-group">
+    <details>
+      <summary>Robust Online</summary>
+      <ul class="bk-nav-list bk-nav-depth-2">
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-online/">Overview</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-online/atla/">ATLA</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-online/atla-sa/">ATLA-SA</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-online/rsc/">RSC</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-online/rarl/">RARL</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-online/dr/">DR</a></li>
+</ul>
+    </details>
+  </li>
+  <li class="bk-nav-group">
+    <details>
+      <summary>Robust Offline</summary>
+      <ul class="bk-nav-list bk-nav-depth-2">
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-offline/">Overview</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-offline/rfqi/">RFQI</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-offline/rorl/">RORL</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-offline/atla-iql/">ATLA-IQL</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-offline/rsc-iql/">RSC-IQL</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-offline/rambo/">RAMBO</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-offline/romb/">ROMB</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-offline/fwm/">FWM</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-offline/plr-pvl/">PLR-PVL</a></li>
+</ul>
+    </details>
+  </li>
+  <li class="bk-nav-group">
+    <details>
+      <summary>Robust Safe</summary>
+      <ul class="bk-nav-list bk-nav-depth-2">
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-safe/">Overview</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-safe/ramu/">RAMU</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-safe/spidr/">SPiDR</a></li>
+</ul>
+    </details>
+  </li>
+  <li><a class="bk-nav-link" href="../../../algorithms/run-a-method/">Run a Method</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/add-an-algorithm/">Add an Algorithm</a></li>
+</ul>
+        <p class="bk-caption">Shift Sources and Modes</p>
+        <ul class="bk-nav-list bk-nav-depth-1">
+  <li><a class="bk-nav-link" href="../../">Overview</a></li>
+  <li class="bk-nav-group">
+    <details open>
+      <summary>Shift Sources</summary>
+      <ul class="bk-nav-list bk-nav-depth-2">
+  <li><a class="bk-nav-link" href="../dynamic/">Dynamic shift</a></li>
+  <li><a class="bk-nav-link" href="../observation/">Observation shift</a></li>
+  <li><a class="bk-nav-link" href="../action/">Action shift</a></li>
+  <li><a class="bk-nav-link" href="../reward-cost/">Reward/cost shift</a></li>
+  <li><a class="bk-nav-link is-active" href="./" aria-current="page">Latency shift</a></li>
+  <li><a class="bk-nav-link" href="../semantic/">Semantic shift</a></li>
+</ul>
+    </details>
+  </li>
+  <li class="bk-nav-group">
+    <details>
+      <summary>Shift Modes</summary>
+      <ul class="bk-nav-list bk-nav-depth-2">
+  <li><a class="bk-nav-link" href="../../modes/stochastic/">Stochastic</a></li>
+  <li><a class="bk-nav-link" href="../../modes/adversarial/">Adversarial</a></li>
+  <li><a class="bk-nav-link" href="../../modes/parametric/">Parametric</a></li>
+  <li><a class="bk-nav-link" href="../../modes/non-stationary/">Non-stationary</a></li>
+  <li><a class="bk-nav-link" href="../../modes/composition/">Composition</a></li>
+</ul>
+    </details>
+  </li>
+  <li><a class="bk-nav-link" href="../../add-a-backend/">Add a Backend</a></li>
+</ul>
+        <p class="bk-caption">Evaluation</p>
+        <ul class="bk-nav-list bk-nav-depth-1">
+  <li><a class="bk-nav-link" href="../../../evaluation/protocol/">Evaluation Protocol</a></li>
+</ul>
+      </nav>
+    </div>
+  </aside>
+
+  <div class="bk-main">
+    <div class="bk-content">
+      <div class="bk-tools">
+        <button type="button" class="bk-icon-button" id="bk-toggle-toc" aria-controls="bk-toc" aria-label="Show or hide the contents of this page" title="On this page">
+          <span class="fa fa-list-ul" aria-hidden="true"></span>
+        </button>
+      </div>
+
+      <main class="bk-article" id="bk-content">
+        <h1 id="latency-shift">Latency shift<a class="headerlink" href="#latency-shift" title="Permanent link">&para;</a></h1>
+<p>A Latency shift changes timing: when an action takes effect, when an observation arrives, how
+long a control period lasts, and when a reward is paid. A delay changes the loop that the policy
+closes around the plant, which noise on an observation or an action cannot imitate.</p>
+<p><img alt="The loop between agent and environment, with the Latency shift highlighted" src="../../../assets/figures/shift-loop-latency.svg" width="760" /></p>
+<p><em>The Latency shift acts on timing: the delay of the observation, the delay of the action and the control period.</em></p>
+<p><img alt="Two curves over time: the time stamp the policy issued a command for and the time stamp at which it is executed" src="../../../assets/figures/latency.png" width="720" /></p>
+<p><em>Execution latency separates the time a command is issued from the time it takes effect.</em></p>
+<h2 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Latency shift</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Perturbs</td>
+<td>The timing of actions, observations, the control period and the reward</td>
+</tr>
+<tr>
+<td>Target in code</td>
+<td><code>latency</code></td>
+</tr>
+<tr>
+<td>Modes</td>
+<td>Stochastic, Parametric, Non-stationary, Composition</td>
+</tr>
+<tr>
+<td>Units</td>
+<td>Control steps for <code>fixed</code>, <code>buffer</code> and <code>delay</code>; seconds for <code>substep</code> and <code>interp</code></td>
+</tr>
+<tr>
+<td>Acts on a frozen policy</td>
+<td><code>fixed</code>, <code>buffer</code>, <code>substep</code> and <code>interp</code>; <code>delay</code> is applied during training</td>
+</tr>
+<tr>
+<td>Backends</td>
+<td>Any; <code>substep</code> needs a MuJoCo task that exposes <code>frame_skip</code> or <code>n_substeps</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="supported-modes">Supported modes<a class="headerlink" href="#supported-modes" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Mode name in code</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../../modes/parametric/">Parametric</a></td>
+<td><code>fixed</code></td>
+<td>Applies every action a constant number of control steps late</td>
+</tr>
+<tr>
+<td><a href="../../modes/parametric/">Parametric</a></td>
+<td><code>delay</code></td>
+<td>Pays the reward late; observation and action stay on time</td>
+</tr>
+<tr>
+<td><a href="../../modes/stochastic/">Stochastic</a></td>
+<td><code>buffer</code></td>
+<td>Applies every action late by a number of steps drawn per episode or per step</td>
+</tr>
+<tr>
+<td><a href="../../modes/stochastic/">Stochastic</a></td>
+<td><code>substep</code></td>
+<td>Holds every action for a control period of random length</td>
+</tr>
+<tr>
+<td><a href="../../modes/stochastic/">Stochastic</a></td>
+<td><code>interp</code></td>
+<td>Returns the observation as it was some seconds ago, by interpolation of the observation history</td>
+</tr>
+<tr>
+<td><a href="../../modes/non-stationary/">Non-stationary</a></td>
+<td><code>schedule</code> on <code>substep</code> and <code>interp</code></td>
+<td>Varies the excess of the period, or the delay, within the episode</td>
+</tr>
+<tr>
+<td><a href="../../modes/composition/">Composition</a></td>
+<td>Several shifts in one list</td>
+<td>Combines action delay, observation delay and a variable period</td>
+</tr>
+</tbody>
+</table>
+<p>The models behind <code>substep</code> and <code>interp</code> come from two sim-to-real studies: the randomized
+control period of Peng et al. (<em>Sim-to-Real Transfer of Robotic Control with Dynamics
+Randomization</em>, 2018) and the interpolated observation history of Tan et al. (<em>Sim-to-Real:
+Learning Agile Locomotion For Quadruped Robots</em>, 2018). The Adversarial mode is not defined for
+this shift.</p>
+<h2 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Mode name</th>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>fixed</code></td>
+<td><code>steps</code></td>
+<td>int</td>
+<td>required</td>
+<td>Delay of the action in control steps; 0 is the identity</td>
+</tr>
+<tr>
+<td><code>buffer</code></td>
+<td><code>low</code></td>
+<td>int</td>
+<td><code>0</code></td>
+<td>Smallest action delay</td>
+</tr>
+<tr>
+<td></td>
+<td><code>high</code></td>
+<td>int</td>
+<td><code>1</code></td>
+<td>Largest action delay, inclusive</td>
+</tr>
+<tr>
+<td></td>
+<td><code>resample</code></td>
+<td>str</td>
+<td>unset</td>
+<td><code>"step"</code> draws a new delay at every step instead of once per episode</td>
+</tr>
+<tr>
+<td><code>substep</code></td>
+<td><code>lambda_low</code></td>
+<td>float</td>
+<td><code>125.0</code></td>
+<td>Lower bound of the rate of the random excess, per second</td>
+</tr>
+<tr>
+<td></td>
+<td><code>lambda_high</code></td>
+<td>float</td>
+<td><code>1000.0</code></td>
+<td>Upper bound of that rate, per second</td>
+</tr>
+<tr>
+<td></td>
+<td><code>dt0</code></td>
+<td>float</td>
+<td>The nominal control period</td>
+<td>Base period in seconds</td>
+</tr>
+<tr>
+<td><code>interp</code></td>
+<td><code>low</code></td>
+<td>float</td>
+<td><code>0.0</code></td>
+<td>Smallest observation delay in seconds</td>
+</tr>
+<tr>
+<td></td>
+<td><code>high</code></td>
+<td>float</td>
+<td><code>0.0</code></td>
+<td>Largest observation delay in seconds</td>
+</tr>
+<tr>
+<td></td>
+<td><code>resample</code></td>
+<td>str</td>
+<td>unset</td>
+<td><code>"step"</code> draws a new delay at every step instead of once per episode</td>
+</tr>
+<tr>
+<td></td>
+<td><code>control_dt</code></td>
+<td>float</td>
+<td><code>1.0</code></td>
+<td>Control period in seconds, used only if the task has no <code>dt</code> attribute</td>
+</tr>
+<tr>
+<td><code>delay</code></td>
+<td><code>steps</code></td>
+<td>int</td>
+<td><code>1</code></td>
+<td>Reward delay in control steps; at least 1</td>
+</tr>
+<tr>
+<td></td>
+<td><code>release</code></td>
+<td>str</td>
+<td><code>"interval"</code></td>
+<td><code>"interval"</code> pays the accumulated reward every <code>steps</code> steps; <code>"shift"</code> pays each reward <code>steps</code> steps late</td>
+</tr>
+</tbody>
+</table>
+<p>With <code>substep</code>, the control period is the base period plus a random excess. The excess is drawn
+at every step from an exponential distribution whose rate is drawn once per episode between
+<code>lambda_low</code> and <code>lambda_high</code>; the mean excess is one over the rate, so the default bounds add
+between 1 ms and 8 ms on average.</p>
+<h2 id="declare-the-shift">Declare the shift<a class="headerlink" href="#declare-the-shift" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">robustrllib.gym</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gym</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">robustrllib</span><span class="w"> </span><span class="kn">import</span> <span class="n">ShiftSpec</span><span class="p">,</span> <span class="n">build_pipeline</span><span class="p">,</span> <span class="n">make_robust</span>
+
+<span class="n">PARAMETRIC</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"fixed"</span><span class="p">:</span> <span class="n">ShiftSpec</span><span class="p">(</span><span class="s2">"latency"</span><span class="p">,</span> <span class="s2">"fixed"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"steps"</span><span class="p">:</span> <span class="mi">2</span><span class="p">}),</span>
+    <span class="s2">"delay"</span><span class="p">:</span> <span class="n">ShiftSpec</span><span class="p">(</span><span class="s2">"latency"</span><span class="p">,</span> <span class="s2">"delay"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"steps"</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span> <span class="s2">"release"</span><span class="p">:</span> <span class="s2">"interval"</span><span class="p">}),</span>
+<span class="p">}</span>
+<span class="n">STOCHASTIC</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"buffer"</span><span class="p">:</span>  <span class="n">ShiftSpec</span><span class="p">(</span><span class="s2">"latency"</span><span class="p">,</span> <span class="s2">"buffer"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"low"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">"high"</span><span class="p">:</span> <span class="mi">2</span><span class="p">}),</span>
+    <span class="s2">"substep"</span><span class="p">:</span> <span class="n">ShiftSpec</span><span class="p">(</span><span class="s2">"latency"</span><span class="p">,</span> <span class="s2">"substep"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"lambda_low"</span><span class="p">:</span> <span class="mf">125.0</span><span class="p">,</span> <span class="s2">"lambda_high"</span><span class="p">:</span> <span class="mf">1000.0</span><span class="p">}),</span>
+    <span class="s2">"interp"</span><span class="p">:</span>  <span class="n">ShiftSpec</span><span class="p">(</span><span class="s2">"latency"</span><span class="p">,</span> <span class="s2">"interp"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"low"</span><span class="p">:</span> <span class="mf">0.004</span><span class="p">,</span> <span class="s2">"high"</span><span class="p">:</span> <span class="mf">0.008</span><span class="p">}),</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Non-stationary, with an observation delay that grows within the episode:</p>
+<div class="highlight"><pre><span></span><code><span class="n">NON_STATIONARY</span> <span class="o">=</span> <span class="n">ShiftSpec</span><span class="p">(</span>
+    <span class="s2">"latency"</span><span class="p">,</span> <span class="s2">"interp"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"low"</span><span class="p">:</span> <span class="mf">0.008</span><span class="p">,</span> <span class="s2">"high"</span><span class="p">:</span> <span class="mf">0.008</span><span class="p">,</span> <span class="s2">"resample"</span><span class="p">:</span> <span class="s2">"step"</span><span class="p">},</span>
+    <span class="n">schedule</span><span class="o">=</span><span class="p">{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"linear"</span><span class="p">,</span> <span class="s2">"start"</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">"end"</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s2">"t0"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">"t1"</span><span class="p">:</span> <span class="mi">500</span><span class="p">},</span>
+<span class="p">)</span>
+</code></pre></div>
+<p>Composition of the three execution delays:</p>
+<div class="highlight"><pre><span></span><code><span class="n">COMPOSITION</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">STOCHASTIC</span><span class="p">[</span><span class="s2">"substep"</span><span class="p">],</span>
+    <span class="n">ShiftSpec</span><span class="p">(</span><span class="s2">"latency"</span><span class="p">,</span> <span class="s2">"fixed"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"steps"</span><span class="p">:</span> <span class="mi">1</span><span class="p">}),</span>
+    <span class="n">ShiftSpec</span><span class="p">(</span><span class="s2">"latency"</span><span class="p">,</span> <span class="s2">"interp"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"low"</span><span class="p">:</span> <span class="mf">0.002</span><span class="p">,</span> <span class="s2">"high"</span><span class="p">:</span> <span class="mf">0.004</span><span class="p">}),</span>
+<span class="p">]</span>
+<span class="n">env</span> <span class="o">=</span> <span class="n">make_robust</span><span class="p">(</span><span class="s2">"Hopper-v5"</span><span class="p">,</span> <span class="n">shifts</span><span class="o">=</span><span class="n">COMPOSITION</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="delayed-actions">Delayed actions<a class="headerlink" href="#delayed-actions" title="Permanent link">&para;</a></h3>
+<p>A recording wrapper between the task and the shift shows the action that reaches the simulator.</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Recorder</span><span class="p">(</span><span class="n">gym</span><span class="o">.</span><span class="n">Wrapper</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">applied</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">applied</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">action</span><span class="p">)[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">applied_actions</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="n">recorder</span> <span class="o">=</span> <span class="n">Recorder</span><span class="p">(</span><span class="n">make_robust</span><span class="p">(</span><span class="s2">"Hopper-v5"</span><span class="p">))</span>
+    <span class="n">env</span> <span class="o">=</span> <span class="n">build_pipeline</span><span class="p">(</span><span class="n">recorder</span><span class="p">,</span> <span class="p">[</span><span class="n">spec</span><span class="p">],</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+    <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">steps</span><span class="p">):</span>
+        <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="p">(</span><span class="n">t</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)))</span>      <span class="c1"># issue 0.1, 0.2, 0.3, ...</span>
+    <span class="n">env</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">recorder</span><span class="o">.</span><span class="n">applied</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+
+<span class="nb">print</span><span class="p">(</span><span class="n">applied_actions</span><span class="p">(</span><span class="n">ShiftSpec</span><span class="p">(</span><span class="s2">"latency"</span><span class="p">,</span> <span class="s2">"fixed"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"steps"</span><span class="p">:</span> <span class="mi">0</span><span class="p">})))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">applied_actions</span><span class="p">(</span><span class="n">ShiftSpec</span><span class="p">(</span><span class="s2">"latency"</span><span class="p">,</span> <span class="s2">"fixed"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"steps"</span><span class="p">:</span> <span class="mi">2</span><span class="p">})))</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>[0.1, 0.2, 0.3, 0.4, 0.5, 0.6]
+[0.1, 0.1, 0.1, 0.2, 0.3, 0.4]
+</code></pre></div>
+<p>During the first steps the wrapper applies the first action of the episode and not a zero
+action, because a zero command is a real torque.</p>
+<h3 id="variable-control-period">Variable control period<a class="headerlink" href="#variable-control-period" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">simulated_time</span><span class="p">(</span><span class="n">shifts</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+    <span class="n">env</span> <span class="o">=</span> <span class="n">make_robust</span><span class="p">(</span><span class="s2">"Hopper-v5"</span><span class="p">,</span> <span class="n">shifts</span><span class="o">=</span><span class="n">shifts</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">terminate_when_unhealthy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">steps</span><span class="p">):</span>
+        <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+    <span class="n">elapsed</span><span class="p">,</span> <span class="n">frame_skip</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">unwrapped</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="n">env</span><span class="o">.</span><span class="n">unwrapped</span><span class="o">.</span><span class="n">frame_skip</span>
+    <span class="n">env</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">return</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">elapsed</span><span class="p">),</span> <span class="mi">3</span><span class="p">),</span> <span class="n">frame_skip</span>
+
+
+<span class="nb">print</span><span class="p">(</span><span class="n">simulated_time</span><span class="p">([]))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">simulated_time</span><span class="p">([</span><span class="n">STOCHASTIC</span><span class="p">[</span><span class="s2">"substep"</span><span class="p">]]))</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>(0.8, 4)
+(1.414, 4)
+</code></pre></div>
+<p>One hundred nominal steps cover 0.8 s of simulated time; under the shift the same actions cover
+more. The <code>frame_skip</code> of the task is back at its nominal value after every step.</p>
+<h3 id="delayed-reward">Delayed reward<a class="headerlink" href="#delayed-reward" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">rewards</span><span class="p">(</span><span class="n">shifts</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="mi">12</span><span class="p">):</span>
+    <span class="n">env</span> <span class="o">=</span> <span class="n">make_robust</span><span class="p">(</span><span class="s2">"Hopper-v5"</span><span class="p">,</span> <span class="n">shifts</span><span class="o">=</span><span class="n">shifts</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">terminate_when_unhealthy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">))[</span><span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">steps</span><span class="p">)]</span>
+    <span class="n">env</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+
+<span class="nb">print</span><span class="p">(</span><span class="n">rewards</span><span class="p">([]))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">rewards</span><span class="p">([</span><span class="n">ShiftSpec</span><span class="p">(</span><span class="s2">"latency"</span><span class="p">,</span> <span class="s2">"delay"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"steps"</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s2">"release"</span><span class="p">:</span> <span class="s2">"interval"</span><span class="p">})]))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">rewards</span><span class="p">([</span><span class="n">ShiftSpec</span><span class="p">(</span><span class="s2">"latency"</span><span class="p">,</span> <span class="s2">"delay"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"steps"</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s2">"release"</span><span class="p">:</span> <span class="s2">"shift"</span><span class="p">})]))</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>[1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.01]
+[0.0, 0.0, 0.0, 3.99, 0.0, 0.0, 0.0, 3.98, 0.0, 0.0, 0.0, 4.0]
+[0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+</code></pre></div>
+<p>Both release rules pay out everything that is still withheld when the episode terminates or is
+truncated, so <strong>the undiscounted return of a complete episode is preserved</strong>. A trainer that
+takes only an environment id receives the delay through the registered ids
+<code>HopperRewardDelay4-v5</code>, <code>HopperRewardDelay16-v5</code>, <code>HopperRewardDelay32-v5</code> and
+<code>HopperRewardDelay64-v5</code>; a trainer that learns from a dataset receives it through the
+<code>reward_channel</code> key of the experiment file.</p>
+<div class="highlight"><span class="filename">robustrllib/configs/dr/rdelay16.yaml (comments omitted)</span><pre><span></span><code><span class="nt">randomization</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
+<span class="nt">extra_shifts</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="nv">latency</span><span class="p p-Indicator">,</span><span class="nt"> mode</span><span class="p">:</span><span class="w"> </span><span class="nv">delay</span><span class="p p-Indicator">,</span><span class="nt"> params</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">steps</span><span class="p">:</span><span class="w"> </span><span class="nv">16</span><span class="p p-Indicator">,</span><span class="nt"> release</span><span class="p">:</span><span class="w"> </span><span class="nv">interval</span><span class="p p-Indicator">}}</span>
+<span class="nt">curriculum</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="nv">constant</span><span class="p p-Indicator">,</span><span class="nt"> end</span><span class="p">:</span><span class="w"> </span><span class="nv">1.0</span><span class="p p-Indicator">}</span>
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code>ShiftSpec("reward", "delay", ...)</code> is the earlier spelling of the mode name <code>delay</code> and
+builds the same wrapper.</p>
+</div>
+<h2 id="rules">Rules<a class="headerlink" href="#rules" title="Permanent link">&para;</a></h2>
+<ul>
+<li>All five timing mode names are written on the target <code>latency</code>.</li>
+<li><code>fixed</code> is the mode name for a severity axis of an evaluation grid, because it adds no
+  variance of its own.</li>
+<li><code>buffer</code> needs nothing from the simulator and runs on any backend.</li>
+<li><strong><code>substep</code> is written only for MuJoCo tasks</strong>; on other tasks it raises
+  <code>NotImplementedError</code> when the environment is built.</li>
+<li><code>interp</code> delays are given in seconds, which grades the delay below one control step.</li>
+<li><code>delay</code> is applied during training, and the policy is evaluated on the nominal task.</li>
+<li>A <code>fixed</code> shift always carries <code>steps</code>; a missing one raises <code>KeyError</code> at the first <code>reset</code>.</li>
+</ul>
+      </main>
+
+      <footer class="bk-footer">
+        <nav class="bk-related" aria-label="Previous and next page">
+          <a class="bk-prev" href="../reward-cost/">
+            <span class="fa fa-arrow-left" aria-hidden="true"></span>
+            <span class="bk-related-text"><span class="bk-related-label">Previous</span><span class="bk-related-title">Reward/cost shift</span></span>
+          </a>
+          <a class="bk-next" href="../semantic/">
+            <span class="bk-related-text"><span class="bk-related-label">Next</span><span class="bk-related-title">Semantic shift</span></span>
+            <span class="fa fa-arrow-right" aria-hidden="true"></span>
+          </a>
+        </nav>
+        <p class="bk-footnote">RobustRLlib · Anonymous submission under double-blind review.</p>
+      </footer>
+    </div>
+
+    <aside class="bk-toc-drawer" id="bk-toc" aria-label="Contents of this page">
+      <div class="bk-toc">
+        <p class="bk-toc-title">On this page</p>
+        <nav class="bk-toc-tree" aria-label="Sections">
+          <ul class="bk-toc-list bk-toc-depth-1">
+  <li><a class="bk-toc-link" href="#properties">Properties</a>
+  </li>
+  <li><a class="bk-toc-link" href="#supported-modes">Supported modes</a>
+  </li>
+  <li><a class="bk-toc-link" href="#parameters">Parameters</a>
+  </li>
+  <li><a class="bk-toc-link" href="#declare-the-shift">Declare the shift</a>
+    <ul class="bk-toc-list bk-toc-depth-2">
+  <li><a class="bk-toc-link" href="#delayed-actions">Delayed actions</a>
+  </li>
+  <li><a class="bk-toc-link" href="#variable-control-period">Variable control period</a>
+  </li>
+  <li><a class="bk-toc-link" href="#delayed-reward">Delayed reward</a>
+  </li>
+</ul>
+  </li>
+  <li><a class="bk-toc-link" href="#rules">Rules</a>
+  </li>
+</ul>
+        </nav>
+      </div>
+    </aside>
+  </div>
+
+</div>
+
+<div class="bk-backdrop" id="bk-backdrop" hidden></div>
+<div class="bk-search" id="bk-search" role="dialog" aria-modal="true" aria-label="Search the tutorial" hidden>
+  <div class="bk-search-panel">
+    <div class="bk-search-field">
+      <span class="fa fa-search" aria-hidden="true"></span>
+      <input type="search" id="mkdocs-search-query" name="q" placeholder="Search the tutorial" aria-label="Search the tutorial" autocomplete="off" spellcheck="false">
+      <button type="button" class="bk-icon-button" id="bk-search-close" aria-label="Close the search"><span class="fa fa-times" aria-hidden="true"></span></button>
+    </div>
+    <div class="bk-search-results" id="mkdocs-search-results" data-no-results-text="Nothing found"></div>
+  </div>
+</div>
+
+<script>var base_url = "../../..";</script>
+<script src="../../../js/site.js"></script>
+<script src="../../../search/main.js"></script>
+</body>
+</html>

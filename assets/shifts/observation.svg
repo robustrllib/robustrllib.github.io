@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 220" role="img" aria-label="A camera whose image carries noise">
+  <rect width="360" height="220" rx="16" fill="#eef3ff"/>
+  <g fill="none" stroke="#14305e" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="24" y="30" width="170" height="126" rx="12" fill="#ffffff"/>
+    <path d="M40 130 l30 -36 l24 22 l28 -34 l40 48" />
+    <circle cx="160" cy="58" r="11" fill="#fde8d2"/>
+    <g fill="#14305e" stroke="none">
+      <circle cx="60" cy="52" r="2.2"/><circle cx="92" cy="44" r="2.2"/><circle cx="118" cy="70" r="2.2"/><circle cx="140" cy="96" r="2.2"/>
+      <circle cx="70" cy="98" r="2.2"/><circle cx="104" cy="112" r="2.2"/><circle cx="176" cy="120" r="2.2"/><circle cx="48" cy="140" r="2.2"/>
+      <circle cx="150" cy="140" r="2.2"/><circle cx="126" cy="36" r="2.2"/>
+    </g>
+    <path d="M32 84 h154 M32 100 h154" stroke="#8a94a6" stroke-width="3" stroke-dasharray="6 8"/>
+    <rect x="236" y="70" width="90" height="70" rx="12" fill="#ffffff"/>
+    <circle cx="281" cy="105" r="18" fill="#ffffff"/><circle cx="281" cy="105" r="7" fill="#14305e" stroke="none"/>
+    <path d="M252 70 v-10 h22 v10"/>
+    <path d="M204 92 L232 92 M204 118 L232 118" stroke="#2f6bff" stroke-dasharray="8 6"/>
+    <path d="M300 150 q12 12 0 24 q-12 12 0 24" stroke="#e5484d" stroke-width="4"/>
+    <text x="250" y="180" font-family="sans-serif" font-size="14" font-weight="700" fill="#e5484d" stroke="none">+ noise</text>
+  </g>
+</svg>

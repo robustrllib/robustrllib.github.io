@@ -1,0 +1,163 @@
+block,task,method,cell,channel_label,bar_order,score_mean,score_sd,n_seeds,nominal_mean,retention_pct,bar_color
+hopper_offline,hopper,IQL,nominal,nominal,,106.7849,4.1806,5,106.7849,100.00,
+hopper_offline,hopper,IQL,theta_a,action,1,51.7007,5.4380,5,106.7849,48.42,#95aad0
+hopper_offline,hopper,IQL,theta_p,dynamics,2,27.8904,2.2104,5,106.7849,26.12,#8c79b8
+hopper_offline,hopper,IQL,theta_tau,latency,3,25.6987,3.6882,5,106.7849,24.07,#8947a0
+hopper_offline,hopper,IQL,compound,compound,4,13.3799,2.4657,5,106.7849,12.53,#7e0e79
+hopper_offline,hopper,IQL,pred,independence prediction,,3.2459,0.5447,5,106.7849,3.04,
+hopper_offline,hopper,TD3+BC,nominal,nominal,,110.2090,1.0159,5,110.2090,100.00,
+hopper_offline,hopper,TD3+BC,theta_a,action,1,77.0937,25.9413,5,110.2090,69.95,#95aad0
+hopper_offline,hopper,TD3+BC,theta_tau,latency,2,33.7219,5.7400,5,110.2090,30.60,#8c79b8
+hopper_offline,hopper,TD3+BC,theta_p,dynamics,3,26.8353,4.2246,5,110.2090,24.35,#8947a0
+hopper_offline,hopper,TD3+BC,compound,compound,4,18.1410,1.3788,5,110.2090,16.46,#7e0e79
+hopper_offline,hopper,TD3+BC,pred,independence prediction,,5.6175,1.7814,5,110.2090,5.10,
+hopper_offline,hopper,SynthER,nominal,nominal,,110.5381,0.6563,5,110.5381,100.00,
+hopper_offline,hopper,SynthER,theta_a,action,1,60.9913,7.4660,5,110.5381,55.18,#95aad0
+hopper_offline,hopper,SynthER,theta_p,dynamics,2,27.2320,2.1634,5,110.5381,24.64,#8c79b8
+hopper_offline,hopper,SynthER,theta_tau,latency,3,25.0333,2.6986,5,110.5381,22.65,#8947a0
+hopper_offline,hopper,SynthER,compound,compound,4,13.9341,2.3741,5,110.5381,12.61,#7e0e79
+hopper_offline,hopper,SynthER,pred,independence prediction,,3.4368,0.8921,5,110.5381,3.11,
+hopper_offline,hopper,MOPO,nominal,nominal,,33.7568,34.3483,5,33.7568,100.00,
+hopper_offline,hopper,MOPO,theta_a,action,1,34.0402,40.7575,5,33.7568,100.84,#95aad0
+hopper_offline,hopper,MOPO,theta_p,dynamics,2,16.0035,13.4011,5,33.7568,47.41,#8c79b8
+hopper_offline,hopper,MOPO,theta_tau,latency,3,13.9106,14.8762,5,33.7568,41.21,#8947a0
+hopper_offline,hopper,MOPO,compound,compound,4,6.7916,5.4279,5,33.7568,20.12,#7e0e79
+hopper_offline,hopper,MOPO,pred,independence prediction,,6.2767,5.0554,5,33.7568,18.59,
+hopper_offline,hopper,ATLA-IQL,nominal,nominal,,107.2070,4.9451,5,107.2070,100.00,
+hopper_offline,hopper,ATLA-IQL,theta_a,action,1,56.5003,6.9701,5,107.2070,52.70,#95aad0
+hopper_offline,hopper,ATLA-IQL,theta_tau,latency,2,27.1476,5.8197,5,107.2070,25.32,#8c79b8
+hopper_offline,hopper,ATLA-IQL,theta_p,dynamics,3,27.1038,1.2729,5,107.2070,25.28,#8947a0
+hopper_offline,hopper,ATLA-IQL,compound,compound,4,15.6139,2.8670,5,107.2070,14.56,#7e0e79
+hopper_offline,hopper,ATLA-IQL,pred,independence prediction,,3.5943,0.7567,5,107.2070,3.35,
+hopper_offline,hopper,RSC-IQL,nominal,nominal,,100.8116,11.7594,5,100.8116,100.00,
+hopper_offline,hopper,RSC-IQL,theta_a,action,1,46.9488,4.7179,5,100.8116,46.57,#95aad0
+hopper_offline,hopper,RSC-IQL,theta_tau,latency,2,27.0169,4.1038,5,100.8116,26.80,#8c79b8
+hopper_offline,hopper,RSC-IQL,theta_p,dynamics,3,25.3064,1.8254,5,100.8116,25.10,#8947a0
+hopper_offline,hopper,RSC-IQL,compound,compound,4,13.7869,2.7281,5,100.8116,13.68,#7e0e79
+hopper_offline,hopper,RSC-IQL,pred,independence prediction,,3.1608,0.3639,5,100.8116,3.14,
+hopper_offline,hopper,ROMB-IQL,nominal,nominal,,99.1389,14.7339,5,99.1389,100.00,
+hopper_offline,hopper,ROMB-IQL,theta_a,action,1,55.3968,13.3428,5,99.1389,55.88,#95aad0
+hopper_offline,hopper,ROMB-IQL,theta_tau,latency,2,29.0829,5.1450,5,99.1389,29.34,#8c79b8
+hopper_offline,hopper,ROMB-IQL,theta_p,dynamics,3,28.0152,1.4430,5,99.1389,28.26,#8947a0
+hopper_offline,hopper,ROMB-IQL,compound,compound,4,15.8907,2.4412,5,99.1389,16.03,#7e0e79
+hopper_offline,hopper,ROMB-IQL,pred,independence prediction,,4.6415,1.2793,5,99.1389,4.68,
+hopper_offline,hopper,FWM-IQL,nominal,nominal,,101.1446,14.6213,5,101.1446,100.00,
+hopper_offline,hopper,FWM-IQL,theta_a,action,1,50.7108,7.8834,5,101.1446,50.14,#95aad0
+hopper_offline,hopper,FWM-IQL,theta_tau,latency,2,29.3067,4.5922,5,101.1446,28.98,#8c79b8
+hopper_offline,hopper,FWM-IQL,theta_p,dynamics,3,27.9110,1.0288,5,101.1446,27.60,#8947a0
+hopper_offline,hopper,FWM-IQL,compound,compound,4,16.8920,2.7387,5,101.1446,16.70,#7e0e79
+hopper_offline,hopper,FWM-IQL,pred,independence prediction,,4.1962,1.2585,5,101.1446,4.15,
+hopper_offline,hopper,FMGAN-IQL,nominal,nominal,,106.7173,4.6151,5,106.7173,100.00,
+hopper_offline,hopper,FMGAN-IQL,theta_a,action,1,58.4454,16.3953,5,106.7173,54.77,#95aad0
+hopper_offline,hopper,FMGAN-IQL,theta_p,dynamics,2,28.9834,1.1033,5,106.7173,27.16,#8c79b8
+hopper_offline,hopper,FMGAN-IQL,theta_tau,latency,3,28.9699,5.5036,5,106.7173,27.15,#8947a0
+hopper_offline,hopper,FMGAN-IQL,compound,compound,4,16.1142,2.1983,5,106.7173,15.10,#7e0e79
+hopper_offline,hopper,FMGAN-IQL,pred,independence prediction,,4.4198,2.0019,5,106.7173,4.14,
+hopper_offline,hopper,RAMBO,nominal,nominal,,100.1358,8.6486,5,100.1358,100.00,
+hopper_offline,hopper,RAMBO,theta_a,action,1,42.9571,2.0064,5,100.1358,42.90,#95aad0
+hopper_offline,hopper,RAMBO,theta_p,dynamics,2,28.4419,2.7566,5,100.1358,28.40,#8c79b8
+hopper_offline,hopper,RAMBO,theta_tau,latency,3,26.1446,2.5048,5,100.1358,26.11,#8947a0
+hopper_offline,hopper,RAMBO,compound,compound,4,14.9033,3.7242,5,100.1358,14.88,#7e0e79
+hopper_offline,hopper,RAMBO,pred,independence prediction,,3.2566,0.8230,5,100.1358,3.25,
+hopper_offline,hopper,RFQI,nominal,nominal,,108.0055,2.5460,5,108.0055,100.00,
+hopper_offline,hopper,RFQI,theta_a,action,1,57.7350,17.2550,5,108.0055,53.46,#95aad0
+hopper_offline,hopper,RFQI,theta_tau,latency,2,29.0228,2.7364,5,108.0055,26.87,#8c79b8
+hopper_offline,hopper,RFQI,theta_p,dynamics,3,25.8891,0.9882,5,108.0055,23.97,#8947a0
+hopper_offline,hopper,RFQI,compound,compound,4,14.0790,1.1514,5,108.0055,13.04,#7e0e79
+hopper_offline,hopper,RFQI,pred,independence prediction,,3.7308,1.2471,5,108.0055,3.45,
+hopper_offline,hopper,RORL,nominal,nominal,,110.5441,1.7563,5,110.5441,100.00,
+hopper_offline,hopper,RORL,theta_a,action,1,48.7089,2.6100,5,110.5441,44.06,#95aad0
+hopper_offline,hopper,RORL,theta_tau,latency,2,37.3617,4.1645,5,110.5441,33.80,#8c79b8
+hopper_offline,hopper,RORL,theta_p,dynamics,3,29.8672,0.4106,5,110.5441,27.02,#8947a0
+hopper_offline,hopper,RORL,compound,compound,4,18.7095,3.3644,5,110.5441,16.92,#7e0e79
+hopper_offline,hopper,RORL,pred,independence prediction,,4.4471,0.5238,5,110.5441,4.02,
+hopper_online,hopper,PPO,nominal,nominal,,82.5741,10.4370,5,82.5741,100.00,
+hopper_online,hopper,PPO,theta_a,action,1,61.8340,16.2057,5,82.5741,74.88,#20a386
+hopper_online,hopper,PPO,theta_p,dynamics,2,16.9224,4.8014,5,82.5741,20.49,#65cb5e
+hopper_online,hopper,PPO,theta_tau,latency,3,12.2605,9.2382,5,82.5741,14.85,#a0da39
+hopper_online,hopper,PPO,compound,compound,4,7.9901,3.9681,5,82.5741,9.68,#dfe318
+hopper_online,hopper,PPO,pred,independence prediction,,1.9470,1.6235,5,82.5741,2.36,
+hopper_online,hopper,RARL-PPO,nominal,nominal,,75.7518,41.1069,5,75.7518,100.00,
+hopper_online,hopper,RARL-PPO,theta_a,action,1,85.5682,33.5600,5,75.7518,112.96,#20a386
+hopper_online,hopper,RARL-PPO,theta_p,dynamics,2,21.6762,3.0639,5,75.7518,28.61,#65cb5e
+hopper_online,hopper,RARL-PPO,theta_tau,latency,3,15.4109,14.6633,5,75.7518,20.34,#a0da39
+hopper_online,hopper,RARL-PPO,compound,compound,4,7.7756,3.6902,5,75.7518,10.26,#dfe318
+hopper_online,hopper,RARL-PPO,pred,independence prediction,,9.1176,13.5105,5,75.7518,12.04,
+hopper_online,hopper,RARL-TRPO,nominal,nominal,,78.4812,25.1368,5,78.4812,100.00,
+hopper_online,hopper,RARL-TRPO,theta_a,action,1,79.3210,21.0026,5,78.4812,101.07,#20a386
+hopper_online,hopper,RARL-TRPO,theta_p,dynamics,2,22.6445,3.1660,5,78.4812,28.85,#65cb5e
+hopper_online,hopper,RARL-TRPO,theta_tau,latency,3,12.9581,3.7969,5,78.4812,16.51,#a0da39
+hopper_online,hopper,RARL-TRPO,compound,compound,4,7.7562,1.0460,5,78.4812,9.88,#dfe318
+hopper_online,hopper,RARL-TRPO,pred,independence prediction,,4.2655,1.8730,5,78.4812,5.44,
+hopper_online,hopper,ATLA-PPO,nominal,nominal,,63.2940,39.8751,5,63.2940,100.00,
+hopper_online,hopper,ATLA-PPO,theta_a,action,1,62.0208,38.8036,5,63.2940,97.99,#20a386
+hopper_online,hopper,ATLA-PPO,theta_tau,latency,2,29.7686,28.1566,5,63.2940,47.03,#65cb5e
+hopper_online,hopper,ATLA-PPO,theta_p,dynamics,3,24.5928,5.2409,5,63.2940,38.85,#a0da39
+hopper_online,hopper,ATLA-PPO,compound,compound,4,11.8293,7.9873,5,63.2940,18.69,#dfe318
+hopper_online,hopper,ATLA-PPO,pred,independence prediction,,10.6921,7.2014,5,63.2940,16.89,
+hopper_online,hopper,ATLA-SA-PPO,nominal,nominal,,104.3942,8.8261,5,104.3942,100.00,
+hopper_online,hopper,ATLA-SA-PPO,theta_a,action,1,88.9294,11.2078,5,104.3942,85.19,#20a386
+hopper_online,hopper,ATLA-SA-PPO,theta_tau,latency,2,44.5248,11.9706,5,104.3942,42.65,#65cb5e
+hopper_online,hopper,ATLA-SA-PPO,theta_p,dynamics,3,25.4297,4.0874,5,104.3942,24.36,#a0da39
+hopper_online,hopper,ATLA-SA-PPO,compound,compound,4,14.8913,2.3155,5,104.3942,14.26,#dfe318
+hopper_online,hopper,ATLA-SA-PPO,pred,independence prediction,,9.8029,4.7957,5,104.3942,9.39,
+hopper_online,hopper,SAC,nominal,nominal,,74.9575,25.9088,5,74.9575,100.00,
+hopper_online,hopper,SAC,theta_a,action,1,55.9435,20.6380,5,74.9575,74.63,#20a386
+hopper_online,hopper,SAC,theta_tau,latency,2,26.2833,9.0958,5,74.9575,35.06,#65cb5e
+hopper_online,hopper,SAC,theta_p,dynamics,3,22.6079,4.7162,5,74.9575,30.16,#a0da39
+hopper_online,hopper,SAC,compound,compound,4,14.4746,4.0901,5,74.9575,19.31,#dfe318
+hopper_online,hopper,SAC,pred,independence prediction,,6.6173,3.4908,5,74.9575,8.83,
+hopper_online,hopper,DR-SAC,nominal,nominal,,103.3096,4.5373,5,103.3096,100.00,
+hopper_online,hopper,DR-SAC,theta_a,action,1,100.3509,6.9390,5,103.3096,97.14,#20a386
+hopper_online,hopper,DR-SAC,theta_tau,latency,2,55.5817,14.6996,5,103.3096,53.80,#65cb5e
+hopper_online,hopper,DR-SAC,theta_p,dynamics,3,31.2824,3.4078,5,103.3096,30.28,#a0da39
+hopper_online,hopper,DR-SAC,compound,compound,4,19.3569,2.9383,5,103.3096,18.74,#dfe318
+hopper_online,hopper,DR-SAC,pred,independence prediction,,16.3052,4.7267,5,103.3096,15.78,
+hopper_online,hopper,RSC-SAC,nominal,nominal,,78.2846,26.9996,5,78.2846,100.00,
+hopper_online,hopper,RSC-SAC,theta_a,action,1,73.8661,25.1416,5,78.2846,94.36,#20a386
+hopper_online,hopper,RSC-SAC,theta_p,dynamics,2,36.5607,3.2735,5,78.2846,46.70,#65cb5e
+hopper_online,hopper,RSC-SAC,theta_tau,latency,3,26.8772,27.0072,5,78.2846,34.33,#a0da39
+hopper_online,hopper,RSC-SAC,compound,compound,4,11.2403,6.1095,5,78.2846,14.36,#dfe318
+hopper_online,hopper,RSC-SAC,pred,independence prediction,,12.0061,13.2462,5,78.2846,15.34,
+pusher,pusher,PPO,nominal,nominal,,100.0000,0.7216,5,100.0000,100.00,
+pusher,pusher,PPO,theta_tau,latency,1,100.7844,0.9065,5,100.0000,100.78,#2a768e
+pusher,pusher,PPO,theta_o,observation,2,99.0559,0.8388,5,100.0000,99.06,#20a386
+pusher,pusher,PPO,theta_z,semantic,3,66.6383,1.4284,5,100.0000,66.64,#65cb5e
+pusher,pusher,PPO,theta_p,dynamics,4,52.3721,6.6168,5,100.0000,52.37,#a0da39
+pusher,pusher,PPO,compound,compound,5,45.2563,4.5981,5,100.0000,45.26,#dfe318
+pusher,pusher,PPO,pred,independence prediction,,34.8287,4.3559,5,100.0000,34.83,
+pusher,pusher,ATLA-SA-PPO,nominal,nominal,,101.2301,2.5046,5,101.2301,100.00,
+pusher,pusher,ATLA-SA-PPO,theta_tau,latency,1,102.0784,2.3749,5,101.2301,100.84,#2a768e
+pusher,pusher,ATLA-SA-PPO,theta_o,observation,2,101.1517,2.5163,5,101.2301,99.92,#20a386
+pusher,pusher,ATLA-SA-PPO,theta_z,semantic,3,77.5543,5.6548,5,101.2301,76.61,#65cb5e
+pusher,pusher,ATLA-SA-PPO,theta_p,dynamics,4,49.9077,12.6872,5,101.2301,49.30,#a0da39
+pusher,pusher,ATLA-SA-PPO,compound,compound,5,38.6575,10.6315,5,101.2301,38.19,#dfe318
+pusher,pusher,ATLA-SA-PPO,pred,independence prediction,,38.6381,10.3766,5,101.2301,38.17,
+pusher,pusher,RARL,nominal,nominal,,86.4066,6.7071,5,86.4066,100.00,
+pusher,pusher,RARL,theta_tau,latency,1,86.9442,6.8233,5,86.4066,100.62,#2a768e
+pusher,pusher,RARL,theta_o,observation,2,86.4910,6.9720,5,86.4066,100.10,#20a386
+pusher,pusher,RARL,theta_z,semantic,3,70.1490,7.9890,5,86.4066,81.18,#65cb5e
+pusher,pusher,RARL,theta_p,dynamics,4,48.4396,13.7121,5,86.4066,56.06,#a0da39
+pusher,pusher,RARL,compound,compound,5,37.4227,3.2340,5,86.4066,43.31,#dfe318
+pusher,pusher,RARL,pred,independence prediction,,39.4672,11.0855,5,86.4066,45.68,
+pusher,pusher,SAC,nominal,nominal,,97.8540,4.2677,5,97.8540,100.00,
+pusher,pusher,SAC,theta_tau,latency,1,98.6724,4.5744,5,97.8540,100.84,#2a768e
+pusher,pusher,SAC,theta_o,observation,2,94.2565,3.6564,5,97.8540,96.32,#20a386
+pusher,pusher,SAC,theta_z,semantic,3,79.7291,4.7971,5,97.8540,81.48,#65cb5e
+pusher,pusher,SAC,theta_p,dynamics,4,44.5935,10.2473,5,97.8540,45.57,#a0da39
+pusher,pusher,SAC,compound,compound,5,18.8323,9.7602,5,97.8540,19.25,#dfe318
+pusher,pusher,SAC,pred,independence prediction,,35.3455,8.3987,5,97.8540,36.12,
+pusher,pusher,SAC (in),nominal,nominal,,92.0093,3.5034,5,92.0093,100.00,
+pusher,pusher,SAC (in),theta_tau,latency,1,92.6286,3.7856,5,92.0093,100.67,#2a768e
+pusher,pusher,SAC (in),theta_o,observation,2,91.0680,3.0696,5,92.0093,98.98,#20a386
+pusher,pusher,SAC (in),theta_z,semantic,3,72.7824,4.1117,5,92.0093,79.10,#65cb5e
+pusher,pusher,SAC (in),theta_p,dynamics,4,48.3487,10.5832,5,92.0093,52.55,#a0da39
+pusher,pusher,SAC (in),compound,compound,5,28.7012,14.3759,5,92.0093,31.19,#dfe318
+pusher,pusher,SAC (in),pred,independence prediction,,37.9926,7.9790,5,92.0093,41.29,
+pusher,pusher,DR-SAC,nominal,nominal,,96.4683,3.6420,5,96.4683,100.00,
+pusher,pusher,DR-SAC,theta_tau,latency,1,97.3170,3.8412,5,96.4683,100.88,#2a768e
+pusher,pusher,DR-SAC,theta_o,observation,2,92.0598,3.0438,5,96.4683,95.43,#20a386
+pusher,pusher,DR-SAC,theta_z,semantic,3,78.5685,3.5238,5,96.4683,81.44,#65cb5e
+pusher,pusher,DR-SAC,theta_p,dynamics,4,46.0321,9.3349,5,96.4683,47.72,#a0da39
+pusher,pusher,DR-SAC,compound,compound,5,21.5239,10.0683,5,96.4683,22.31,#dfe318
+pusher,pusher,DR-SAC,pred,independence prediction,,36.0476,7.1275,5,96.4683,37.37,

@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 430" fill="none" role="img" aria-labelledby="title desc">
+  <title id="title">A field guide to robust reinforcement learning</title>
+  <desc id="desc">An open book with a shield labeled robustRL and a performance curve labeled Evaluation, surrounded by ink drawings of a car in rain, a four-legged robot stepping over rocks, a robot arm reaching for a displaced object, and a maze with a successful route and two wrong turns marked with crosses.</desc>
+  <!-- Warm paper, quiet pigment, and deliberately irregular pen contours. -->
+  <g stroke="#4d4c48" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Driving in changing weather. -->
+    <g id="scene-driving" transform="translate(172 105) rotate(-9 60 60)">
+      <path d="M-5 57C-13 27 7 8 36 9C60-5 106 6 116 38C132 63 106 94 76 100C44 110 5 91-5 57Z" fill="#e8e6dc" stroke="none"/>
+      <path d="M13 37C1 39-3 25 7 21C5 10 20 5 28 13C37 3 52 11 51 20C66 19 67 34 55 36C40 38 25 35 13 37Z" fill="#faf9f5"/>
+      <path d="M13 47L10 55M29 45L26 56M45 46L42 53M58 43L55 51" stroke="#87867f" stroke-width="2"/>
+      <path d="M0 98C34 88 73 90 121 96M-5 104L20 100M93 102L125 103" stroke="#87867f" stroke-width="1.6"/>
+      <path d="M24 80L27 66L40 61L52 46L79 46L96 62L109 68L110 81C84 83 49 81 24 80Z" fill="#c96442" stroke="none"/>
+      <path d="M22 79L25 65L40 60L51 44L80 45L97 61L108 65L111 79L100 80M78 80L51 79M32 79L22 79"/>
+      <path d="M46 60L55 49L65 49L66 61ZM71 49L79 50L89 62L72 61Z" fill="#faf9f5" stroke-width="1.7"/>
+      <path d="M27 69L34 69M102 69L108 70M69 68L74 68" stroke="#faf9f5" stroke-width="2"/>
+      <path d="M51 78C51 92 32 92 32 79C32 66 51 66 51 78ZM100 80C100 93 80 93 80 80C80 67 100 67 100 80Z" fill="#4d4c48"/>
+      <path d="M42 76L42 82M88 78L89 84" stroke="#faf9f5" stroke-width="2"/>
+    </g>
+
+    <!-- A small field robot stepping over a rocky obstacle. -->
+    <g id="scene-robot" transform="translate(326 37) rotate(-4 58 61)">
+      <path d="M6 38C23 5 70 2 101 22C128 44 116 80 91 92C59 111 4 88 6 38Z" fill="#eddfc6" stroke="none"/>
+      <path d="M7 107C43 105 90 109 137 107" stroke="#87867f" stroke-width="1.7"/>
+      <path d="M78 107L84 96L96 88L110 92L120 106L99 109Z" fill="#c2b08b" stroke-width="2.1"/>
+      <path d="M84 96L99 99L96 88M99 99L110 92M99 99L105 108" stroke="#87867f" stroke-width="1.3"/>
+      <path d="M62 107L66 100L73 101L78 107Z" fill="#d1cfc5" stroke-width="1.5"/>
+      <path d="M119 91L124 86M124 98L131 96M86 114L110 114" stroke="#b0aea5" stroke-width="1.4"/>
+      <path d="M42 59L31 78L40 97M75 57L68 74L80 89" stroke="#87867f" stroke-width="5"/>
+      <path d="M31 43C47 39 68 39 88 40L90 58C70 65 48 64 31 61Z" fill="#faf9f5"/>
+      <path d="M35 45L82 44L82 52L36 55Z" fill="#c2b08b" stroke="none"/>
+      <path d="M48 60L53 78L46 101L57 101M83 57L101 69L96 88L106 88" stroke-width="4"/>
+      <path d="M88 43L94 28L112 30L111 44L91 47" fill="#faf9f5"/>
+      <path d="M100 30L101 20M97 19L105 20" stroke-width="1.7"/>
+      <circle cx="106" cy="36" r="2.2" fill="#4d4c48" stroke="none"/>
+      <circle cx="47" cy="59" r="4.6" fill="#c96442" stroke-width="1.7"/>
+      <circle cx="82" cy="56" r="4.6" fill="#c96442" stroke-width="1.7"/>
+      <path d="M16 50L10 47M19 39L16 33" stroke="#c2b08b" stroke-width="2"/>
+    </g>
+
+    <!-- Reaching for an object whose position has shifted. -->
+    <g id="scene-arm" transform="translate(503 38) rotate(6 55 60)">
+      <path d="M9 29C28 10 70 1 94 20C118 39 117 73 96 93C74 112 33 102 16 83C4 70-7 48 9 29Z" fill="#dfe4d8" stroke="none"/>
+      <path d="M-1 108C37 106 72 110 116 106" stroke="#87867f" stroke-width="1.6"/>
+      <path d="M62 91L92 91L98 103L57 103Z" fill="#8b9980"/>
+      <path d="M75 90L85 51L54 32L47 42L72 57L67 91" fill="#faf9f5"/>
+      <path d="M75 82L81 59M65 44L76 51" stroke="#8b9980" stroke-width="3.5"/>
+      <circle cx="80" cy="53" r="9" fill="#8b9980"/>
+      <circle cx="51" cy="35" r="8" fill="#8b9980"/>
+      <path d="M47 42L39 50L41 60M51 45L51 53L45 61" stroke-width="2.8"/>
+      <path d="M13 78L34 76L36 98L14 100Z" fill="#c96442" stroke="none"/>
+      <path d="M12 76L34 75L35 98L13 99ZM13 77L20 82L34 80M20 83L21 98" stroke-width="1.6"/>
+      <path d="M7 33L23 33L24 49L8 50Z" stroke="#87867f" stroke-width="1.7" stroke-dasharray="3 5"/>
+      <path d="M5 58C1 66 4 71 8 75" stroke="#87867f" stroke-width="1.3"/>
+    </g>
+
+    <!-- Maze navigation: a successful route and two failed explorations. -->
+    <g id="scene-maze" transform="translate(643 117) rotate(10 53 46)">
+      <path d="M-10 28C1 2 38-7 73 4C106 13 127 45 109 76C95 99 44 104 17 88C-8 75-20 48-10 28Z" fill="#eee2d7" stroke="none"/>
+      <path d="M2 8L97 9L98 84L3 85Z" fill="#faf9f5" stroke="none"/>
+      <path d="M5 64L5 10L50 9L95 10M95 28L96 55L95 82L49 83L5 82"/>
+      <path d="M23 10L24 28L23 46L41 46L41 28M24 28L59 28L59 10
+               M5 64L23 64M41 82L41 64L59 64L59 46
+               M77 28L76 46L77 64M77 46L95 46" stroke-width="2.3"/>
+      <path d="M-2 73L29 73Q32 73 32 70L32 58Q32 55 35 55L47 55
+               Q50 55 50 52L50 40Q50 37 53 37L65 37Q68 37 68 34
+               L68 22Q68 19 71 19L103 19" stroke="#c96442" stroke-width="2.8"/>
+      <g stroke="#b53333" stroke-width="1.9" opacity=".8">
+        <path d="M32 55L17 55Q14 55 14 52L14 25
+                 M68 37L68 70Q68 73 71 73L83 73Q86 73 86 70L86 60"
+              stroke-dasharray="3 4"/>
+        <path d="M11 17L17 23M17 17L11 23M83 52L89 58M89 52L83 58"/>
+      </g>
+      <circle cx="-2" cy="73" r="4" fill="#8b9980" stroke="#faf9f5" stroke-width="1.5"/>
+      <circle cx="103" cy="19" r="4.5" fill="#c96442" stroke="#faf9f5" stroke-width="1.5"/>
+      <path d="M103 7L105 2M114 15L119 13M15 91L38 92" stroke="#b0aea5" stroke-width="1.5"/>
+    </g>
+
+    <!-- Fine, interrupted pencil trails tie the studies to the book. -->
+    <g stroke="#b0aea5" stroke-width="1.4" stroke-dasharray="2 8">
+      <path d="M287 217C297 235 313 242 329 243"/>
+      <path d="M400 158C398 169 405 179 416 187"/>
+      <path d="M550 159C550 173 536 185 525 190"/>
+      <path d="M654 222C639 238 620 244 603 244"/>
+    </g>
+
+    <!-- A clothbound field guide, open at the robustness chapter. -->
+    <g id="scene-book">
+      <path d="M280 376C335 365 397 381 449 394C505 378 573 369 623 377C593 390 517 405 453 408C389 405 321 393 280 376Z" fill="#e8e6dc" stroke="none"/>
+      <path d="M297 224C350 210 407 227 452 250C501 224 555 211 605 221L613 369C548 363 499 384 452 398C404 382 349 365 289 371Z" fill="#8b9980"/>
+      <path d="M305 219C359 210 412 229 452 249C501 225 551 211 596 216L604 361C550 359 499 376 453 391C410 375 352 356 298 363Z" fill="#e8e6dc" stroke-width="1.8"/>
+      <path d="M310 208C356 198 410 218 451 243L451 379C403 354 356 344 304 353Z" fill="#faf9f5"/>
+      <path d="M451 243C493 216 546 199 590 207L598 351C548 345 496 359 451 379Z" fill="#faf9f5"/>
+      <path d="M444 247C442 286 445 337 445 367M459 246C462 286 457 329 458 366" stroke="#d1cfc5" stroke-width="1.2"/>
+      <path d="M310 360C355 354 401 367 441 382M306 366C350 361 395 373 426 382M465 382C509 365 553 357 597 358M479 383C519 369 563 362 600 365" stroke="#b0aea5" stroke-width="1.3"/>
+      <path d="M452 380L452 398M445 397L459 397" stroke-width="2"/>
+      <!-- A ribbon left between the pages. -->
+      <path d="M475 374L488 370L490 403L483 398L476 408Z" fill="#c96442" stroke="none"/>
+      <!-- Shield, with a slightly offset terracotta impression. -->
+      <g transform="translate(377 285) rotate(8)">
+        <path d="M-31-33C-15-33-4-39 1-43C13-34 27-30 38-29L35 4C32 23 16 36 3 43C-15 34-28 21-30 3Z" fill="#c96442" stroke="none"/>
+        <path d="M-35-37C-19-38-7-42-1-47C12-39 25-34 34-33L33 0C31 20 14 34 0 40C-18 30-33 17-34-2Z" stroke-width="2.3"/>
+        <path d="M-15-3L-4 10L17-15" stroke="#faf9f5" stroke-width="4"/>
+        <text x="0" y="63" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="18" font-style="italic" font-weight="400" fill="#4d4c48" stroke="none">robustRL</text>
+      </g>
+      <!-- A measured curve, drawn like a field observation. -->
+      <g transform="translate(523 287) rotate(-8)">
+        <path d="M-42-37L-43 29L38 29" stroke-width="1.8"/>
+        <path d="M-34 13C-23 12-23-11-11-10C0-10-1 6 9 1C18-3 21-26 32-31" stroke="#c96442" stroke-width="3.3"/>
+        <path d="M-35-26L36-26M-36-5L37-5M-36 16L37 16" stroke="#e8e6dc" stroke-width="1.1"/>
+        <circle cx="-11" cy="-10" r="3" fill="#c96442" stroke="none"/>
+        <circle cx="9" cy="1" r="3" fill="#c96442" stroke="none"/>
+        <circle cx="32" cy="-31" r="3" fill="#c96442" stroke="none"/>
+        <text x="0" y="61" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="18" font-style="italic" font-weight="400" fill="#4d4c48" stroke="none">Evaluation</text>
+      </g>
+    </g>
+  </g>
+</svg>

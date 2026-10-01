@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <meta name="description" content="A unified library and benchmark for robust reinforcement learning algorithms.">
+  <title>Non-stationary - RobustRLlib Tutorial</title>
+  <link rel="icon" type="image/svg+xml" href="../../../assets/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="../../../assets/favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../../../assets/apple-touch-icon.png">
+  <link rel="stylesheet" href="../../../css/site.css">
+  <link rel="stylesheet" href="../../../assets/pygments.css">
+  <link rel="stylesheet" href="../../../assets/rl.css">
+  <link rel="stylesheet" href="../../../assets/book.css">
+</head>
+<body class="bk">
+<a class="bk-skip" href="#bk-content">Skip to the text</a>
+
+<header class="bk-topbar">
+  <div class="bk-topbar-inner">
+    <button type="button" class="bk-icon-button bk-topbar-menu" id="bk-toggle-nav" aria-controls="bk-sidebar" aria-label="Show or hide the pages" title="Pages">
+      <span class="fa fa-bars" aria-hidden="true"></span>
+    </button>
+    <a class="bk-brand" href="../../..">
+  <svg class="mark" viewBox="0 0 44 40" width="30" height="27" aria-hidden="true">
+        <g transform="translate(22,9)">
+        <rect x="-19" y="-3" width="8" height="6" rx="1.5" transform="rotate(-16 -15 0)" fill="#eb8787" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="-9" y="-7" width="8" height="6" rx="1.5" transform="rotate(-5 -5 -4)" fill="#cde4be" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="1" y="-7" width="8" height="6" rx="1.5" transform="rotate(5 5 -4)" fill="#bcd6eb" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="11" y="-3" width="8" height="6" rx="1.5" transform="rotate(16 15 0)" fill="#d5c8ed" stroke="#5e5d59" stroke-width="1.1"/>
+        </g>
+        <path d="M4 16 L3 34 L22 38 L41 34 L40 16 L22 20 Z" fill="#c96442" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M22 20 L41 16 L40 16 L41 34 L22 38 Z" fill="#d97757" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M6 13 Q14 11 22 17 L22 35 Q14 30 5 31 Z" fill="#faf9f5" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M38 13 Q30 11 22 17 L22 35 Q30 30 39 31 Z" fill="#faf9f5" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        </svg>
+  <span class="bk-brand-name"><span class="bk-brand-mark">Robust</span>RLlib</span>
+  <span class="bk-brand-kind">Tutorial</span>
+</a>
+    <span class="bk-topbar-space"></span>
+    <a class="bk-topbar-link" href="/">Project Page</a>
+  </div>
+</header>
+
+<div class="bk-page">
+
+  <aside class="bk-sidebar-drawer" id="bk-sidebar" aria-label="Pages of the tutorial">
+    <div class="bk-sidebar">
+      <a class="bk-brand" href="../../..">
+  <svg class="mark" viewBox="0 0 44 40" width="30" height="27" aria-hidden="true">
+        <g transform="translate(22,9)">
+        <rect x="-19" y="-3" width="8" height="6" rx="1.5" transform="rotate(-16 -15 0)" fill="#eb8787" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="-9" y="-7" width="8" height="6" rx="1.5" transform="rotate(-5 -5 -4)" fill="#cde4be" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="1" y="-7" width="8" height="6" rx="1.5" transform="rotate(5 5 -4)" fill="#bcd6eb" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="11" y="-3" width="8" height="6" rx="1.5" transform="rotate(16 15 0)" fill="#d5c8ed" stroke="#5e5d59" stroke-width="1.1"/>
+        </g>
+        <path d="M4 16 L3 34 L22 38 L41 34 L40 16 L22 20 Z" fill="#c96442" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M22 20 L41 16 L40 16 L41 34 L22 38 Z" fill="#d97757" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M6 13 Q14 11 22 17 L22 35 Q14 30 5 31 Z" fill="#faf9f5" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M38 13 Q30 11 22 17 L22 35 Q30 30 39 31 Z" fill="#faf9f5" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        </svg>
+  <span class="bk-brand-name"><span class="bk-brand-mark">Robust</span>RLlib</span>
+  <span class="bk-brand-kind">Tutorial</span>
+</a>
+      <button type="button" class="bk-search-button" id="bk-search-open" aria-haspopup="dialog">
+        <span class="fa fa-search" aria-hidden="true"></span>
+        <span class="bk-search-label">Search</span>
+      </button>
+      <nav class="bk-nav" aria-label="Pages">
+        <ul class="bk-nav-list bk-nav-depth-0">
+  <li><a class="bk-nav-link" href="../../..">Home</a></li>
+</ul>
+        <p class="bk-caption">Getting Started</p>
+        <ul class="bk-nav-list bk-nav-depth-1">
+  <li><a class="bk-nav-link" href="../../../getting-started/overview/">Overview</a></li>
+  <li><a class="bk-nav-link" href="../../../getting-started/quick-start/">Quick Start</a></li>
+</ul>
+        <p class="bk-caption">Algorithms</p>
+        <ul class="bk-nav-list bk-nav-depth-1">
+  <li><a class="bk-nav-link" href="../../../algorithms/">All Methods</a></li>
+  <li class="bk-nav-group">
+    <details>
+      <summary>Standard</summary>
+      <ul class="bk-nav-list bk-nav-depth-2">
+  <li><a class="bk-nav-link" href="../../../algorithms/standard/">Overview</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/standard/iql/">IQL</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/standard/td3bc/">TD3+BC</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/standard/mopo/">MOPO</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/standard/synther/">SynthER</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/standard/ppo/">PPO</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/standard/sac/">SAC</a></li>
+</ul>
+    </details>
+  </li>
+  <li class="bk-nav-group">
+    <details>
+      <summary>Robust Online</summary>
+      <ul class="bk-nav-list bk-nav-depth-2">
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-online/">Overview</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-online/atla/">ATLA</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-online/atla-sa/">ATLA-SA</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-online/rsc/">RSC</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-online/rarl/">RARL</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-online/dr/">DR</a></li>
+</ul>
+    </details>
+  </li>
+  <li class="bk-nav-group">
+    <details>
+      <summary>Robust Offline</summary>
+      <ul class="bk-nav-list bk-nav-depth-2">
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-offline/">Overview</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-offline/rfqi/">RFQI</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-offline/rorl/">RORL</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-offline/atla-iql/">ATLA-IQL</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-offline/rsc-iql/">RSC-IQL</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-offline/rambo/">RAMBO</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-offline/romb/">ROMB</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-offline/fwm/">FWM</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-offline/plr-pvl/">PLR-PVL</a></li>
+</ul>
+    </details>
+  </li>
+  <li class="bk-nav-group">
+    <details>
+      <summary>Robust Safe</summary>
+      <ul class="bk-nav-list bk-nav-depth-2">
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-safe/">Overview</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-safe/ramu/">RAMU</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-safe/spidr/">SPiDR</a></li>
+</ul>
+    </details>
+  </li>
+  <li><a class="bk-nav-link" href="../../../algorithms/run-a-method/">Run a Method</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/add-an-algorithm/">Add an Algorithm</a></li>
+</ul>
+        <p class="bk-caption">Shift Sources and Modes</p>
+        <ul class="bk-nav-list bk-nav-depth-1">
+  <li><a class="bk-nav-link" href="../../">Overview</a></li>
+  <li class="bk-nav-group">
+    <details>
+      <summary>Shift Sources</summary>
+      <ul class="bk-nav-list bk-nav-depth-2">
+  <li><a class="bk-nav-link" href="../../sources/dynamic/">Dynamic shift</a></li>
+  <li><a class="bk-nav-link" href="../../sources/observation/">Observation shift</a></li>
+  <li><a class="bk-nav-link" href="../../sources/action/">Action shift</a></li>
+  <li><a class="bk-nav-link" href="../../sources/reward-cost/">Reward/cost shift</a></li>
+  <li><a class="bk-nav-link" href="../../sources/latency/">Latency shift</a></li>
+  <li><a class="bk-nav-link" href="../../sources/semantic/">Semantic shift</a></li>
+</ul>
+    </details>
+  </li>
+  <li class="bk-nav-group">
+    <details open>
+      <summary>Shift Modes</summary>
+      <ul class="bk-nav-list bk-nav-depth-2">
+  <li><a class="bk-nav-link" href="../stochastic/">Stochastic</a></li>
+  <li><a class="bk-nav-link" href="../adversarial/">Adversarial</a></li>
+  <li><a class="bk-nav-link" href="../parametric/">Parametric</a></li>
+  <li><a class="bk-nav-link is-active" href="./" aria-current="page">Non-stationary</a></li>
+  <li><a class="bk-nav-link" href="../composition/">Composition</a></li>
+</ul>
+    </details>
+  </li>
+  <li><a class="bk-nav-link" href="../../add-a-backend/">Add a Backend</a></li>
+</ul>
+        <p class="bk-caption">Evaluation</p>
+        <ul class="bk-nav-list bk-nav-depth-1">
+  <li><a class="bk-nav-link" href="../../../evaluation/protocol/">Evaluation Protocol</a></li>
+</ul>
+      </nav>
+    </div>
+  </aside>
+
+  <div class="bk-main">
+    <div class="bk-content">
+      <div class="bk-tools">
+        <button type="button" class="bk-icon-button" id="bk-toggle-toc" aria-controls="bk-toc" aria-label="Show or hide the contents of this page" title="On this page">
+          <span class="fa fa-list-ul" aria-hidden="true"></span>
+        </button>
+      </div>
+
+      <main class="bk-article" id="bk-content">
+        <h1 id="non-stationary">Non-stationary<a class="headerlink" href="#non-stationary" title="Permanent link">&para;</a></h1>
+<p>In the Non-stationary mode the intensity of a shift changes within the episode. It is declared
+by the <code>schedule</code> field of a shift: the schedule produces a multiplier from the step counter,
+and the wrapper applies the multiplier to the intensity of the shift.</p>
+<h2 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Non-stationary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Built by</td>
+<td>A stationary shift and a multiplier that follows a schedule</td>
+</tr>
+<tr>
+<td>Declared by</td>
+<td>The <code>schedule</code> field of a <code>ShiftSpec</code>, a dictionary</td>
+</tr>
+<tr>
+<td>Schedule types</td>
+<td><code>constant</code>, <code>linear</code>, <code>step</code>, <code>sine</code></td>
+</tr>
+<tr>
+<td>Clock</td>
+<td>Control steps since the last <code>reset</code></td>
+</tr>
+<tr>
+<td>Shifts</td>
+<td>All six shift sources, for the mode names listed below</td>
+</tr>
+<tr>
+<td>Without a schedule</td>
+<td>The multiplier is 1 at all times</td>
+</tr>
+</tbody>
+</table>
+<h2 id="supported-shifts">Supported shifts<a class="headerlink" href="#supported-shifts" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Shift</th>
+<th>Mode names that read the schedule</th>
+<th>What the multiplier scales</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../../sources/dynamic/">Dynamic shift</a></td>
+<td><code>scale</code>, <code>translate</code>, <code>push</code>; <code>gauss</code> on the target <code>transition</code></td>
+<td>The factor, the offset, the force, the noise level</td>
+</tr>
+<tr>
+<td><a href="../../sources/observation/">Observation shift</a></td>
+<td><code>gauss</code>, <code>uniform</code>, <code>shift</code>, <code>relative</code>, <code>bias</code>, <code>adversarial</code></td>
+<td>The noise level, the offset, the radius</td>
+</tr>
+<tr>
+<td><a href="../../sources/action/">Action shift</a></td>
+<td><code>gauss</code>, <code>uniform</code>, <code>shift</code>, <code>oppose</code>, <code>rotate</code>, <code>oppose_goal</code>, <code>adversarial</code></td>
+<td>The noise level, the offset, the magnitude, the angle</td>
+</tr>
+<tr>
+<td><a href="../../sources/reward-cost/">Reward/cost shift</a></td>
+<td><code>gauss</code>, <code>uniform</code>, <code>shift</code></td>
+<td>The noise level, the offset</td>
+</tr>
+<tr>
+<td><a href="../../sources/latency/">Latency shift</a></td>
+<td><code>substep</code>, <code>interp</code></td>
+<td>The excess of the control period, the delay</td>
+</tr>
+<tr>
+<td><a href="../../sources/semantic/">Semantic shift</a></td>
+<td><code>hue</code>, <code>tint</code>, <code>swap</code>, <code>scale</code>, <code>translate</code></td>
+<td>The angle, the blend with the target colour, the factor, the offset</td>
+</tr>
+</tbody>
+</table>
+<p><strong><code>set</code>, <code>fixed</code>, <code>buffer</code> and <code>delay</code> do not read the schedule.</strong> The mode names <code>gauss</code>,
+<code>uniform</code> and <code>loguniform</code> on a Dynamic shift or a Semantic shift read it, but then draw a new
+value at every step; they are left out of the table for that reason.</p>
+<h2 id="supported-schedules">Supported schedules<a class="headerlink" href="#supported-schedules" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Shape of the multiplier</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>constant</code></td>
+<td>Equal to <code>start</code> at all times</td>
+</tr>
+<tr>
+<td><code>linear</code></td>
+<td>Equal to <code>start</code> until step <code>t0</code>, then a straight ramp that reaches <code>end</code> at step <code>t1</code>, then equal to <code>end</code></td>
+</tr>
+<tr>
+<td><code>step</code></td>
+<td>Equal to <code>start</code> before step <code>t1</code> and to <code>end</code> from step <code>t1</code> on</td>
+</tr>
+<tr>
+<td><code>sine</code></td>
+<td>An oscillation between <code>start</code> and <code>end</code> with a period of <code>period</code> steps; it begins at the midpoint and moves towards <code>end</code> first</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Default</th>
+<th>Used by</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>type</code></td>
+<td>str</td>
+<td><code>"constant"</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>start</code></td>
+<td>float</td>
+<td><code>0.0</code></td>
+<td>all types</td>
+</tr>
+<tr>
+<td><code>end</code></td>
+<td>float</td>
+<td><code>1.0</code></td>
+<td><code>linear</code>, <code>step</code>, <code>sine</code></td>
+</tr>
+<tr>
+<td><code>t0</code></td>
+<td>float</td>
+<td><code>0</code></td>
+<td><code>linear</code></td>
+</tr>
+<tr>
+<td><code>t1</code></td>
+<td>float</td>
+<td><code>1</code></td>
+<td><code>linear</code>, <code>step</code></td>
+</tr>
+<tr>
+<td><code>period</code></td>
+<td>float</td>
+<td><code>1000</code></td>
+<td><code>sine</code></td>
+</tr>
+</tbody>
+</table>
+<p>The multiplier of each type, for the first nine steps:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">robustrllib.schedule</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_schedule</span>
+
+<span class="n">SCHEDULES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"none"</span><span class="p">:</span>     <span class="kc">None</span><span class="p">,</span>
+    <span class="s2">"constant"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"constant"</span><span class="p">,</span> <span class="s2">"start"</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">},</span>
+    <span class="s2">"linear"</span><span class="p">:</span>   <span class="p">{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"linear"</span><span class="p">,</span> <span class="s2">"start"</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s2">"end"</span><span class="p">:</span> <span class="mf">0.8</span><span class="p">,</span> <span class="s2">"t0"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">"t1"</span><span class="p">:</span> <span class="mi">6</span><span class="p">},</span>
+    <span class="s2">"step"</span><span class="p">:</span>     <span class="p">{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"step"</span><span class="p">,</span> <span class="s2">"start"</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s2">"end"</span><span class="p">:</span> <span class="mf">0.8</span><span class="p">,</span> <span class="s2">"t1"</span><span class="p">:</span> <span class="mi">4</span><span class="p">},</span>
+    <span class="s2">"sine"</span><span class="p">:</span>     <span class="p">{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"sine"</span><span class="p">,</span> <span class="s2">"start"</span><span class="p">:</span> <span class="mf">0.8</span><span class="p">,</span> <span class="s2">"end"</span><span class="p">:</span> <span class="mf">1.2</span><span class="p">,</span> <span class="s2">"period"</span><span class="p">:</span> <span class="mi">8</span><span class="p">},</span>
+<span class="p">}</span>
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">spec</span> <span class="ow">in</span> <span class="n">SCHEDULES</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">multiplier</span> <span class="o">=</span> <span class="n">make_schedule</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">:</span><span class="s2">9s</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="p">[</span><span class="nb">round</span><span class="p">(</span><span class="n">multiplier</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">9</span><span class="p">)])</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>none      [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+constant  [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5]
+linear    [1.0, 1.0, 1.0, 0.95, 0.9, 0.85, 0.8, 0.8, 0.8]
+step      [1.0, 1.0, 1.0, 1.0, 0.8, 0.8, 0.8, 0.8, 0.8]
+sine      [1.0, 1.14, 1.2, 1.14, 1.0, 0.86, 0.8, 0.86, 1.0]
+</code></pre></div>
+<h2 id="declare-the-mode">Declare the mode<a class="headerlink" href="#declare-the-mode" title="Permanent link">&para;</a></h2>
+<p>On a Dynamic shift the multiplier acts on the parameter itself: the value is the nominal value
+times <code>factor</code> times the multiplier. The factor range is written into <code>start</code> and <code>end</code>, with
+<code>factor: 1.0</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">robustrllib</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_robust</span><span class="p">,</span> <span class="n">ShiftSpec</span>
+
+<span class="n">env</span> <span class="o">=</span> <span class="n">make_robust</span><span class="p">(</span><span class="s2">"Hopper-v5"</span><span class="p">,</span> <span class="n">shifts</span><span class="o">=</span><span class="p">[</span><span class="n">ShiftSpec</span><span class="p">(</span>
+    <span class="s2">"dynamics"</span><span class="p">,</span> <span class="s2">"scale"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"param"</span><span class="p">:</span> <span class="s2">"gravity"</span><span class="p">,</span> <span class="s2">"factor"</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">},</span>
+    <span class="n">schedule</span><span class="o">=</span><span class="p">{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"linear"</span><span class="p">,</span> <span class="s2">"start"</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s2">"end"</span><span class="p">:</span> <span class="mf">1.2</span><span class="p">,</span> <span class="s2">"t0"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">"t1"</span><span class="p">:</span> <span class="mi">4</span><span class="p">},</span>
+<span class="p">)],</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">factors</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">):</span>
+    <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+    <span class="n">factors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">unwrapped</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">gravity</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">/</span> <span class="o">-</span><span class="mf">9.81</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">factors</span><span class="p">)</span>
+
+<span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">unwrapped</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">gravity</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">/</span> <span class="o">-</span><span class="mf">9.81</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>[1.0, 1.05, 1.1, 1.15, 1.2, 1.2]
+1.0
+</code></pre></div>
+<p>The multiplier is held at <code>end</code> once <code>t1</code> is passed, and the clock starts again at zero after
+the second <code>reset</code>.</p>
+<p>On an Observation shift the multiplier scales the noise level. The noise below grows from zero
+to its full level over the first 500 steps.</p>
+<div class="highlight"><pre><span></span><code><span class="n">ramp</span> <span class="o">=</span> <span class="n">ShiftSpec</span><span class="p">(</span><span class="s2">"observation"</span><span class="p">,</span> <span class="s2">"gauss"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"sigma"</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">},</span>
+                 <span class="n">schedule</span><span class="o">=</span><span class="p">{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"linear"</span><span class="p">,</span> <span class="s2">"start"</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">"end"</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s2">"t0"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">"t1"</span><span class="p">:</span> <span class="mi">500</span><span class="p">})</span>
+</code></pre></div>
+<p>On an Action shift, an opposition that switches on in the middle of the episode:</p>
+<div class="highlight"><pre><span></span><code><span class="n">switch</span> <span class="o">=</span> <span class="n">ShiftSpec</span><span class="p">(</span><span class="s2">"action"</span><span class="p">,</span> <span class="s2">"oppose"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"eps"</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">,</span> <span class="s2">"clip_first"</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
+                   <span class="n">schedule</span><span class="o">=</span><span class="p">{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"step"</span><span class="p">,</span> <span class="s2">"start"</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">"end"</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s2">"t1"</span><span class="p">:</span> <span class="mi">500</span><span class="p">})</span>
+</code></pre></div>
+<p>In YAML the schedule is one more key of the shift.</p>
+<div class="highlight"><span class="filename">robustrllib/configs/eval/spec_timevar_hopper.yaml (excerpt)</span><pre><span></span><code><span class="nt">grid</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="nv">gear_static_0.8</span><span class="p p-Indicator">,</span><span class="nt"> severity</span><span class="p">:</span><span class="w"> </span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="nt"> shifts</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[{</span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="nv">dynamics</span><span class="p p-Indicator">,</span><span class="nt"> mode</span><span class="p">:</span><span class="w"> </span><span class="nv">scale</span><span class="p p-Indicator">,</span><span class="nt"> params</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">param</span><span class="p">:</span><span class="w"> </span><span class="nv">actuator_gear</span><span class="p p-Indicator">,</span><span class="nt"> index</span><span class="p">:</span><span class="w"> </span><span class="nv">all</span><span class="p p-Indicator">,</span><span class="nt"> factor</span><span class="p">:</span><span class="w"> </span><span class="nv">0.8</span><span class="p p-Indicator">}}]}</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="nv">gear_step_0.8</span><span class="p p-Indicator">,</span><span class="nt"> severity</span><span class="p">:</span><span class="w"> </span><span class="nv">1.1</span><span class="p p-Indicator">,</span><span class="nt"> shifts</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[{</span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="nv">dynamics</span><span class="p p-Indicator">,</span><span class="nt"> mode</span><span class="p">:</span><span class="w"> </span><span class="nv">scale</span><span class="p p-Indicator">,</span><span class="nt"> params</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">param</span><span class="p">:</span><span class="w"> </span><span class="nv">actuator_gear</span><span class="p p-Indicator">,</span><span class="nt"> index</span><span class="p">:</span><span class="w"> </span><span class="nv">all</span><span class="p p-Indicator">,</span><span class="nt"> factor</span><span class="p">:</span><span class="w"> </span><span class="nv">1.0</span><span class="p p-Indicator">},</span><span class="nt"> schedule</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="nv">step</span><span class="p p-Indicator">,</span><span class="nt"> start</span><span class="p">:</span><span class="w"> </span><span class="nv">1.0</span><span class="p p-Indicator">,</span><span class="nt"> end</span><span class="p">:</span><span class="w"> </span><span class="nv">0.8</span><span class="p p-Indicator">,</span><span class="nt"> t1</span><span class="p">:</span><span class="w"> </span><span class="nv">500</span><span class="p p-Indicator">}}]}</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="nv">gear_ramp_0.8</span><span class="p p-Indicator">,</span><span class="nt"> severity</span><span class="p">:</span><span class="w"> </span><span class="nv">1.2</span><span class="p p-Indicator">,</span><span class="nt"> shifts</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[{</span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="nv">dynamics</span><span class="p p-Indicator">,</span><span class="nt"> mode</span><span class="p">:</span><span class="w"> </span><span class="nv">scale</span><span class="p p-Indicator">,</span><span class="nt"> params</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">param</span><span class="p">:</span><span class="w"> </span><span class="nv">actuator_gear</span><span class="p p-Indicator">,</span><span class="nt"> index</span><span class="p">:</span><span class="w"> </span><span class="nv">all</span><span class="p p-Indicator">,</span><span class="nt"> factor</span><span class="p">:</span><span class="w"> </span><span class="nv">1.0</span><span class="p p-Indicator">},</span><span class="nt"> schedule</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="nv">linear</span><span class="p p-Indicator">,</span><span class="nt"> start</span><span class="p">:</span><span class="w"> </span><span class="nv">1.0</span><span class="p p-Indicator">,</span><span class="nt"> end</span><span class="p">:</span><span class="w"> </span><span class="nv">0.8</span><span class="p p-Indicator">,</span><span class="nt"> t0</span><span class="p">:</span><span class="w"> </span><span class="nv">0</span><span class="p p-Indicator">,</span><span class="nt"> t1</span><span class="p">:</span><span class="w"> </span><span class="nv">1000</span><span class="p p-Indicator">}}]}</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="nv">gear_sine_p200</span><span class="p p-Indicator">,</span><span class="nt"> severity</span><span class="p">:</span><span class="w"> </span><span class="nv">2</span><span class="p p-Indicator">,</span><span class="nt"> shifts</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[{</span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="nv">dynamics</span><span class="p p-Indicator">,</span><span class="nt"> mode</span><span class="p">:</span><span class="w"> </span><span class="nv">scale</span><span class="p p-Indicator">,</span><span class="nt"> params</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">param</span><span class="p">:</span><span class="w"> </span><span class="nv">actuator_gear</span><span class="p p-Indicator">,</span><span class="nt"> index</span><span class="p">:</span><span class="w"> </span><span class="nv">all</span><span class="p p-Indicator">,</span><span class="nt"> factor</span><span class="p">:</span><span class="w"> </span><span class="nv">1.0</span><span class="p p-Indicator">},</span><span class="nt"> schedule</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="nv">sine</span><span class="p p-Indicator">,</span><span class="nt"> start</span><span class="p">:</span><span class="w"> </span><span class="nv">0.8</span><span class="p p-Indicator">,</span><span class="nt"> end</span><span class="p">:</span><span class="w"> </span><span class="nv">1.2</span><span class="p p-Indicator">,</span><span class="nt"> period</span><span class="p">:</span><span class="w"> </span><span class="nv">200</span><span class="p p-Indicator">}}]}</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Condition</th>
+<th>Gear factor during the episode</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>gear_static_0.8</code></td>
+<td>0.8 throughout; a Parametric shift for comparison</td>
+</tr>
+<tr>
+<td><code>gear_step_0.8</code></td>
+<td>1.0 for the first 500 steps, then 0.8</td>
+</tr>
+<tr>
+<td><code>gear_ramp_0.8</code></td>
+<td>Falls in a straight line from 1.0 to 0.8 over 1000 steps</td>
+</tr>
+<tr>
+<td><code>gear_sine_p200</code></td>
+<td>Oscillates between 0.8 and 1.2 with a period of 200 steps</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>A curriculum over training is not a schedule, because the clock restarts with every
+episode. Domain-randomization cards have a <code>curriculum</code> key, which widens the randomization
+ranges as training proceeds.</p>
+</div>
+<h2 id="rules">Rules<a class="headerlink" href="#rules" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong><code>start</code> is always written</strong>; it defaults to 0, so <code>schedule={}</code> and
+  <code>schedule={"type": "constant"}</code> give a multiplier of 0.</li>
+<li>A multiplier of 0 switches an additive shift off and sets a scaled parameter to zero.</li>
+<li>A scheduled <code>scale</code> shift uses <code>factor: 1.0</code> and carries the factor range in <code>start</code> and
+  <code>end</code>.</li>
+<li>Values of <code>t1</code> and <code>period</code> stay within the length of an episode, because the clock restarts
+  at every <code>reset</code>.</li>
+<li>A drawn mode name with <code>operation: set</code> needs <code>nominal</code>, the value a multiplier of 0 maps to.</li>
+<li>A stochastic Dynamic shift is not given a schedule.</li>
+<li><code>interp</code> reads the multiplier when its delay is drawn, so a delay that changes within the
+  episode needs <code>resample: step</code>.</li>
+</ul>
+      </main>
+
+      <footer class="bk-footer">
+        <nav class="bk-related" aria-label="Previous and next page">
+          <a class="bk-prev" href="../parametric/">
+            <span class="fa fa-arrow-left" aria-hidden="true"></span>
+            <span class="bk-related-text"><span class="bk-related-label">Previous</span><span class="bk-related-title">Parametric</span></span>
+          </a>
+          <a class="bk-next" href="../composition/">
+            <span class="bk-related-text"><span class="bk-related-label">Next</span><span class="bk-related-title">Composition</span></span>
+            <span class="fa fa-arrow-right" aria-hidden="true"></span>
+          </a>
+        </nav>
+        <p class="bk-footnote">RobustRLlib · Anonymous submission under double-blind review.</p>
+      </footer>
+    </div>
+
+    <aside class="bk-toc-drawer" id="bk-toc" aria-label="Contents of this page">
+      <div class="bk-toc">
+        <p class="bk-toc-title">On this page</p>
+        <nav class="bk-toc-tree" aria-label="Sections">
+          <ul class="bk-toc-list bk-toc-depth-1">
+  <li><a class="bk-toc-link" href="#properties">Properties</a>
+  </li>
+  <li><a class="bk-toc-link" href="#supported-shifts">Supported shifts</a>
+  </li>
+  <li><a class="bk-toc-link" href="#supported-schedules">Supported schedules</a>
+  </li>
+  <li><a class="bk-toc-link" href="#declare-the-mode">Declare the mode</a>
+  </li>
+  <li><a class="bk-toc-link" href="#rules">Rules</a>
+  </li>
+</ul>
+        </nav>
+      </div>
+    </aside>
+  </div>
+
+</div>
+
+<div class="bk-backdrop" id="bk-backdrop" hidden></div>
+<div class="bk-search" id="bk-search" role="dialog" aria-modal="true" aria-label="Search the tutorial" hidden>
+  <div class="bk-search-panel">
+    <div class="bk-search-field">
+      <span class="fa fa-search" aria-hidden="true"></span>
+      <input type="search" id="mkdocs-search-query" name="q" placeholder="Search the tutorial" aria-label="Search the tutorial" autocomplete="off" spellcheck="false">
+      <button type="button" class="bk-icon-button" id="bk-search-close" aria-label="Close the search"><span class="fa fa-times" aria-hidden="true"></span></button>
+    </div>
+    <div class="bk-search-results" id="mkdocs-search-results" data-no-results-text="Nothing found"></div>
+  </div>
+</div>
+
+<script>var base_url = "../../..";</script>
+<script src="../../../js/site.js"></script>
+<script src="../../../search/main.js"></script>
+</body>
+</html>

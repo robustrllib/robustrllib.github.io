@@ -1,0 +1,126 @@
+% The six shift sources on the agent--environment loop.
+% Notation and formulas follow Section 2.2 of the paper.
+%
+% \focus selects what is drawn in colour:
+%   all                                   every shift source, for the overview
+%   dynamic | observation | action |
+%   reward | latency | semantic           one shift source, for its own page
+% tools/render_figures.py sets it and converts the result to SVG.
+\documentclass[tikz,border=6pt]{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[scaled=0.92]{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage{amsmath,amssymb,etoolbox}
+\usetikzlibrary{arrows.meta,calc}
+
+\newcommand{\focus}{all}
+
+\definecolor{ink}{HTML}{1F2937}       \definecolor{mute}{HTML}{4B5563}
+\definecolor{neutral}{HTML}{6B7280}   \definecolor{neutralbg}{HTML}{F3F4F6}
+\definecolor{faint}{HTML}{B4B9C1}
+\definecolor{dyn}{HTML}{D9822B}       \definecolor{dynbg}{HTML}{FDF0E2}
+\definecolor{obs}{HTML}{2F7FC1}       \definecolor{obsbg}{HTML}{E8F1F9}
+\definecolor{act}{HTML}{3D9A57}       \definecolor{actbg}{HTML}{E9F5E6}
+\definecolor{rew}{HTML}{7B5BB7}       \definecolor{rewbg}{HTML}{F0EBF8}
+\definecolor{lat}{HTML}{14928E}       \definecolor{latbg}{HTML}{E3F4F3}
+\definecolor{sem}{HTML}{D6457A}       \definecolor{sembg}{HTML}{FBE9F0}
+
+% one switch per shift source
+\newcommand{\declare}[1]{\newbool{on#1}%
+  \ifdefstring{\focus}{all}{\booltrue{on#1}}{\ifdefstring{\focus}{#1}{\booltrue{on#1}}{\boolfalse{on#1}}}}
+\declare{dynamic}\declare{observation}\declare{action}\declare{reward}\declare{latency}\declare{semantic}
+
+\tikzset{
+  every node/.style={text=ink},
+  blockbox/.style={draw=neutral, fill=neutralbg, line width=0.9pt, rounded corners=5pt,
+                minimum width=5.4cm, align=center, inner sep=6pt},
+  shiftbox/.style 2 args={draw=#1, fill=#2, line width=1.0pt, rounded corners=5pt,
+                minimum width=4.9cm, minimum height=1.55cm, align=center, inner sep=5pt},
+  flow/.style={-{Stealth[length=6pt,width=5pt]}, line width=0.9pt, draw=mute},
+  learn/.style={flow, dashed},
+  sig/.style={font=\small, text=mute, fill=white, inner sep=1.6pt},
+  tagbox/.style 2 args={draw=#1, fill=#2, text=#1, line width=0.7pt, rounded corners=3pt,
+                font=\footnotesize\bfseries, inner xsep=4.5pt, inner ysep=2pt, minimum height=13pt},
+  cardbox/.style 2 args={draw=#1, fill=#2, line width=1.0pt, rounded corners=5pt,
+                text width=7.75cm, align=left, inner sep=7pt},
+}
+
+% #1 switch  #2 colour  #3 background  #4 options  #5 node name  #6 position  #7 title  #8 formula
+\newcommand{\shiftnode}[8]{%
+  \ifbool{on#1}
+    {\node[shiftbox={#2}{#3}, #4] (#5) at #6 {{\bfseries\color{#2} #7}\\[1pt] #8};}
+    {\node[shiftbox={faint}{white}, #4] (#5) at #6 {{\bfseries\color{faint} #7}};}}
+
+\begin{document}
+\begin{tikzpicture}
+
+% ------------------------------------------------------------ the loop
+\node[blockbox, minimum height=1.35cm] (agent) at (0,4.35)
+  {{\bfseries Agent}\\[1pt] $a_t \sim \pi(\cdot \mid \tilde o_t)$};
+
+\node[blockbox, minimum height=2.55cm] (env) at (0,0) {};
+\node[font=\bfseries, anchor=north] at ($(env.north)+(0,-0.12)$) {Environment};
+
+\shiftnode{dynamic}{dyn}{dynbg}{minimum width=4.7cm, minimum height=1.4cm, anchor=south}
+  {dynamic}{($(env.south)+(0,0.2)$)}{Dynamic shift}{$s_{t+1} \sim P_{\theta^p}(\cdot \mid x_t)$}
+\shiftnode{observation}{obs}{obsbg}{}
+  {observation}{(-5.6,2.2)}{Observation shift}{$\tilde o_t \sim O_{\theta^o}(\cdot \mid s_t)$}
+\shiftnode{action}{act}{actbg}{}
+  {action}{(5.6,2.2)}{Action shift}{$\tilde a_t \sim A_{\theta^a}(\cdot \mid s_t, a_t)$}
+\shiftnode{reward}{rew}{rewbg}{minimum width=8.2cm}
+  {reward}{(0,-3.25)}{Reward/cost shift}
+  {$\tilde r_t \sim R_{\theta^r}(\cdot \mid y_t), \qquad \tilde c_t \sim C_{\theta^c}(\cdot \mid y_t)$}
+
+% ------------------------------------------------------------ signals
+\draw[flow] (env.west) -| node[sig, pos=0.25] {$s_t$} (observation.south);
+\draw[flow] (observation.north) |- node[sig, pos=0.75] {$\tilde o_t$} ($(agent.west)+(0,-0.22)$);
+\draw[flow] (agent.east) -| node[sig, pos=0.25] {$a_t$} (action.north);
+\draw[flow] (action.south) |- node[sig, pos=0.75] {$\tilde a_t$} (env.east);
+\draw[flow] (env.south) -- node[sig] {$r_t,\; c_t$} (reward.north);
+\draw[learn] (reward.west) -- ++(-4.35,0) |- node[sig, pos=0.26, rotate=90] {learning signal\; $\tilde r_t,\, \tilde c_t$}
+      ($(agent.west)+(0,0.3)$);
+
+% ------------------------------------------------------------ where the two cross-cutting shifts act
+\ifbool{onlatency}{
+  \node[tagbox={lat}{latbg}] at ($(observation.south)+(0,-0.62)$) {$\delta_o$};
+  \node[tagbox={lat}{latbg}] at ($(action.south)+(0,-0.62)$)      {$\delta_a$};
+  \node[tagbox={lat}{latbg}, anchor=north east] at ($(env.north east)+(-0.12,-0.12)$) {$\kappa_t$};
+}{}
+\ifbool{onsemantic}{
+  \node[tagbox={sem}{sembg}, anchor=south east] at ($(observation.north east)+(-0.1,-0.02)$) {$\theta^z$};
+  \node[tagbox={sem}{sembg}, anchor=north west] at ($(env.north west)+(0.12,-0.12)$)         {$\theta^z$};
+  \node[tagbox={sem}{sembg}, anchor=south east] at ($(reward.north east)+(-0.1,-0.02)$)      {$\theta^z$};
+}{}
+
+% ------------------------------------------------------------ the two cross-cutting shifts
+% In the overview the cards stand side by side; on a page of its own a card is centred.
+\newcommand{\latencycard}[2]{%
+  \node[cardbox={lat}{latbg}, anchor=#1] (latency) at #2
+    {{\bfseries\color{lat} Latency shift}\; \tikz[baseline=(t.base)]\node[tagbox={lat}{latbg}] (t) {$\delta_o,\ \delta_a,\ \kappa_t$};
+     \\[3pt] {\small\color{mute} the timing of sensing, execution and control}\\[5pt]
+     $\tilde o_t = \mathcal{I}(\mathcal{H}_t,\, t-\delta_o)$\\[3pt]
+     $\tilde a_t = a_{t-\delta_a}$\\[3pt]
+     $s_{t+1} \sim P_0^{(\kappa_t)}(\cdot \mid s_t, \tilde a_t)$};}
+\newcommand{\semanticcard}[2]{%
+  \node[cardbox={sem}{sembg}, anchor=#1] (semantic) at #2
+    {{\bfseries\color{sem} Semantic shift}\; \tikz[baseline=(t.base)]\node[tagbox={sem}{sembg}] (t) {$\theta^z$};
+     \\[3pt] {\small\color{mute} the scene, the appearance and the task layout}\\[5pt]
+     $o_t \sim O_{\theta^z}(\cdot \mid s_t)$\\[3pt]
+     $s_{t+1} \sim P_{\theta^z}(\cdot \mid x_t)$\\[3pt]
+     $(r_t, c_t) \sim (R_{\theta^z}, C_{\theta^z})(\cdot \mid y_t)$};}
+
+\newcommand{\notes}[1]{%
+  \node[font=\small, text=mute, anchor=north] at (0,#1)
+    {$x_t = (s_t, \tilde a_t)$ \qquad $y_t = (s_t, \tilde a_t, s_{t+1})$ \qquad
+     $\theta$ with a superscript is the parameter of the shift};}
+
+\ifdefstring{\focus}{all}
+  {\latencycard{north east}{(-0.15,-4.75)} \semanticcard{north west}{(0.15,-4.75)} \notes{-8.15}}
+  {\ifdefstring{\focus}{latency}
+    {\latencycard{north}{(0,-4.75)} \notes{-8.15}}
+    {\ifdefstring{\focus}{semantic}
+      {\semanticcard{north}{(0,-4.75)} \notes{-8.15}}
+      {\notes{-4.55}}}}
+
+\end{tikzpicture}
+\end{document}

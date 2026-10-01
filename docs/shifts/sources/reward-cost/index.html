@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <meta name="description" content="A unified library and benchmark for robust reinforcement learning algorithms.">
+  <title>Reward/cost shift - RobustRLlib Tutorial</title>
+  <link rel="icon" type="image/svg+xml" href="../../../assets/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="../../../assets/favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../../../assets/apple-touch-icon.png">
+  <link rel="stylesheet" href="../../../css/site.css">
+  <link rel="stylesheet" href="../../../assets/pygments.css">
+  <link rel="stylesheet" href="../../../assets/rl.css">
+  <link rel="stylesheet" href="../../../assets/book.css">
+</head>
+<body class="bk">
+<a class="bk-skip" href="#bk-content">Skip to the text</a>
+
+<header class="bk-topbar">
+  <div class="bk-topbar-inner">
+    <button type="button" class="bk-icon-button bk-topbar-menu" id="bk-toggle-nav" aria-controls="bk-sidebar" aria-label="Show or hide the pages" title="Pages">
+      <span class="fa fa-bars" aria-hidden="true"></span>
+    </button>
+    <a class="bk-brand" href="../../..">
+  <svg class="mark" viewBox="0 0 44 40" width="30" height="27" aria-hidden="true">
+        <g transform="translate(22,9)">
+        <rect x="-19" y="-3" width="8" height="6" rx="1.5" transform="rotate(-16 -15 0)" fill="#eb8787" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="-9" y="-7" width="8" height="6" rx="1.5" transform="rotate(-5 -5 -4)" fill="#cde4be" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="1" y="-7" width="8" height="6" rx="1.5" transform="rotate(5 5 -4)" fill="#bcd6eb" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="11" y="-3" width="8" height="6" rx="1.5" transform="rotate(16 15 0)" fill="#d5c8ed" stroke="#5e5d59" stroke-width="1.1"/>
+        </g>
+        <path d="M4 16 L3 34 L22 38 L41 34 L40 16 L22 20 Z" fill="#c96442" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M22 20 L41 16 L40 16 L41 34 L22 38 Z" fill="#d97757" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M6 13 Q14 11 22 17 L22 35 Q14 30 5 31 Z" fill="#faf9f5" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M38 13 Q30 11 22 17 L22 35 Q30 30 39 31 Z" fill="#faf9f5" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        </svg>
+  <span class="bk-brand-name"><span class="bk-brand-mark">Robust</span>RLlib</span>
+  <span class="bk-brand-kind">Tutorial</span>
+</a>
+    <span class="bk-topbar-space"></span>
+    <a class="bk-topbar-link" href="/">Project Page</a>
+  </div>
+</header>
+
+<div class="bk-page">
+
+  <aside class="bk-sidebar-drawer" id="bk-sidebar" aria-label="Pages of the tutorial">
+    <div class="bk-sidebar">
+      <a class="bk-brand" href="../../..">
+  <svg class="mark" viewBox="0 0 44 40" width="30" height="27" aria-hidden="true">
+        <g transform="translate(22,9)">
+        <rect x="-19" y="-3" width="8" height="6" rx="1.5" transform="rotate(-16 -15 0)" fill="#eb8787" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="-9" y="-7" width="8" height="6" rx="1.5" transform="rotate(-5 -5 -4)" fill="#cde4be" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="1" y="-7" width="8" height="6" rx="1.5" transform="rotate(5 5 -4)" fill="#bcd6eb" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="11" y="-3" width="8" height="6" rx="1.5" transform="rotate(16 15 0)" fill="#d5c8ed" stroke="#5e5d59" stroke-width="1.1"/>
+        </g>
+        <path d="M4 16 L3 34 L22 38 L41 34 L40 16 L22 20 Z" fill="#c96442" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M22 20 L41 16 L40 16 L41 34 L22 38 Z" fill="#d97757" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M6 13 Q14 11 22 17 L22 35 Q14 30 5 31 Z" fill="#faf9f5" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M38 13 Q30 11 22 17 L22 35 Q30 30 39 31 Z" fill="#faf9f5" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        </svg>
+  <span class="bk-brand-name"><span class="bk-brand-mark">Robust</span>RLlib</span>
+  <span class="bk-brand-kind">Tutorial</span>
+</a>
+      <button type="button" class="bk-search-button" id="bk-search-open" aria-haspopup="dialog">
+        <span class="fa fa-search" aria-hidden="true"></span>
+        <span class="bk-search-label">Search</span>
+      </button>
+      <nav class="bk-nav" aria-label="Pages">
+        <ul class="bk-nav-list bk-nav-depth-0">
+  <li><a class="bk-nav-link" href="../../..">Home</a></li>
+</ul>
+        <p class="bk-caption">Getting Started</p>
+        <ul class="bk-nav-list bk-nav-depth-1">
+  <li><a class="bk-nav-link" href="../../../getting-started/overview/">Overview</a></li>
+  <li><a class="bk-nav-link" href="../../../getting-started/quick-start/">Quick Start</a></li>
+</ul>
+        <p class="bk-caption">Algorithms</p>
+        <ul class="bk-nav-list bk-nav-depth-1">
+  <li><a class="bk-nav-link" href="../../../algorithms/">All Methods</a></li>
+  <li class="bk-nav-group">
+    <details>
+      <summary>Standard</summary>
+      <ul class="bk-nav-list bk-nav-depth-2">
+  <li><a class="bk-nav-link" href="../../../algorithms/standard/">Overview</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/standard/iql/">IQL</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/standard/td3bc/">TD3+BC</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/standard/mopo/">MOPO</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/standard/synther/">SynthER</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/standard/ppo/">PPO</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/standard/sac/">SAC</a></li>
+</ul>
+    </details>
+  </li>
+  <li class="bk-nav-group">
+    <details>
+      <summary>Robust Online</summary>
+      <ul class="bk-nav-list bk-nav-depth-2">
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-online/">Overview</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-online/atla/">ATLA</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-online/atla-sa/">ATLA-SA</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-online/rsc/">RSC</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-online/rarl/">RARL</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-online/dr/">DR</a></li>
+</ul>
+    </details>
+  </li>
+  <li class="bk-nav-group">
+    <details>
+      <summary>Robust Offline</summary>
+      <ul class="bk-nav-list bk-nav-depth-2">
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-offline/">Overview</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-offline/rfqi/">RFQI</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-offline/rorl/">RORL</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-offline/atla-iql/">ATLA-IQL</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-offline/rsc-iql/">RSC-IQL</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-offline/rambo/">RAMBO</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-offline/romb/">ROMB</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-offline/fwm/">FWM</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-offline/plr-pvl/">PLR-PVL</a></li>
+</ul>
+    </details>
+  </li>
+  <li class="bk-nav-group">
+    <details>
+      <summary>Robust Safe</summary>
+      <ul class="bk-nav-list bk-nav-depth-2">
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-safe/">Overview</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-safe/ramu/">RAMU</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/robust-safe/spidr/">SPiDR</a></li>
+</ul>
+    </details>
+  </li>
+  <li><a class="bk-nav-link" href="../../../algorithms/run-a-method/">Run a Method</a></li>
+  <li><a class="bk-nav-link" href="../../../algorithms/add-an-algorithm/">Add an Algorithm</a></li>
+</ul>
+        <p class="bk-caption">Shift Sources and Modes</p>
+        <ul class="bk-nav-list bk-nav-depth-1">
+  <li><a class="bk-nav-link" href="../../">Overview</a></li>
+  <li class="bk-nav-group">
+    <details open>
+      <summary>Shift Sources</summary>
+      <ul class="bk-nav-list bk-nav-depth-2">
+  <li><a class="bk-nav-link" href="../dynamic/">Dynamic shift</a></li>
+  <li><a class="bk-nav-link" href="../observation/">Observation shift</a></li>
+  <li><a class="bk-nav-link" href="../action/">Action shift</a></li>
+  <li><a class="bk-nav-link is-active" href="./" aria-current="page">Reward/cost shift</a></li>
+  <li><a class="bk-nav-link" href="../latency/">Latency shift</a></li>
+  <li><a class="bk-nav-link" href="../semantic/">Semantic shift</a></li>
+</ul>
+    </details>
+  </li>
+  <li class="bk-nav-group">
+    <details>
+      <summary>Shift Modes</summary>
+      <ul class="bk-nav-list bk-nav-depth-2">
+  <li><a class="bk-nav-link" href="../../modes/stochastic/">Stochastic</a></li>
+  <li><a class="bk-nav-link" href="../../modes/adversarial/">Adversarial</a></li>
+  <li><a class="bk-nav-link" href="../../modes/parametric/">Parametric</a></li>
+  <li><a class="bk-nav-link" href="../../modes/non-stationary/">Non-stationary</a></li>
+  <li><a class="bk-nav-link" href="../../modes/composition/">Composition</a></li>
+</ul>
+    </details>
+  </li>
+  <li><a class="bk-nav-link" href="../../add-a-backend/">Add a Backend</a></li>
+</ul>
+        <p class="bk-caption">Evaluation</p>
+        <ul class="bk-nav-list bk-nav-depth-1">
+  <li><a class="bk-nav-link" href="../../../evaluation/protocol/">Evaluation Protocol</a></li>
+</ul>
+      </nav>
+    </div>
+  </aside>
+
+  <div class="bk-main">
+    <div class="bk-content">
+      <div class="bk-tools">
+        <button type="button" class="bk-icon-button" id="bk-toggle-toc" aria-controls="bk-toc" aria-label="Show or hide the contents of this page" title="On this page">
+          <span class="fa fa-list-ul" aria-hidden="true"></span>
+        </button>
+      </div>
+
+      <main class="bk-article" id="bk-content">
+        <h1 id="rewardcost-shift">Reward/cost shift<a class="headerlink" href="#rewardcost-shift" title="Permanent link">&para;</a></h1>
+<p>A Reward/cost shift changes the learning signal. It perturbs the scalar reward returned by
+<code>step</code>, or a cost field of the <code>info</code> dictionary, and leaves the observation, the action and
+the dynamics untouched.</p>
+<p><img alt="The loop between agent and environment, with the Reward/cost shift highlighted" src="../../../assets/figures/shift-loop-reward-cost.svg" width="760" /></p>
+<p><em>The Reward/cost shift acts on the learning signal: the reward and the cost that reach the learner are perturbed.</em></p>
+<p><img alt="A bar chart with two series of rewards over several steps" src="../../../assets/figures/example-reward-cost.png" width="440" /></p>
+<p><em>A Reward/cost shift changes the reward at every step.</em></p>
+<h2 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Reward/cost shift</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Perturbs</td>
+<td>The reward, or a cost field in <code>info</code></td>
+</tr>
+<tr>
+<td>Targets in code</td>
+<td><code>reward</code> and <code>cost</code></td>
+</tr>
+<tr>
+<td>Modes</td>
+<td>Stochastic, Parametric, Non-stationary, Composition</td>
+</tr>
+<tr>
+<td>Applied</td>
+<td>At every <code>step</code></td>
+</tr>
+<tr>
+<td>Acts on a frozen policy</td>
+<td>No; it is applied during training</td>
+</tr>
+<tr>
+<td>Backends</td>
+<td>Any; the shift needs nothing from the simulator</td>
+</tr>
+</tbody>
+</table>
+<h2 id="supported-modes">Supported modes<a class="headerlink" href="#supported-modes" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Mode name in code</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../../modes/stochastic/">Stochastic</a></td>
+<td><code>gauss</code></td>
+<td>Adds one Gaussian draw per step</td>
+</tr>
+<tr>
+<td><a href="../../modes/stochastic/">Stochastic</a></td>
+<td><code>uniform</code></td>
+<td>Adds one uniform draw per step</td>
+</tr>
+<tr>
+<td><a href="../../modes/parametric/">Parametric</a></td>
+<td><code>shift</code></td>
+<td>Adds a constant at every step</td>
+</tr>
+<tr>
+<td><a href="../../modes/non-stationary/">Non-stationary</a></td>
+<td><code>schedule</code> on any of the three mode names</td>
+<td>Varies the noise level or the offset within the episode</td>
+</tr>
+<tr>
+<td><a href="../../modes/composition/">Composition</a></td>
+<td>Several shifts in one list</td>
+<td>Corrupts the reward and the cost, or stacks two corruptions</td>
+</tr>
+</tbody>
+</table>
+<p>The Adversarial mode is not defined for this shift. <strong><code>cost</code> has no delay</strong>; the mode name
+<code>delay</code> postpones the reward and belongs to the <a href="../latency/">Latency shift</a>.</p>
+<h2 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Mode name</th>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>gauss</code></td>
+<td><code>mu</code></td>
+<td>float</td>
+<td><code>0.0</code></td>
+<td>Mean of the noise</td>
+</tr>
+<tr>
+<td></td>
+<td><code>sigma</code></td>
+<td>float</td>
+<td><code>0.05</code></td>
+<td>Standard deviation of the noise</td>
+</tr>
+<tr>
+<td><code>uniform</code></td>
+<td><code>low</code>, <code>high</code></td>
+<td>float</td>
+<td>minus <code>range</code>, <code>range</code></td>
+<td>Bounds of the noise</td>
+</tr>
+<tr>
+<td></td>
+<td><code>range</code></td>
+<td>float</td>
+<td><code>0.1</code></td>
+<td>Shorthand for a symmetric interval</td>
+</tr>
+<tr>
+<td><code>shift</code></td>
+<td><code>shift</code></td>
+<td>float</td>
+<td><code>value</code>, else <code>0.0</code></td>
+<td>The constant</td>
+</tr>
+<tr>
+<td>all, on the target <code>cost</code></td>
+<td><code>info_key</code></td>
+<td>str</td>
+<td><code>"cost"</code></td>
+<td>The field of <code>info</code> that is perturbed; a missing field counts as 0</td>
+</tr>
+</tbody>
+</table>
+<h2 id="declare-the-shift">Declare the shift<a class="headerlink" href="#declare-the-shift" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">robustrllib</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_robust</span><span class="p">,</span> <span class="n">ShiftSpec</span>
+
+<span class="n">STOCHASTIC</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"gauss"</span><span class="p">:</span>   <span class="n">ShiftSpec</span><span class="p">(</span><span class="s2">"reward"</span><span class="p">,</span> <span class="s2">"gauss"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"sigma"</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">}),</span>
+    <span class="s2">"uniform"</span><span class="p">:</span> <span class="n">ShiftSpec</span><span class="p">(</span><span class="s2">"reward"</span><span class="p">,</span> <span class="s2">"uniform"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"low"</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="s2">"high"</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">}),</span>
+<span class="p">}</span>
+<span class="n">PARAMETRIC</span> <span class="o">=</span> <span class="n">ShiftSpec</span><span class="p">(</span><span class="s2">"reward"</span><span class="p">,</span> <span class="s2">"shift"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"shift"</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">})</span>
+<span class="n">COST</span> <span class="o">=</span> <span class="n">ShiftSpec</span><span class="p">(</span><span class="s2">"cost"</span><span class="p">,</span> <span class="s2">"gauss"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"sigma"</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span> <span class="s2">"info_key"</span><span class="p">:</span> <span class="s2">"cost"</span><span class="p">})</span>
+</code></pre></div>
+<p>Non-stationary, with reward noise that grows within the episode:</p>
+<div class="highlight"><pre><span></span><code><span class="n">NON_STATIONARY</span> <span class="o">=</span> <span class="n">ShiftSpec</span><span class="p">(</span>
+    <span class="s2">"reward"</span><span class="p">,</span> <span class="s2">"gauss"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"sigma"</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">},</span>
+    <span class="n">schedule</span><span class="o">=</span><span class="p">{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"linear"</span><span class="p">,</span> <span class="s2">"start"</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">"end"</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s2">"t0"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">"t1"</span><span class="p">:</span> <span class="mi">500</span><span class="p">},</span>
+<span class="p">)</span>
+</code></pre></div>
+<p>Composition of a reward corruption and a cost corruption:</p>
+<div class="highlight"><pre><span></span><code><span class="n">COMPOSITION</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">ShiftSpec</span><span class="p">(</span><span class="s2">"reward"</span><span class="p">,</span> <span class="s2">"gauss"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"sigma"</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">}),</span>
+    <span class="n">ShiftSpec</span><span class="p">(</span><span class="s2">"cost"</span><span class="p">,</span> <span class="s2">"shift"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"shift"</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">}),</span>
+<span class="p">]</span>
+</code></pre></div>
+<p>A shift on the target <code>reward</code> changes the reward; a shift on the target <code>cost</code> changes the
+field in <code>info</code> and leaves the reward alone.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">first_step</span><span class="p">(</span><span class="n">shifts</span><span class="p">):</span>
+    <span class="n">env</span> <span class="o">=</span> <span class="n">make_robust</span><span class="p">(</span><span class="s2">"Hopper-v5"</span><span class="p">,</span> <span class="n">shifts</span><span class="o">=</span><span class="n">shifts</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+    <span class="n">env</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">return</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">reward</span><span class="p">),</span> <span class="mi">3</span><span class="p">),</span> <span class="n">info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"cost"</span><span class="p">)</span>
+
+
+<span class="nb">print</span><span class="p">(</span><span class="n">first_step</span><span class="p">([]))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">first_step</span><span class="p">([</span><span class="n">PARAMETRIC</span><span class="p">]))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">first_step</span><span class="p">([</span><span class="n">ShiftSpec</span><span class="p">(</span><span class="s2">"cost"</span><span class="p">,</span> <span class="s2">"shift"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"shift"</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">})]))</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>(0.999, None)
+(0.499, None)
+(0.999, 0.1)
+</code></pre></div>
+<p>The shift is carried into training through the training environment. An online method receives
+it in the shift list of that environment, for example through the <code>extra_shifts</code> key of a
+domain-randomization card.</p>
+<div class="highlight"><span class="filename">robustrllib/configs/dr/rgauss05.yaml (comments omitted)</span><pre><span></span><code><span class="nt">randomization</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
+<span class="nt">extra_shifts</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="nv">reward</span><span class="p p-Indicator">,</span><span class="nt"> mode</span><span class="p">:</span><span class="w"> </span><span class="nv">gauss</span><span class="p p-Indicator">,</span><span class="nt"> params</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">sigma</span><span class="p">:</span><span class="w"> </span><span class="nv">0.5</span><span class="p p-Indicator">}}</span>
+<span class="nt">curriculum</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="nv">constant</span><span class="p p-Indicator">,</span><span class="nt"> end</span><span class="p">:</span><span class="w"> </span><span class="nv">1.0</span><span class="p p-Indicator">}</span>
+</code></pre></div>
+<p>An offline method learns from a dataset, so the same corruption is applied to the rewards of
+the dataset, through the <code>reward_channel</code> key of the experiment file.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">reward_channel</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gauss</span>
+<span class="w">  </span><span class="nt">params</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">sigma</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span>
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>A frozen policy does not read the reward. Applied at evaluation time, a Reward/cost shift
+changes the measured return and leaves the trajectory as it was.</p>
+</div>
+<h2 id="rules">Rules<a class="headerlink" href="#rules" title="Permanent link">&para;</a></h2>
+<ul>
+<li>A Reward/cost shift is studied by training under it and evaluating on the nominal task.</li>
+<li>The target <code>reward</code> changes the reward; the target <code>cost</code> changes a field of <code>info</code>.</li>
+<li><code>info_key</code> names the cost field when the task does not call it <code>cost</code>.</li>
+<li>The mode names are <code>gauss</code>, <code>uniform</code> and <code>shift</code>; every other mode name raises <code>ValueError</code>
+  no later than the first <code>step</code>.</li>
+<li>A delayed reward is declared as a Latency shift with the mode name <code>delay</code>.</li>
+<li>The noise level is given in the units of the reward, not as a fraction of it.</li>
+</ul>
+      </main>
+
+      <footer class="bk-footer">
+        <nav class="bk-related" aria-label="Previous and next page">
+          <a class="bk-prev" href="../action/">
+            <span class="fa fa-arrow-left" aria-hidden="true"></span>
+            <span class="bk-related-text"><span class="bk-related-label">Previous</span><span class="bk-related-title">Action shift</span></span>
+          </a>
+          <a class="bk-next" href="../latency/">
+            <span class="bk-related-text"><span class="bk-related-label">Next</span><span class="bk-related-title">Latency shift</span></span>
+            <span class="fa fa-arrow-right" aria-hidden="true"></span>
+          </a>
+        </nav>
+        <p class="bk-footnote">RobustRLlib · Anonymous submission under double-blind review.</p>
+      </footer>
+    </div>
+
+    <aside class="bk-toc-drawer" id="bk-toc" aria-label="Contents of this page">
+      <div class="bk-toc">
+        <p class="bk-toc-title">On this page</p>
+        <nav class="bk-toc-tree" aria-label="Sections">
+          <ul class="bk-toc-list bk-toc-depth-1">
+  <li><a class="bk-toc-link" href="#properties">Properties</a>
+  </li>
+  <li><a class="bk-toc-link" href="#supported-modes">Supported modes</a>
+  </li>
+  <li><a class="bk-toc-link" href="#parameters">Parameters</a>
+  </li>
+  <li><a class="bk-toc-link" href="#declare-the-shift">Declare the shift</a>
+  </li>
+  <li><a class="bk-toc-link" href="#rules">Rules</a>
+  </li>
+</ul>
+        </nav>
+      </div>
+    </aside>
+  </div>
+
+</div>
+
+<div class="bk-backdrop" id="bk-backdrop" hidden></div>
+<div class="bk-search" id="bk-search" role="dialog" aria-modal="true" aria-label="Search the tutorial" hidden>
+  <div class="bk-search-panel">
+    <div class="bk-search-field">
+      <span class="fa fa-search" aria-hidden="true"></span>
+      <input type="search" id="mkdocs-search-query" name="q" placeholder="Search the tutorial" aria-label="Search the tutorial" autocomplete="off" spellcheck="false">
+      <button type="button" class="bk-icon-button" id="bk-search-close" aria-label="Close the search"><span class="fa fa-times" aria-hidden="true"></span></button>
+    </div>
+    <div class="bk-search-results" id="mkdocs-search-results" data-no-results-text="Nothing found"></div>
+  </div>
+</div>
+
+<script>var base_url = "../../..";</script>
+<script src="../../../js/site.js"></script>
+<script src="../../../search/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,101 @@
+# Documentation site of RobustRLlib, served at /docs/ next to the landing page.
+#
+# The paper is under double-blind review. Do NOT add: repo_url, edit_uri,
+# site_author, copyright, social links, analytics, or any plugin that reads git
+# history (git-authors, git-revision-date, git-committers). Each of them prints
+# identity into the rendered pages.
+site_name: RobustRLlib Tutorial
+site_description: A unified library and benchmark for robust reinforcement learning algorithms.
+site_url: https://robust-rllib.site/docs/
+docs_dir: content
+site_dir: ../docs
+use_directory_urls: true
+
+# The theme is the site's own, in theme/: the pages on the left, the text in the middle,
+# the sections of the page on the right. It loads nothing from outside the site.
+theme:
+  name: null
+  custom_dir: theme
+  static_templates:
+    - 404.html
+
+extra_css:
+  - assets/pygments.css
+  - assets/rl.css
+  - assets/book.css
+
+plugins:
+  - search
+
+validation:
+  nav:
+    absolute_links: ignore   # the last nav entry leaves the docs for the project page
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - def_list
+  - md_in_html
+  - tables
+  - toc: {permalink: true}
+  - pymdownx.superfences
+  - pymdownx.inlinehilite
+  - pymdownx.highlight: {use_pygments: true}
+
+nav:
+  - Home: index.md
+  - Getting Started:
+      - Overview: getting-started/overview.md
+      - Quick Start: getting-started/quick-start.md
+  - Algorithms:
+      - All Methods: algorithms/index.md
+      - Standard:
+          - Overview: algorithms/standard/index.md
+          - IQL: algorithms/standard/iql.md
+          - TD3+BC: algorithms/standard/td3bc.md
+          - MOPO: algorithms/standard/mopo.md
+          - SynthER: algorithms/standard/synther.md
+          - PPO: algorithms/standard/ppo.md
+          - SAC: algorithms/standard/sac.md
+      - Robust Online:
+          - Overview: algorithms/robust-online/index.md
+          - ATLA: algorithms/robust-online/atla.md
+          - ATLA-SA: algorithms/robust-online/atla-sa.md
+          - RSC: algorithms/robust-online/rsc.md
+          - RARL: algorithms/robust-online/rarl.md
+          - DR: algorithms/robust-online/dr.md
+      - Robust Offline:
+          - Overview: algorithms/robust-offline/index.md
+          - RFQI: algorithms/robust-offline/rfqi.md
+          - RORL: algorithms/robust-offline/rorl.md
+          - ATLA-IQL: algorithms/robust-offline/atla-iql.md
+          - RSC-IQL: algorithms/robust-offline/rsc-iql.md
+          - RAMBO: algorithms/robust-offline/rambo.md
+          - ROMB: algorithms/robust-offline/romb.md
+          - FWM: algorithms/robust-offline/fwm.md
+          - PLR-PVL: algorithms/robust-offline/plr-pvl.md
+      - Robust Safe:
+          - Overview: algorithms/robust-safe/index.md
+          - RAMU: algorithms/robust-safe/ramu.md
+          - SPiDR: algorithms/robust-safe/spidr.md
+      - Run a Method: algorithms/run-a-method.md
+      - Add an Algorithm: algorithms/add-an-algorithm.md
+  - Shift Sources and Modes:
+      - Overview: shifts/index.md
+      - Shift Sources:
+          - Dynamic shift: shifts/sources/dynamic.md
+          - Observation shift: shifts/sources/observation.md
+          - Action shift: shifts/sources/action.md
+          - Reward/cost shift: shifts/sources/reward-cost.md
+          - Latency shift: shifts/sources/latency.md
+          - Semantic shift: shifts/sources/semantic.md
+      - Shift Modes:
+          - Stochastic: shifts/modes/stochastic.md
+          - Adversarial: shifts/modes/adversarial.md
+          - Parametric: shifts/modes/parametric.md
+          - Non-stationary: shifts/modes/non-stationary.md
+          - Composition: shifts/modes/composition.md
+      - Add a Backend: shifts/add-a-backend.md
+  - Evaluation:
+      - Evaluation Protocol: evaluation/protocol.md
+  - Project Page: /

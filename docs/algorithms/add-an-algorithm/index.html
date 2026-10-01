@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <meta name="description" content="A unified library and benchmark for robust reinforcement learning algorithms.">
+  <title>Add an Algorithm - RobustRLlib Tutorial</title>
+  <link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="../../assets/favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../../assets/apple-touch-icon.png">
+  <link rel="stylesheet" href="../../css/site.css">
+  <link rel="stylesheet" href="../../assets/pygments.css">
+  <link rel="stylesheet" href="../../assets/rl.css">
+  <link rel="stylesheet" href="../../assets/book.css">
+</head>
+<body class="bk">
+<a class="bk-skip" href="#bk-content">Skip to the text</a>
+
+<header class="bk-topbar">
+  <div class="bk-topbar-inner">
+    <button type="button" class="bk-icon-button bk-topbar-menu" id="bk-toggle-nav" aria-controls="bk-sidebar" aria-label="Show or hide the pages" title="Pages">
+      <span class="fa fa-bars" aria-hidden="true"></span>
+    </button>
+    <a class="bk-brand" href="../..">
+  <svg class="mark" viewBox="0 0 44 40" width="30" height="27" aria-hidden="true">
+        <g transform="translate(22,9)">
+        <rect x="-19" y="-3" width="8" height="6" rx="1.5" transform="rotate(-16 -15 0)" fill="#eb8787" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="-9" y="-7" width="8" height="6" rx="1.5" transform="rotate(-5 -5 -4)" fill="#cde4be" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="1" y="-7" width="8" height="6" rx="1.5" transform="rotate(5 5 -4)" fill="#bcd6eb" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="11" y="-3" width="8" height="6" rx="1.5" transform="rotate(16 15 0)" fill="#d5c8ed" stroke="#5e5d59" stroke-width="1.1"/>
+        </g>
+        <path d="M4 16 L3 34 L22 38 L41 34 L40 16 L22 20 Z" fill="#c96442" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M22 20 L41 16 L40 16 L41 34 L22 38 Z" fill="#d97757" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M6 13 Q14 11 22 17 L22 35 Q14 30 5 31 Z" fill="#faf9f5" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M38 13 Q30 11 22 17 L22 35 Q30 30 39 31 Z" fill="#faf9f5" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        </svg>
+  <span class="bk-brand-name"><span class="bk-brand-mark">Robust</span>RLlib</span>
+  <span class="bk-brand-kind">Tutorial</span>
+</a>
+    <span class="bk-topbar-space"></span>
+    <a class="bk-topbar-link" href="/">Project Page</a>
+  </div>
+</header>
+
+<div class="bk-page">
+
+  <aside class="bk-sidebar-drawer" id="bk-sidebar" aria-label="Pages of the tutorial">
+    <div class="bk-sidebar">
+      <a class="bk-brand" href="../..">
+  <svg class="mark" viewBox="0 0 44 40" width="30" height="27" aria-hidden="true">
+        <g transform="translate(22,9)">
+        <rect x="-19" y="-3" width="8" height="6" rx="1.5" transform="rotate(-16 -15 0)" fill="#eb8787" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="-9" y="-7" width="8" height="6" rx="1.5" transform="rotate(-5 -5 -4)" fill="#cde4be" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="1" y="-7" width="8" height="6" rx="1.5" transform="rotate(5 5 -4)" fill="#bcd6eb" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="11" y="-3" width="8" height="6" rx="1.5" transform="rotate(16 15 0)" fill="#d5c8ed" stroke="#5e5d59" stroke-width="1.1"/>
+        </g>
+        <path d="M4 16 L3 34 L22 38 L41 34 L40 16 L22 20 Z" fill="#c96442" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M22 20 L41 16 L40 16 L41 34 L22 38 Z" fill="#d97757" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M6 13 Q14 11 22 17 L22 35 Q14 30 5 31 Z" fill="#faf9f5" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M38 13 Q30 11 22 17 L22 35 Q30 30 39 31 Z" fill="#faf9f5" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        </svg>
+  <span class="bk-brand-name"><span class="bk-brand-mark">Robust</span>RLlib</span>
+  <span class="bk-brand-kind">Tutorial</span>
+</a>
+      <button type="button" class="bk-search-button" id="bk-search-open" aria-haspopup="dialog">
+        <span class="fa fa-search" aria-hidden="true"></span>
+        <span class="bk-search-label">Search</span>
+      </button>
+      <nav class="bk-nav" aria-label="Pages">
+        <ul class="bk-nav-list bk-nav-depth-0">
+  <li><a class="bk-nav-link" href="../..">Home</a></li>
+</ul>
+        <p class="bk-caption">Getting Started</p>
+        <ul class="bk-nav-list bk-nav-depth-1">
+  <li><a class="bk-nav-link" href="../../getting-started/overview/">Overview</a></li>
+  <li><a class="bk-nav-link" href="../../getting-started/quick-start/">Quick Start</a></li>
+</ul>
+        <p class="bk-caption">Algorithms</p>
+        <ul class="bk-nav-list bk-nav-depth-1">
+  <li><a class="bk-nav-link" href="../">All Methods</a></li>
+  <li class="bk-nav-group">
+    <details>
+      <summary>Standard</summary>
+      <ul class="bk-nav-list bk-nav-depth-2">
+  <li><a class="bk-nav-link" href="../standard/">Overview</a></li>
+  <li><a class="bk-nav-link" href="../standard/iql/">IQL</a></li>
+  <li><a class="bk-nav-link" href="../standard/td3bc/">TD3+BC</a></li>
+  <li><a class="bk-nav-link" href="../standard/mopo/">MOPO</a></li>
+  <li><a class="bk-nav-link" href="../standard/synther/">SynthER</a></li>
+  <li><a class="bk-nav-link" href="../standard/ppo/">PPO</a></li>
+  <li><a class="bk-nav-link" href="../standard/sac/">SAC</a></li>
+</ul>
+    </details>
+  </li>
+  <li class="bk-nav-group">
+    <details>
+      <summary>Robust Online</summary>
+      <ul class="bk-nav-list bk-nav-depth-2">
+  <li><a class="bk-nav-link" href="../robust-online/">Overview</a></li>
+  <li><a class="bk-nav-link" href="../robust-online/atla/">ATLA</a></li>
+  <li><a class="bk-nav-link" href="../robust-online/atla-sa/">ATLA-SA</a></li>
+  <li><a class="bk-nav-link" href="../robust-online/rsc/">RSC</a></li>
+  <li><a class="bk-nav-link" href="../robust-online/rarl/">RARL</a></li>
+  <li><a class="bk-nav-link" href="../robust-online/dr/">DR</a></li>
+</ul>
+    </details>
+  </li>
+  <li class="bk-nav-group">
+    <details>
+      <summary>Robust Offline</summary>
+      <ul class="bk-nav-list bk-nav-depth-2">
+  <li><a class="bk-nav-link" href="../robust-offline/">Overview</a></li>
+  <li><a class="bk-nav-link" href="../robust-offline/rfqi/">RFQI</a></li>
+  <li><a class="bk-nav-link" href="../robust-offline/rorl/">RORL</a></li>
+  <li><a class="bk-nav-link" href="../robust-offline/atla-iql/">ATLA-IQL</a></li>
+  <li><a class="bk-nav-link" href="../robust-offline/rsc-iql/">RSC-IQL</a></li>
+  <li><a class="bk-nav-link" href="../robust-offline/rambo/">RAMBO</a></li>
+  <li><a class="bk-nav-link" href="../robust-offline/romb/">ROMB</a></li>
+  <li><a class="bk-nav-link" href="../robust-offline/fwm/">FWM</a></li>
+  <li><a class="bk-nav-link" href="../robust-offline/plr-pvl/">PLR-PVL</a></li>
+</ul>
+    </details>
+  </li>
+  <li class="bk-nav-group">
+    <details>
+      <summary>Robust Safe</summary>
+      <ul class="bk-nav-list bk-nav-depth-2">
+  <li><a class="bk-nav-link" href="../robust-safe/">Overview</a></li>
+  <li><a class="bk-nav-link" href="../robust-safe/ramu/">RAMU</a></li>
+  <li><a class="bk-nav-link" href="../robust-safe/spidr/">SPiDR</a></li>
+</ul>
+    </details>
+  </li>
+  <li><a class="bk-nav-link" href="../run-a-method/">Run a Method</a></li>
+  <li><a class="bk-nav-link is-active" href="./" aria-current="page">Add an Algorithm</a></li>
+</ul>
+        <p class="bk-caption">Shift Sources and Modes</p>
+        <ul class="bk-nav-list bk-nav-depth-1">
+  <li><a class="bk-nav-link" href="../../shifts/">Overview</a></li>
+  <li class="bk-nav-group">
+    <details>
+      <summary>Shift Sources</summary>
+      <ul class="bk-nav-list bk-nav-depth-2">
+  <li><a class="bk-nav-link" href="../../shifts/sources/dynamic/">Dynamic shift</a></li>
+  <li><a class="bk-nav-link" href="../../shifts/sources/observation/">Observation shift</a></li>
+  <li><a class="bk-nav-link" href="../../shifts/sources/action/">Action shift</a></li>
+  <li><a class="bk-nav-link" href="../../shifts/sources/reward-cost/">Reward/cost shift</a></li>
+  <li><a class="bk-nav-link" href="../../shifts/sources/latency/">Latency shift</a></li>
+  <li><a class="bk-nav-link" href="../../shifts/sources/semantic/">Semantic shift</a></li>
+</ul>
+    </details>
+  </li>
+  <li class="bk-nav-group">
+    <details>
+      <summary>Shift Modes</summary>
+      <ul class="bk-nav-list bk-nav-depth-2">
+  <li><a class="bk-nav-link" href="../../shifts/modes/stochastic/">Stochastic</a></li>
+  <li><a class="bk-nav-link" href="../../shifts/modes/adversarial/">Adversarial</a></li>
+  <li><a class="bk-nav-link" href="../../shifts/modes/parametric/">Parametric</a></li>
+  <li><a class="bk-nav-link" href="../../shifts/modes/non-stationary/">Non-stationary</a></li>
+  <li><a class="bk-nav-link" href="../../shifts/modes/composition/">Composition</a></li>
+</ul>
+    </details>
+  </li>
+  <li><a class="bk-nav-link" href="../../shifts/add-a-backend/">Add a Backend</a></li>
+</ul>
+        <p class="bk-caption">Evaluation</p>
+        <ul class="bk-nav-list bk-nav-depth-1">
+  <li><a class="bk-nav-link" href="../../evaluation/protocol/">Evaluation Protocol</a></li>
+</ul>
+      </nav>
+    </div>
+  </aside>
+
+  <div class="bk-main">
+    <div class="bk-content">
+      <div class="bk-tools">
+        <button type="button" class="bk-icon-button" id="bk-toggle-toc" aria-controls="bk-toc" aria-label="Show or hide the contents of this page" title="On this page">
+          <span class="fa fa-list-ul" aria-hidden="true"></span>
+        </button>
+      </div>
+
+      <main class="bk-article" id="bk-content">
+        <h1 id="add-an-algorithm">Add an Algorithm<a class="headerlink" href="#add-an-algorithm" title="Permanent link">&para;</a></h1>
+<p>A new method is a class with four methods. It is registered from a configuration file, without
+an edit to the library, and runs through the same train and evaluate pipeline as the built-in
+algorithms.</p>
+<h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Custom algorithm</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Interface</td>
+<td>A subclass of <code>Algo</code> with <code>train</code>, <code>predict</code>, <code>save</code> and <code>load</code></td>
+</tr>
+<tr>
+<td>Registration</td>
+<td>The <code>class</code> key of an algorithm config, written <code>module.path:ClassName</code></td>
+</tr>
+<tr>
+<td>Configuration</td>
+<td><code>hparams</code> of the algorithm config, passed to the constructor</td>
+</tr>
+<tr>
+<td>Runner</td>
+<td><code>examples/run_experiment.py -c &lt;experiment.yaml&gt;</code></td>
+</tr>
+<tr>
+<td>Evaluation</td>
+<td>The shift grid of the experiment's <code>eval</code> section</td>
+</tr>
+<tr>
+<td>Limits</td>
+<td>The shared evaluator reads checkpoints named <code>ckpt/ep*.pt</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="the-interface">The interface<a class="headerlink" href="#the-interface" title="Permanent link">&para;</a></h2>
+<p><code>Algo</code> is defined in the module <code>robustrllib.algos.base</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">robustrllib.algos</span><span class="w"> </span><span class="kn">import</span> <span class="n">Algo</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">Algo</span><span class="o">.</span><span class="n">__abstractmethods__</span><span class="p">))</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>['load', 'predict', 'save', 'train']
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Member</th>
+<th>Signature</th>
+<th>Contract</th>
+<th>Called by</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Constructor</td>
+<td><code>__init__(self, **hparams)</code></td>
+<td>Accepts the <code>hparams</code> of the config as keyword arguments</td>
+<td><code>build_algo</code></td>
+</tr>
+<tr>
+<td><code>train</code></td>
+<td><code>train(self, env, total_timesteps, seed=None)</code></td>
+<td>Fits the policy on <code>env</code></td>
+<td>The experiment runner</td>
+</tr>
+<tr>
+<td><code>predict</code></td>
+<td><code>predict(self, obs, deterministic=True)</code></td>
+<td>Returns the action for one observation</td>
+<td>Every evaluator</td>
+</tr>
+<tr>
+<td><code>save</code></td>
+<td><code>save(self, path)</code></td>
+<td>Writes what <code>load</code> needs</td>
+<td>The runner, after training</td>
+</tr>
+<tr>
+<td><code>load</code></td>
+<td><code>load(cls, path, **kwargs)</code>, a class method</td>
+<td>Returns an instance ready for <code>predict</code></td>
+<td><code>load_algo</code></td>
+</tr>
+</tbody>
+</table>
+<p>The evaluators call <code>load</code> with <code>env=...</code>; <code>baselines/eval_final.py</code> also passes <code>device=...</code>.
+<strong>A subclass that leaves out one of the four methods cannot be instantiated</strong>: Python raises
+<code>TypeError: Can't instantiate abstract class</code>.</p>
+<h2 id="implement-a-method">Implement a method<a class="headerlink" href="#implement-a-method" title="Permanent link">&para;</a></h2>
+<p>The module <code>robustrllib.algos.template_reinforce</code> is a minimal REINFORCE written to be copied.
+The command prints the location of the file.</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">"import robustrllib.algos.template_reinforce as m; print(m.__file__)"</span>
+</code></pre></div>
+<p>The constructor takes hyperparameters as keyword arguments. The trailing <code>**_</code> swallows keys the
+class does not know.</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Reinforce</span><span class="p">(</span><span class="n">Algo</span><span class="p">):</span>  <span class="c1"># &lt;-- your algorithm body</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">3e-4</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">0.99</span><span class="p">,</span> <span class="n">hidden</span><span class="o">=</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">),</span> <span class="n">device</span><span class="o">=</span><span class="s2">"cpu"</span><span class="p">,</span> <span class="o">**</span><span class="n">_</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">gamma</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">lr</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">hidden</span><span class="p">),</span> <span class="n">device</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">policy</span> <span class="o">=</span> <span class="kc">None</span>
+</code></pre></div>
+<p><code>train</code> reads the dimensions from the spaces of the environment and owns the training loop.</p>
+<div class="highlight"><pre><span></span><code>    <span class="k">def</span><span class="w"> </span><span class="nf">_build</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">):</span>
+        <span class="n">obs_dim</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">observation_space</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+        <span class="n">act_dim</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">policy</span> <span class="o">=</span> <span class="n">_Policy</span><span class="p">(</span><span class="n">obs_dim</span><span class="p">,</span> <span class="n">act_dim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">opt</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">lr</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">total_timesteps</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_build</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+        <span class="n">env</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+        <span class="n">steps</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="n">steps</span> <span class="o">&lt;</span> <span class="n">total_timesteps</span><span class="p">:</span>
+            <span class="n">obs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+            <span class="o">...</span>
+</code></pre></div>
+<p><code>predict</code> maps one observation to one action, as a NumPy array.</p>
+<div class="highlight"><pre><span></span><code>    <span class="k">def</span><span class="w"> </span><span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obs</span><span class="p">,</span> <span class="n">deterministic</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">obs</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+            <span class="n">dist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">dist</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="n">dist</span><span class="o">.</span><span class="n">mean</span> <span class="k">if</span> <span class="n">deterministic</span> <span class="k">else</span> <span class="n">dist</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">a</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+</code></pre></div>
+<p><code>load</code> rebuilds the network from the environment and restores the weights.</p>
+<div class="highlight"><pre><span></span><code>    <span class="k">def</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span> <span class="n">path</span> <span class="o">+</span> <span class="s2">".pt"</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">env</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">algo</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">algo</span><span class="o">.</span><span class="n">_build</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+        <span class="n">algo</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="s2">".pt"</span><span class="p">,</span> <span class="n">map_location</span><span class="o">=</span><span class="n">algo</span><span class="o">.</span><span class="n">device</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">algo</span>
+</code></pre></div>
+<p>The training loop uses only <code>reset</code> and <code>step</code>, so it does not need to know which shifts are
+stacked on the environment. <strong><code>save</code> and <code>load</code> must agree on the file name</strong>; the template
+appends <code>.pt</code> to the path in both.</p>
+<h2 id="register-a-method">Register a method<a class="headerlink" href="#register-a-method" title="Permanent link">&para;</a></h2>
+<p>Registration is one line in an algorithm config.</p>
+<div class="highlight"><span class="filename">robustrllib/configs/algorithm/reinforce.yaml</span><pre><span></span><code><span class="c1"># Custom algorithm plugged in by import path -- no framework edit needed.</span>
+<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reinforce</span>
+<span class="nt">class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">robustrllib.algos.template_reinforce:Reinforce</span>
+<span class="nt">hparams</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">lr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0003</span>
+<span class="w">  </span><span class="nt">gamma</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.99</span>
+<span class="w">  </span><span class="nt">hidden</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">64</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">64</span><span class="p p-Indicator">]</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>A label. Without <code>class</code> it selects a built-in: <code>random</code>, <code>ppo</code>, <code>sac</code>, <code>td3</code>, <code>a2c</code>, <code>ddpg</code>.</td>
+</tr>
+<tr>
+<td><code>class</code></td>
+<td><code>module.path:ClassName</code>, importable from where the launcher runs</td>
+</tr>
+<tr>
+<td><code>hparams</code></td>
+<td>Keyword arguments of the constructor</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The file spells the module by its implementation path. The public name,
+<code>robustrllib.algos.template_reinforce:Reinforce</code>, resolves to the same class.</p>
+</div>
+<p>The contract can be checked before any training. A budget of zero timesteps builds the network
+without running an episode.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">robustrllib</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_robust</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">robustrllib.algos</span><span class="w"> </span><span class="kn">import</span> <span class="n">Algo</span><span class="p">,</span> <span class="n">build_algo</span><span class="p">,</span> <span class="n">load_algo</span>
+
+<span class="n">CLASS</span> <span class="o">=</span> <span class="s2">"robustrllib.algos.template_reinforce:Reinforce"</span>
+
+<span class="n">env</span> <span class="o">=</span> <span class="n">make_robust</span><span class="p">(</span><span class="s2">"Hopper-v5"</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">algo</span> <span class="o">=</span> <span class="n">build_algo</span><span class="p">(</span><span class="s2">"reinforce"</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">CLASS</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.0003</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">0.99</span><span class="p">,</span> <span class="n">hidden</span><span class="o">=</span><span class="p">[</span><span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">])</span>
+<span class="n">algo</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">total_timesteps</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">obs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">action</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">obs</span><span class="p">,</span> <span class="n">deterministic</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">algo</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">algo</span><span class="p">,</span> <span class="n">Algo</span><span class="p">),</span> <span class="n">action</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">tmp</span><span class="p">:</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span> <span class="s2">"checkpoint"</span><span class="p">)</span>
+    <span class="n">algo</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="n">clone</span> <span class="o">=</span> <span class="n">load_algo</span><span class="p">(</span><span class="s2">"reinforce"</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">CLASS</span><span class="p">,</span> <span class="n">env</span><span class="o">=</span><span class="n">env</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">tmp</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">clone</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">obs</span><span class="p">),</span> <span class="n">action</span><span class="p">))</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>Reinforce True (3,)
+['checkpoint.pt'] True
+</code></pre></div>
+<h2 id="run-a-method">Run a method<a class="headerlink" href="#run-a-method" title="Permanent link">&para;</a></h2>
+<p>An experiment file names the algorithm, the task, the budget and the grid. Every section is a
+path to a card or an inline dictionary.</p>
+<div class="highlight"><span class="filename">hopper_reinforce.yaml</span><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hopper_reinforce</span>
+<span class="nt">task</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">env_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Hopper-v5</span>
+<span class="w">  </span><span class="nt">make_kwargs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">max_episode_steps</span><span class="p">:</span><span class="w"> </span><span class="nv">1000</span><span class="p p-Indicator">}</span>
+<span class="w">  </span><span class="nt">train_shifts</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
+<span class="nt">algorithm</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reinforce</span>
+<span class="w">  </span><span class="nt">class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">robustrllib.algos.template_reinforce:Reinforce</span>
+<span class="w">  </span><span class="nt">hparams</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">lr</span><span class="p">:</span><span class="w"> </span><span class="nv">0.0003</span><span class="p p-Indicator">,</span><span class="nt"> gamma</span><span class="p">:</span><span class="w"> </span><span class="nv">0.99</span><span class="p p-Indicator">,</span><span class="nt"> hidden</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">64</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">64</span><span class="p p-Indicator">]}</span>
+<span class="nt">train</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">total_timesteps</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20000</span>
+<span class="w">  </span><span class="nt">seed</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="nt">eval</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">episodes</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">  </span><span class="nt">seeds</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">0</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">grid</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="nv">nominal</span><span class="p p-Indicator">,</span><span class="nt"> shifts</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[],</span><span class="nt"> severity</span><span class="p">:</span><span class="w"> </span><span class="nv">1.0</span><span class="p p-Indicator">}</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gravity_1.2</span>
+<span class="w">      </span><span class="nt">severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.2</span>
+<span class="w">      </span><span class="nt">shifts</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[{</span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="nv">dynamics</span><span class="p p-Indicator">,</span><span class="nt"> mode</span><span class="p">:</span><span class="w"> </span><span class="nv">scale</span><span class="p p-Indicator">,</span><span class="nt"> params</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">param</span><span class="p">:</span><span class="w"> </span><span class="nv">gravity</span><span class="p p-Indicator">,</span><span class="nt"> factor</span><span class="p">:</span><span class="w"> </span><span class="nv">1.2</span><span class="p p-Indicator">}}]</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">obs_noise_0.05</span>
+<span class="w">      </span><span class="nt">shifts</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[{</span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="nv">observation</span><span class="p p-Indicator">,</span><span class="nt"> mode</span><span class="p">:</span><span class="w"> </span><span class="nv">gauss</span><span class="p p-Indicator">,</span><span class="nt"> params</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">sigma</span><span class="p">:</span><span class="w"> </span><span class="nv">0.05</span><span class="p p-Indicator">}}]</span>
+<span class="nt">output_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">results/reinforce</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>examples/run_experiment.py<span class="w"> </span>-c<span class="w"> </span>hopper_reinforce.yaml
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Call</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Build</td>
+<td><code>make_robust(env_id, shifts=train_shifts, **make_kwargs)</code></td>
+</tr>
+<tr>
+<td>Train</td>
+<td><code>algo.train(env, total_timesteps, seed)</code></td>
+</tr>
+<tr>
+<td>Save</td>
+<td><code>algo.save("&lt;run dir&gt;/checkpoint")</code></td>
+</tr>
+<tr>
+<td>Evaluate</td>
+<td>Every condition of <code>grid</code>, <code>episodes</code> episodes per entry of <code>seeds</code></td>
+</tr>
+<tr>
+<td>Write</td>
+<td>The files below, in <code>&lt;output_dir&gt;/&lt;name&gt;-&lt;hash&gt;/</code></td>
+</tr>
+</tbody>
+</table>
+<p>The same run is available from Python.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">robustrllib.run</span><span class="w"> </span><span class="kn">import</span> <span class="n">run_from_file</span>
+
+<span class="c1"># result = run_from_file("hopper_reinforce.yaml")</span>
+</code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Shifts listed under <code>task.train_shifts</code>, in the dictionary form of the grid, are applied to
+the training environment. The shifts and their mode names are listed under
+<a href="../../shifts/">Shift Sources and Modes</a>.</p>
+</div>
+<h2 id="evaluation-and-metrics">Evaluation and metrics<a class="headerlink" href="#evaluation-and-metrics" title="Permanent link">&para;</a></h2>
+<p>The runner prints one row per condition and writes four files.</p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Content</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>checkpoint.pt</code></td>
+<td>What <code>save</code> wrote</td>
+</tr>
+<tr>
+<td><code>config.json</code></td>
+<td>The four resolved sections and the hash</td>
+</tr>
+<tr>
+<td><code>summary.json</code></td>
+<td>Metrics per condition and the summary across conditions</td>
+</tr>
+<tr>
+<td><code>episodes.csv</code></td>
+<td>One row per evaluation episode</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Scope</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>return_mean</code>, <code>return_std</code>, <code>return_min</code></td>
+<td>Condition</td>
+<td>Episodic return over the episodes of the condition</td>
+</tr>
+<tr>
+<td><code>cvar</code></td>
+<td>Condition</td>
+<td>Mean of the worst <code>cvar_alpha</code> fraction of the episodes</td>
+</tr>
+<tr>
+<td><code>cost_mean</code>, <code>constraint_violation</code></td>
+<td>Condition</td>
+<td>Mean episode cost and share of episodes with a positive cost</td>
+</tr>
+<tr>
+<td><code>success_rate</code></td>
+<td>Condition</td>
+<td>Share of episodes that report success</td>
+</tr>
+<tr>
+<td><code>return_mean_avg</code>, <code>worst_case_return</code></td>
+<td>Summary</td>
+<td>Mean and minimum of <code>return_mean</code> over the conditions</td>
+</tr>
+<tr>
+<td><code>auc</code></td>
+<td>Summary</td>
+<td>Area under return against <code>severity</code>, when the grid has severities</td>
+</tr>
+</tbody>
+</table>
+<p>The shared evaluator applies the <a href="../../evaluation/protocol/">Evaluation Protocol</a> to any class
+that follows the contract, under four assumptions.</p>
+<table>
+<thead>
+<tr>
+<th>Assumption</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Checkpoint location</td>
+<td>Files named <code>ckpt/ep*.pt</code> in the run directory</td>
+</tr>
+<tr>
+<td>Path used verbatim</td>
+<td><code>save(path)</code> writes exactly <code>path</code>, and <code>load(path)</code> reads exactly <code>path</code></td>
+</tr>
+<tr>
+<td><code>load</code> keywords</td>
+<td><code>load</code> is called with <code>env=</code> and <code>device=</code></td>
+</tr>
+<tr>
+<td>Config references</td>
+<td>The experiment file names its cards as paths relative to the root of the checkout</td>
+</tr>
+</tbody>
+</table>
+<p><strong>The template appends <code>.pt</code> to the path</strong>, so its checkpoints are not found by
+<code>baselines/eval_final.py</code>. A copy that is meant for the shared evaluator uses the path verbatim.</p>
+<h2 id="registration-rules">Registration rules<a class="headerlink" href="#registration-rules" title="Permanent link">&para;</a></h2>
+<ul>
+<li>A method subclasses <code>Algo</code> and implements all four methods.</li>
+<li>The constructor accepts every key of <code>hparams</code> as a keyword argument.</li>
+<li>The module named in <code>class</code> is importable from the directory where the launcher runs.</li>
+<li><code>predict</code> returns one action for one observation and honours <code>deterministic=True</code>.</li>
+<li><code>save</code> and <code>load</code> agree on the file name, and use the path verbatim for the shared evaluator.</li>
+<li>The training loop uses only <code>reset</code> and <code>step</code>, so that it runs on any shifted environment.</li>
+<li>An optional <code>set_eval_seed(seed)</code> method is called by the shared evaluator before every
+  episode.</li>
+</ul>
+      </main>
+
+      <footer class="bk-footer">
+        <nav class="bk-related" aria-label="Previous and next page">
+          <a class="bk-prev" href="../run-a-method/">
+            <span class="fa fa-arrow-left" aria-hidden="true"></span>
+            <span class="bk-related-text"><span class="bk-related-label">Previous</span><span class="bk-related-title">Run a Method</span></span>
+          </a>
+          <a class="bk-next" href="../../shifts/">
+            <span class="bk-related-text"><span class="bk-related-label">Next</span><span class="bk-related-title">Overview</span></span>
+            <span class="fa fa-arrow-right" aria-hidden="true"></span>
+          </a>
+        </nav>
+        <p class="bk-footnote">RobustRLlib · Anonymous submission under double-blind review.</p>
+      </footer>
+    </div>
+
+    <aside class="bk-toc-drawer" id="bk-toc" aria-label="Contents of this page">
+      <div class="bk-toc">
+        <p class="bk-toc-title">On this page</p>
+        <nav class="bk-toc-tree" aria-label="Sections">
+          <ul class="bk-toc-list bk-toc-depth-1">
+  <li><a class="bk-toc-link" href="#summary">Summary</a>
+  </li>
+  <li><a class="bk-toc-link" href="#the-interface">The interface</a>
+  </li>
+  <li><a class="bk-toc-link" href="#implement-a-method">Implement a method</a>
+  </li>
+  <li><a class="bk-toc-link" href="#register-a-method">Register a method</a>
+  </li>
+  <li><a class="bk-toc-link" href="#run-a-method">Run a method</a>
+  </li>
+  <li><a class="bk-toc-link" href="#evaluation-and-metrics">Evaluation and metrics</a>
+  </li>
+  <li><a class="bk-toc-link" href="#registration-rules">Registration rules</a>
+  </li>
+</ul>
+        </nav>
+      </div>
+    </aside>
+  </div>
+
+</div>
+
+<div class="bk-backdrop" id="bk-backdrop" hidden></div>
+<div class="bk-search" id="bk-search" role="dialog" aria-modal="true" aria-label="Search the tutorial" hidden>
+  <div class="bk-search-panel">
+    <div class="bk-search-field">
+      <span class="fa fa-search" aria-hidden="true"></span>
+      <input type="search" id="mkdocs-search-query" name="q" placeholder="Search the tutorial" aria-label="Search the tutorial" autocomplete="off" spellcheck="false">
+      <button type="button" class="bk-icon-button" id="bk-search-close" aria-label="Close the search"><span class="fa fa-times" aria-hidden="true"></span></button>
+    </div>
+    <div class="bk-search-results" id="mkdocs-search-results" data-no-results-text="Nothing found"></div>
+  </div>
+</div>
+
+<script>var base_url = "../..";</script>
+<script src="../../js/site.js"></script>
+<script src="../../search/main.js"></script>
+</body>
+</html>

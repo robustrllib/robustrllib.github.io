@@ -1,0 +1,224 @@
+/* The algorithm book. Used by the All Methods page of the documentation and by the
+   landing page, so nothing here relies on the style of either.
+   Without the script the spreads are a plain list, one below the other. The script
+   adds .is-live and either builds leaves that turn (wide screens) or shows one
+   spread at a time (narrow screens). */
+
+@font-face {
+  font-family: "Roboto Slab"; font-style: normal; font-weight: 700; font-display: swap;
+  src: url("../fonts/Roboto-Slab-Bold.woff2") format("woff2"),
+       url("../fonts/Roboto-Slab-Bold.woff") format("woff");
+}
+
+:root {
+  /* the labels of the groups, in the warm palette of the site */
+  --rl-g-contents: #5e5d59;
+  --rl-g-standard: #87867f;
+  --rl-g-robust-online: #c96442;
+  --rl-g-robust-offline: #8c6a8f;
+  --rl-g-robust-safe: #6f9a63;
+  --rl-paper: #fffdf8;
+  --rl-cover: #30302e;
+  /* one colour per family, shared with the badges of the method pages */
+  --rl-fam-standard: #b7b7b7;
+  --rl-fam-learner: #a9cbe5;
+  --rl-fam-data: #bfdcac;
+  --rl-fam-generative: #e9a0a0;
+  --rl-fam-environment: #9ed9d0;
+  --rl-fam-safe: #f2cf8e;
+}
+
+.rl-book { position: relative; margin: 8px 0 34px; color: #1f2937; text-align: left; }
+
+/* ---- labels ---- */
+.rl-book-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 10px; }
+.rl-book .rl-tab {
+  display: inline-block; padding: 6px 12px; border-radius: 6px 6px 0 0;
+  font-size: var(--rl-tab-size, 13.5px); font-weight: 700; line-height: 1.3; white-space: nowrap;
+  color: #ffffff; background: var(--rl-g-contents); text-decoration: none;
+  opacity: .78; transition: opacity .15s, transform .15s;
+}
+.rl-book .rl-tab:hover, .rl-book .rl-tab:focus { opacity: 1; color: #ffffff; text-decoration: none; }
+.rl-book .rl-tab.is-active { opacity: 1; box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px currentColor; }
+.rl-book .rl-tab span { font-weight: 400; opacity: .85; margin-left: 4px; }
+.rl-book .rl-tab-standard       { background: var(--rl-g-standard); }
+.rl-book .rl-tab-robust-online  { background: var(--rl-g-robust-online); }
+.rl-book .rl-tab-robust-offline { background: var(--rl-g-robust-offline); }
+.rl-book .rl-tab-robust-safe    { background: var(--rl-g-robust-safe); }
+.rl-book .rl-tab.is-active.rl-tab-contents       { color: var(--rl-g-contents); }
+.rl-book .rl-tab.is-active.rl-tab-standard       { color: var(--rl-g-standard); }
+.rl-book .rl-tab.is-active.rl-tab-robust-online  { color: var(--rl-g-robust-online); }
+.rl-book .rl-tab.is-active.rl-tab-robust-offline { color: var(--rl-g-robust-offline); }
+.rl-book .rl-tab.is-active.rl-tab-robust-safe    { color: var(--rl-g-robust-safe); }
+.rl-book .rl-tab.is-active > * , .rl-book .rl-tab.is-active { -webkit-text-fill-color: #ffffff; }
+
+/* ---- a spread: two pages ---- */
+.rl-book .rl-spread {
+  display: grid; grid-template-columns: 1fr 1fr; margin: 0 0 16px; padding: 0;
+  border: 8px solid var(--rl-cover); border-radius: 10px; background: var(--rl-cover);
+}
+.rl-book .rl-page {
+  position: relative; box-sizing: border-box; padding: 22px 26px 36px;
+  background: var(--rl-paper); font-size: 13px; line-height: 1.45; overflow: auto;
+}
+.rl-book .rl-page.rl-left  { border-radius: 4px 0 0 4px; box-shadow: inset -22px 0 26px -22px rgba(0, 0, 0, .28); }
+.rl-book .rl-page.rl-right { border-radius: 0 4px 4px 0; box-shadow: inset 22px 0 26px -22px rgba(0, 0, 0, .28); }
+.rl-book .rl-page p { margin: 0 0 9px; font-size: inherit; line-height: inherit; }
+
+.rl-book .rl-book-group {
+  margin: 0 0 10px; font-size: 11.5px; font-weight: 700; letter-spacing: .06em;
+  text-transform: uppercase; color: var(--rl-g-contents);
+}
+.rl-book .rl-spread[data-group="standard"]       .rl-book-group { color: var(--rl-g-standard); }
+.rl-book .rl-spread[data-group="robust-online"]  .rl-book-group { color: var(--rl-g-robust-online); }
+.rl-book .rl-spread[data-group="robust-offline"] .rl-book-group { color: var(--rl-g-robust-offline); }
+.rl-book .rl-spread[data-group="robust-safe"]    .rl-book-group { color: var(--rl-g-robust-safe); }
+.rl-book .rl-page .rl-book-name  { margin: 0 0 2px; font-family: "Roboto Slab", Georgia, serif; font-size: 27px; font-weight: 700; line-height: 1.15; color: #1f2937; }
+.rl-book .rl-page .rl-book-title { margin: 0 0 9px; font-size: 13.5px; line-height: 1.35; color: #6b7280; }
+.rl-book .rl-page .rl-book-h     { margin: 0 0 6px; font-family: "Roboto Slab", Georgia, serif; font-size: 15px; font-weight: 700; color: #1f2937; }
+.rl-book .rl-page .rl-book-tagline { font-style: italic; color: #374151; padding-left: 10px; border-left: 3px solid #d1d5db; }
+.rl-book .rl-page .rl-badges { display: flex; flex-wrap: wrap; gap: 5px; margin: 0 0 10px; }
+.rl-book .rl-badge {
+  display: inline-block; padding: 0 9px; border-radius: 999px;
+  font-size: 11.5px; font-weight: 700; line-height: 1.7; white-space: nowrap;
+  color: #111827; background: #e5e7eb;
+}
+.rl-book .rl-badge.rl-plain { background: transparent; border: 1px solid #c9ccd1; font-weight: 600; }
+.rl-book .rl-badge.rl-fam-standard    { background: var(--rl-fam-standard); }
+.rl-book .rl-badge.rl-fam-learner     { background: var(--rl-fam-learner); }
+.rl-book .rl-badge.rl-fam-data        { background: var(--rl-fam-data); }
+.rl-book .rl-badge.rl-fam-generative  { background: var(--rl-fam-generative); }
+.rl-book .rl-badge.rl-fam-environment { background: var(--rl-fam-environment); }
+.rl-book .rl-badge.rl-fam-safe        { background: var(--rl-fam-safe); }
+.rl-book .rl-page .rl-book-folio {
+  position: absolute; bottom: 10px; margin: 0; font-size: 11.5px; color: #9ca3af;
+  font-variant-numeric: tabular-nums;
+}
+.rl-book .rl-left  .rl-book-folio { left: 26px; }
+.rl-book .rl-right .rl-book-folio { right: 26px; }
+
+.rl-book .rl-page table,
+.rl-book .rl-page table.docutils {
+  display: table; width: 100% !important; max-width: none; overflow: visible;
+  margin: 0 0 12px; font-size: 12.5px; line-height: 1.35; border: 0 !important;
+  border-collapse: collapse; border-spacing: 0; box-shadow: none; border-radius: 0;
+}
+.rl-book .rl-page table th,
+.rl-book .rl-page table td {
+  padding: 4px 6px !important; border: 0 !important; border-bottom: 1px solid #e7e2d6 !important;
+  background: transparent !important; white-space: normal; line-height: 1.4;
+  text-align: left; vertical-align: top;
+}
+.rl-book .rl-page table thead { display: none; }
+.rl-book .rl-page table td:first-child { width: 46%; color: #6b7280; }
+.rl-book .rl-page table tbody tr:hover { background: transparent; }
+.rl-book .rl-page div.highlight {
+  margin: 0 -10px 12px; padding: 0; border: 1px solid #e7e2d6; border-radius: 4px; background: #f7f4ea;
+}
+.rl-book .rl-page div.highlight pre,
+.rl-book .rl-page div.highlight pre code {
+  font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 10.5px; line-height: 1.4; white-space: pre !important;
+  color: #1f2937; background: transparent; border: 0;
+}
+.rl-book .rl-page div.highlight pre { margin: 0; padding: 8px; overflow-x: auto; }
+.rl-book .rl-page div.highlight pre code { padding: 0; overflow: visible; }
+.rl-book .rl-page ul { margin: 0 0 9px; padding: 0; }
+.rl-book .rl-page ul li { margin-left: 18px; list-style: disc; }
+.rl-book .rl-page .rl-book-more a {
+  display: inline-block; padding: 6px 13px; border-radius: 6px; font-weight: 700; font-size: 12.5px;
+  color: #faf9f5; background: #c96442; text-decoration: none;
+}
+.rl-book .rl-page .rl-book-more a:hover { background: #a8502f; color: #faf9f5; text-decoration: none; }
+.rl-book .rl-book-toc { columns: 2; column-gap: 18px; }
+.rl-book .rl-book-toc p { break-inside: avoid; margin: 0 0 8px; }
+.rl-book-toc .rl-book-tocg { display: block; font-weight: 700; margin-bottom: 2px; }
+.rl-book-toc a { white-space: nowrap; text-decoration: none; }
+.rl-book .rl-book-toc a:hover { text-decoration: underline; }
+.rl-book .rl-page .rl-book-paper { margin-top: 10px; padding-top: 8px; border-top: 1px solid #e7e2d6; font-size: 12px; line-height: 1.4; color: #6b7280; }
+.rl-book .rl-page .rl-book-paper b { display: block; margin-bottom: 2px; color: #374151; font-size: 11px; letter-spacing: .05em; text-transform: uppercase; }
+
+/* ---- controls ---- */
+.rl-book-controls { display: none; align-items: center; justify-content: space-between; gap: 12px; margin: 12px 0 0; }
+.rl-book-controls button {
+  padding: 7px 16px; border: 1px solid #c9ccd1; border-radius: 6px; background: #ffffff;
+  font: inherit; font-size: 14px; font-weight: 700; color: #1f2937; cursor: pointer;
+}
+.rl-book-controls button:hover:not(:disabled) { background: #f3f4f6; }
+.rl-book-controls button:disabled { opacity: .4; cursor: default; }
+.rl-book-status { font-size: 14px; color: #4b5563; text-align: center; }
+.rl-book-hint { margin: 8px 0 0; font-size: 13px; color: #6b7280; text-align: center; display: none; }
+
+/* ================= with the script ================= */
+.rl-book.is-live .rl-book-controls { display: flex; }
+.rl-book.is-live .rl-book-hint { display: block; }
+.rl-book.is-live .rl-spread { display: none; margin: 0; }
+.rl-book.is-live.is-narrow .rl-spread.is-current { display: grid; grid-template-columns: 1fr; }
+.rl-book.is-live.is-narrow .rl-page { border-radius: 4px; box-shadow: none; }
+.rl-book.is-live.is-narrow .rl-page.rl-left { border-bottom: 1px dashed #d8d2c4; padding-bottom: 26px; }
+.rl-book.is-live.is-narrow .rl-left .rl-book-folio { display: none; }
+
+/* wide: the book lies open, its labels stick out on the right */
+.rl-book.is-live.is-wide { padding-right: 40px; }
+.rl-book.is-live.is-wide .rl-book-tabs {
+  position: absolute; top: 18px; right: 0; width: 40px; margin: 0; z-index: 3;
+  flex-direction: column; flex-wrap: nowrap; gap: 5px;
+}
+.rl-book.is-live.is-wide .rl-tab {
+  writing-mode: vertical-rl; padding: 10px 8px; border-radius: 0 7px 7px 0;
+  width: 34px; box-sizing: border-box; text-align: center;
+}
+.rl-book.is-live.is-wide .rl-tab.is-active { width: 40px; box-shadow: none; transform: none; }
+.rl-book.is-live.is-wide .rl-tab span { margin: 4px 0 0; }
+
+.rl-book .rl-leaves {
+  position: relative; height: 600px; perspective: 2600px;
+  border: 8px solid var(--rl-cover); border-radius: 10px; background: var(--rl-cover);
+  box-shadow: 0 10px 28px -12px rgba(15, 23, 42, .55);
+}
+.rl-book .rl-leaf {
+  position: absolute; top: 0; left: 50%; width: 50%; height: 100%;
+  transform-origin: left center; transform-style: preserve-3d;
+  transition: transform .75s cubic-bezier(.35, .1, .2, 1);
+}
+.rl-book .rl-leaf.is-flipped { transform: rotateY(-180deg); }
+.rl-book .rl-face {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  backface-visibility: hidden; -webkit-backface-visibility: hidden; background: var(--rl-paper);
+}
+.rl-book .rl-face.rl-back { transform: rotateY(180deg); }
+.rl-book .rl-face .rl-page { height: 100%; overflow: hidden; }
+.rl-book-edge {
+  position: absolute; top: 0; bottom: 0; width: 44px; z-index: 2000; border: 0; padding: 0;
+  background: transparent; cursor: pointer; color: transparent; font-size: 26px; font-weight: 700;
+}
+.rl-book-edge:hover:not(:disabled), .rl-book-edge:focus-visible { color: #c96442; background: rgba(201, 100, 66, .08); }
+.rl-book-edge:disabled { cursor: default; }
+.rl-book-edge.rl-prev { left: 0; border-radius: 4px 0 0 4px; }
+.rl-book-edge.rl-next { right: 0; border-radius: 0 4px 4px 0; }
+
+/* the front cover: the face of the first leaf, shown while the book lies closed */
+.rl-book .rl-face.rl-cover { background: var(--rl-cover); }
+.rl-book .rl-cover-front {
+  height: 100%; box-sizing: border-box; padding: 24px 28px;
+  display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
+  color: #faf9f5; border-left: 6px solid rgba(255, 255, 255, .08);
+  background: linear-gradient(135deg, rgba(255, 255, 255, .06), rgba(255, 255, 255, 0) 60%);
+}
+.rl-book .rl-cover-front p { margin: 0; }
+.rl-book .rl-cover-kicker { font-size: 12px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; opacity: .72; margin-bottom: 12px !important; }
+.rl-book .rl-cover-title { font-family: "Roboto Slab", Georgia, serif; font-size: 36px; font-weight: 700; line-height: 1.1; margin-bottom: 10px !important; }
+.rl-book .rl-cover-sub { font-size: 14px; opacity: .8; margin-bottom: 22px !important; }
+.rl-book .rl-cover-blocks { display: flex; gap: 8px; }
+.rl-book .rl-cover-blocks i { display: block; width: 28px; height: 18px; border-radius: 4px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .rl-book .rl-leaf { transition: none; }
+}
+@media print {
+  .rl-book.is-live .rl-spread { display: grid !important; margin: 0 0 12px; }
+  .rl-book .rl-leaves, .rl-book-controls, .rl-book-tabs, .rl-book-hint { display: none !important; }
+}
+
+/* the wrapper the script measures: it has to contain the margins of what is in it */
+.rl-book .rl-page-inner { display: flow-root; }

@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <meta name="description" content="A unified library and benchmark for robust reinforcement learning algorithms.">
+  <title>PPO - RobustRLlib Tutorial</title>
+  <link rel="icon" type="image/svg+xml" href="../../../assets/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="../../../assets/favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../../../assets/apple-touch-icon.png">
+  <link rel="stylesheet" href="../../../css/site.css">
+  <link rel="stylesheet" href="../../../assets/pygments.css">
+  <link rel="stylesheet" href="../../../assets/rl.css">
+  <link rel="stylesheet" href="../../../assets/book.css">
+</head>
+<body class="bk">
+<a class="bk-skip" href="#bk-content">Skip to the text</a>
+
+<header class="bk-topbar">
+  <div class="bk-topbar-inner">
+    <button type="button" class="bk-icon-button bk-topbar-menu" id="bk-toggle-nav" aria-controls="bk-sidebar" aria-label="Show or hide the pages" title="Pages">
+      <span class="fa fa-bars" aria-hidden="true"></span>
+    </button>
+    <a class="bk-brand" href="../../..">
+  <svg class="mark" viewBox="0 0 44 40" width="30" height="27" aria-hidden="true">
+        <g transform="translate(22,9)">
+        <rect x="-19" y="-3" width="8" height="6" rx="1.5" transform="rotate(-16 -15 0)" fill="#eb8787" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="-9" y="-7" width="8" height="6" rx="1.5" transform="rotate(-5 -5 -4)" fill="#cde4be" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="1" y="-7" width="8" height="6" rx="1.5" transform="rotate(5 5 -4)" fill="#bcd6eb" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="11" y="-3" width="8" height="6" rx="1.5" transform="rotate(16 15 0)" fill="#d5c8ed" stroke="#5e5d59" stroke-width="1.1"/>
+        </g>
+        <path d="M4 16 L3 34 L22 38 L41 34 L40 16 L22 20 Z" fill="#c96442" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M22 20 L41 16 L40 16 L41 34 L22 38 Z" fill="#d97757" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M6 13 Q14 11 22 17 L22 35 Q14 30 5 31 Z" fill="#faf9f5" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M38 13 Q30 11 22 17 L22 35 Q30 30 39 31 Z" fill="#faf9f5" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        </svg>
+  <span class="bk-brand-name"><span class="bk-brand-mark">Robust</span>RLlib</span>
+  <span class="bk-brand-kind">Tutorial</span>
+</a>
+    <span class="bk-topbar-space"></span>
+    <a class="bk-topbar-link" href="/">Project Page</a>
+  </div>
+</header>
+
+<div class="bk-page">
+
+  <aside class="bk-sidebar-drawer" id="bk-sidebar" aria-label="Pages of the tutorial">
+    <div class="bk-sidebar">
+      <a class="bk-brand" href="../../..">
+  <svg class="mark" viewBox="0 0 44 40" width="30" height="27" aria-hidden="true">
+        <g transform="translate(22,9)">
+        <rect x="-19" y="-3" width="8" height="6" rx="1.5" transform="rotate(-16 -15 0)" fill="#eb8787" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="-9" y="-7" width="8" height="6" rx="1.5" transform="rotate(-5 -5 -4)" fill="#cde4be" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="1" y="-7" width="8" height="6" rx="1.5" transform="rotate(5 5 -4)" fill="#bcd6eb" stroke="#5e5d59" stroke-width="1.1"/>
+        <rect x="11" y="-3" width="8" height="6" rx="1.5" transform="rotate(16 15 0)" fill="#d5c8ed" stroke="#5e5d59" stroke-width="1.1"/>
+        </g>
+        <path d="M4 16 L3 34 L22 38 L41 34 L40 16 L22 20 Z" fill="#c96442" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M22 20 L41 16 L40 16 L41 34 L22 38 Z" fill="#d97757" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M6 13 Q14 11 22 17 L22 35 Q14 30 5 31 Z" fill="#faf9f5" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M38 13 Q30 11 22 17 L22 35 Q30 30 39 31 Z" fill="#faf9f5" stroke="#3d3d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        </svg>
+  <span class="bk-brand-name"><span class="bk-brand-mark">Robust</span>RLlib</span>
+  <span class="bk-brand-kind">Tutorial</span>
+</a>
+      <button type="button" class="bk-search-button" id="bk-search-open" aria-haspopup="dialog">
+        <span class="fa fa-search" aria-hidden="true"></span>
+        <span class="bk-search-label">Search</span>
+      </button>
+      <nav class="bk-nav" aria-label="Pages">
+        <ul class="bk-nav-list bk-nav-depth-0">
+  <li><a class="bk-nav-link" href="../../..">Home</a></li>
+</ul>
+        <p class="bk-caption">Getting Started</p>
+        <ul class="bk-nav-list bk-nav-depth-1">
+  <li><a class="bk-nav-link" href="../../../getting-started/overview/">Overview</a></li>
+  <li><a class="bk-nav-link" href="../../../getting-started/quick-start/">Quick Start</a></li>
+</ul>
+        <p class="bk-caption">Algorithms</p>
+        <ul class="bk-nav-list bk-nav-depth-1">
+  <li><a class="bk-nav-link" href="../../">All Methods</a></li>
+  <li class="bk-nav-group">
+    <details open>
+      <summary>Standard</summary>
+      <ul class="bk-nav-list bk-nav-depth-2">
+  <li><a class="bk-nav-link" href="../">Overview</a></li>
+  <li><a class="bk-nav-link" href="../iql/">IQL</a></li>
+  <li><a class="bk-nav-link" href="../td3bc/">TD3+BC</a></li>
+  <li><a class="bk-nav-link" href="../mopo/">MOPO</a></li>
+  <li><a class="bk-nav-link" href="../synther/">SynthER</a></li>
+  <li><a class="bk-nav-link is-active" href="./" aria-current="page">PPO</a></li>
+  <li><a class="bk-nav-link" href="../sac/">SAC</a></li>
+</ul>
+    </details>
+  </li>
+  <li class="bk-nav-group">
+    <details>
+      <summary>Robust Online</summary>
+      <ul class="bk-nav-list bk-nav-depth-2">
+  <li><a class="bk-nav-link" href="../../robust-online/">Overview</a></li>
+  <li><a class="bk-nav-link" href="../../robust-online/atla/">ATLA</a></li>
+  <li><a class="bk-nav-link" href="../../robust-online/atla-sa/">ATLA-SA</a></li>
+  <li><a class="bk-nav-link" href="../../robust-online/rsc/">RSC</a></li>
+  <li><a class="bk-nav-link" href="../../robust-online/rarl/">RARL</a></li>
+  <li><a class="bk-nav-link" href="../../robust-online/dr/">DR</a></li>
+</ul>
+    </details>
+  </li>
+  <li class="bk-nav-group">
+    <details>
+      <summary>Robust Offline</summary>
+      <ul class="bk-nav-list bk-nav-depth-2">
+  <li><a class="bk-nav-link" href="../../robust-offline/">Overview</a></li>
+  <li><a class="bk-nav-link" href="../../robust-offline/rfqi/">RFQI</a></li>
+  <li><a class="bk-nav-link" href="../../robust-offline/rorl/">RORL</a></li>
+  <li><a class="bk-nav-link" href="../../robust-offline/atla-iql/">ATLA-IQL</a></li>
+  <li><a class="bk-nav-link" href="../../robust-offline/rsc-iql/">RSC-IQL</a></li>
+  <li><a class="bk-nav-link" href="../../robust-offline/rambo/">RAMBO</a></li>
+  <li><a class="bk-nav-link" href="../../robust-offline/romb/">ROMB</a></li>
+  <li><a class="bk-nav-link" href="../../robust-offline/fwm/">FWM</a></li>
+  <li><a class="bk-nav-link" href="../../robust-offline/plr-pvl/">PLR-PVL</a></li>
+</ul>
+    </details>
+  </li>
+  <li class="bk-nav-group">
+    <details>
+      <summary>Robust Safe</summary>
+      <ul class="bk-nav-list bk-nav-depth-2">
+  <li><a class="bk-nav-link" href="../../robust-safe/">Overview</a></li>
+  <li><a class="bk-nav-link" href="../../robust-safe/ramu/">RAMU</a></li>
+  <li><a class="bk-nav-link" href="../../robust-safe/spidr/">SPiDR</a></li>
+</ul>
+    </details>
+  </li>
+  <li><a class="bk-nav-link" href="../../run-a-method/">Run a Method</a></li>
+  <li><a class="bk-nav-link" href="../../add-an-algorithm/">Add an Algorithm</a></li>
+</ul>
+        <p class="bk-caption">Shift Sources and Modes</p>
+        <ul class="bk-nav-list bk-nav-depth-1">
+  <li><a class="bk-nav-link" href="../../../shifts/">Overview</a></li>
+  <li class="bk-nav-group">
+    <details>
+      <summary>Shift Sources</summary>
+      <ul class="bk-nav-list bk-nav-depth-2">
+  <li><a class="bk-nav-link" href="../../../shifts/sources/dynamic/">Dynamic shift</a></li>
+  <li><a class="bk-nav-link" href="../../../shifts/sources/observation/">Observation shift</a></li>
+  <li><a class="bk-nav-link" href="../../../shifts/sources/action/">Action shift</a></li>
+  <li><a class="bk-nav-link" href="../../../shifts/sources/reward-cost/">Reward/cost shift</a></li>
+  <li><a class="bk-nav-link" href="../../../shifts/sources/latency/">Latency shift</a></li>
+  <li><a class="bk-nav-link" href="../../../shifts/sources/semantic/">Semantic shift</a></li>
+</ul>
+    </details>
+  </li>
+  <li class="bk-nav-group">
+    <details>
+      <summary>Shift Modes</summary>
+      <ul class="bk-nav-list bk-nav-depth-2">
+  <li><a class="bk-nav-link" href="../../../shifts/modes/stochastic/">Stochastic</a></li>
+  <li><a class="bk-nav-link" href="../../../shifts/modes/adversarial/">Adversarial</a></li>
+  <li><a class="bk-nav-link" href="../../../shifts/modes/parametric/">Parametric</a></li>
+  <li><a class="bk-nav-link" href="../../../shifts/modes/non-stationary/">Non-stationary</a></li>
+  <li><a class="bk-nav-link" href="../../../shifts/modes/composition/">Composition</a></li>
+</ul>
+    </details>
+  </li>
+  <li><a class="bk-nav-link" href="../../../shifts/add-a-backend/">Add a Backend</a></li>
+</ul>
+        <p class="bk-caption">Evaluation</p>
+        <ul class="bk-nav-list bk-nav-depth-1">
+  <li><a class="bk-nav-link" href="../../../evaluation/protocol/">Evaluation Protocol</a></li>
+</ul>
+      </nav>
+    </div>
+  </aside>
+
+  <div class="bk-main">
+    <div class="bk-content">
+      <div class="bk-tools">
+        <button type="button" class="bk-icon-button" id="bk-toggle-toc" aria-controls="bk-toc" aria-label="Show or hide the contents of this page" title="On this page">
+          <span class="fa fa-list-ul" aria-hidden="true"></span>
+        </button>
+      </div>
+
+      <main class="bk-article" id="bk-content">
+        <h1 id="ppo">PPO<a class="headerlink" href="#ppo" title="Permanent link">&para;</a></h1>
+<p class="rl-subtitle">Proximal Policy Optimization</p>
+
+<p class="rl-badges"><span class="rl-badge rl-setting">Online</span><span class="rl-badge rl-fam-standard">Standard reference</span></p>
+
+<p>The on-policy reference: a clipped probability-ratio surrogate with GAE.</p>
+<h2 id="features">Features<a class="headerlink" href="#features" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Group</td>
+<td><a href="../">Standard Algorithms</a></td>
+</tr>
+<tr>
+<td>Setting</td>
+<td>Online</td>
+</tr>
+<tr>
+<td>Family</td>
+<td>Standard reference</td>
+</tr>
+<tr>
+<td>Base algorithm</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Claimed robustness</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Training budget</td>
+<td>2M environment steps</td>
+</tr>
+<tr>
+<td>Original paper</td>
+<td>Schulman et al. <em>Proximal Policy Optimization Algorithms</em>. arXiv:1707.06347, 2017.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="mechanism">Mechanism<a class="headerlink" href="#mechanism" title="Permanent link">&para;</a></h2>
+<p>PPO is the on-policy reference: a clipped probability-ratio surrogate on trajectories from
+the current policy, with generalised advantage estimation. The library uses the
+Stable-Baselines3 implementation.</p>
+<p>PPO is the backbone of ATLA, ATLA-SA and RARL-PPO.</p>
+<h2 id="run-the-method">Run the method<a class="headerlink" href="#run-the-method" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="c1"># the paper's checkpoints: Stable-Baselines3 defaults, 2M steps</span>
+python<span class="w"> </span>experiments/sb3_default_runs/train.py<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--algorithm<span class="w"> </span>ppo<span class="w"> </span>--task<span class="w"> </span>hopper<span class="w"> </span>--seed<span class="w"> </span><span class="m">0</span><span class="w"> </span>--total-steps<span class="w"> </span><span class="m">2000000</span>
+<span class="c1"># the same learner through the library runner</span>
+python<span class="w"> </span>examples/run_experiment.py<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-c<span class="w"> </span>robustrllib/configs/experiment/ppo_hopper.yaml
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Path</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Implementation</td>
+<td><code>robustrllib.algos (Stable-Baselines3 adapter)</code></td>
+</tr>
+<tr>
+<td>Algorithm card</td>
+<td><code>robustrllib/configs/algorithm/ppo_hopper.yaml</code></td>
+</tr>
+<tr>
+<td>Experiment file</td>
+<td><code>robustrllib/configs/experiment/ppo_hopper.yaml</code></td>
+</tr>
+</tbody>
+</table>
+<p>Training is on the nominal task. The configuration files are explained in <a href="../../run-a-method/">Run a Method</a>, and the evaluation of the frozen checkpoint in <a href="../../../evaluation/protocol/">Evaluation Protocol</a>.</p>
+<h2 id="robust-performance">Robust performance<a class="headerlink" href="#robust-performance" title="Permanent link">&para;</a></h2>
+<p>Normalized score of the frozen last checkpoint. Q1 to Q4 are the severity quartiles of each perturbation ladder, ordered by displacement from the nominal setting, and <em>All</em> covers every shifted condition.</p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th style="text-align: right;">Nominal</th>
+<th style="text-align: right;">Q1</th>
+<th style="text-align: right;">Q2</th>
+<th style="text-align: right;">Q3</th>
+<th style="text-align: right;">Q4</th>
+<th style="text-align: right;">All</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>PPO</strong></td>
+<td style="text-align: right;"><strong>71.2</strong></td>
+<td style="text-align: right;"><strong>58.8</strong></td>
+<td style="text-align: right;"><strong>47.7</strong></td>
+<td style="text-align: right;"><strong>41.2</strong></td>
+<td style="text-align: right;"><strong>37.2</strong></td>
+<td style="text-align: right;"><strong>46.2</strong></td>
+</tr>
+</tbody>
+</table>
+<h2 id="by-task">By task<a class="headerlink" href="#by-task" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th style="text-align: right;">Nominal</th>
+<th style="text-align: right;">Q1</th>
+<th style="text-align: right;">Q2</th>
+<th style="text-align: right;">Q3</th>
+<th style="text-align: right;">Q4</th>
+<th style="text-align: right;">All</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CarRacing</td>
+<td style="text-align: right;">78.1</td>
+<td style="text-align: right;">73.1</td>
+<td style="text-align: right;">69.9</td>
+<td style="text-align: right;">60.3</td>
+<td style="text-align: right;">55.9</td>
+<td style="text-align: right;">64.7</td>
+</tr>
+<tr>
+<td>FetchReach</td>
+<td style="text-align: right;">96.6</td>
+<td style="text-align: right;">92.9</td>
+<td style="text-align: right;">83.2</td>
+<td style="text-align: right;">75.7</td>
+<td style="text-align: right;">80.7</td>
+<td style="text-align: right;">83.1</td>
+</tr>
+<tr>
+<td>HalfCheetah</td>
+<td style="text-align: right;">23.4</td>
+<td style="text-align: right;">19.3</td>
+<td style="text-align: right;">13.9</td>
+<td style="text-align: right;">10.2</td>
+<td style="text-align: right;">8.0</td>
+<td style="text-align: right;">12.9</td>
+</tr>
+<tr>
+<td>Hopper</td>
+<td style="text-align: right;">75.5</td>
+<td style="text-align: right;">55.1</td>
+<td style="text-align: right;">33.8</td>
+<td style="text-align: right;">26.6</td>
+<td style="text-align: right;">20.9</td>
+<td style="text-align: right;">34.1</td>
+</tr>
+<tr>
+<td>PointMaze</td>
+<td style="text-align: right;">76.7</td>
+<td style="text-align: right;">68.2</td>
+<td style="text-align: right;">55.7</td>
+<td style="text-align: right;">51.4</td>
+<td style="text-align: right;">38.5</td>
+<td style="text-align: right;">53.4</td>
+</tr>
+<tr>
+<td>Walker2d</td>
+<td style="text-align: right;">77.1</td>
+<td style="text-align: right;">44.1</td>
+<td style="text-align: right;">29.5</td>
+<td style="text-align: right;">23.1</td>
+<td style="text-align: right;">19.1</td>
+<td style="text-align: right;">29.0</td>
+</tr>
+</tbody>
+</table>
+<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Schulman et al. <em>Proximal Policy Optimization Algorithms</em>. arXiv:1707.06347, 2017.</li>
+<li>Raffin et al. <em>Stable-Baselines3: Reliable Reinforcement Learning Implementations</em>. JMLR, 2021.</li>
+</ul>
+      </main>
+
+      <footer class="bk-footer">
+        <nav class="bk-related" aria-label="Previous and next page">
+          <a class="bk-prev" href="../synther/">
+            <span class="fa fa-arrow-left" aria-hidden="true"></span>
+            <span class="bk-related-text"><span class="bk-related-label">Previous</span><span class="bk-related-title">SynthER</span></span>
+          </a>
+          <a class="bk-next" href="../sac/">
+            <span class="bk-related-text"><span class="bk-related-label">Next</span><span class="bk-related-title">SAC</span></span>
+            <span class="fa fa-arrow-right" aria-hidden="true"></span>
+          </a>
+        </nav>
+        <p class="bk-footnote">RobustRLlib · Anonymous submission under double-blind review.</p>
+      </footer>
+    </div>
+
+    <aside class="bk-toc-drawer" id="bk-toc" aria-label="Contents of this page">
+      <div class="bk-toc">
+        <p class="bk-toc-title">On this page</p>
+        <nav class="bk-toc-tree" aria-label="Sections">
+          <ul class="bk-toc-list bk-toc-depth-1">
+  <li><a class="bk-toc-link" href="#features">Features</a>
+  </li>
+  <li><a class="bk-toc-link" href="#mechanism">Mechanism</a>
+  </li>
+  <li><a class="bk-toc-link" href="#run-the-method">Run the method</a>
+  </li>
+  <li><a class="bk-toc-link" href="#robust-performance">Robust performance</a>
+  </li>
+  <li><a class="bk-toc-link" href="#by-task">By task</a>
+  </li>
+  <li><a class="bk-toc-link" href="#references">References</a>
+  </li>
+</ul>
+        </nav>
+      </div>
+    </aside>
+  </div>
+
+</div>
+
+<div class="bk-backdrop" id="bk-backdrop" hidden></div>
+<div class="bk-search" id="bk-search" role="dialog" aria-modal="true" aria-label="Search the tutorial" hidden>
+  <div class="bk-search-panel">
+    <div class="bk-search-field">
+      <span class="fa fa-search" aria-hidden="true"></span>
+      <input type="search" id="mkdocs-search-query" name="q" placeholder="Search the tutorial" aria-label="Search the tutorial" autocomplete="off" spellcheck="false">
+      <button type="button" class="bk-icon-button" id="bk-search-close" aria-label="Close the search"><span class="fa fa-times" aria-hidden="true"></span></button>
+    </div>
+    <div class="bk-search-results" id="mkdocs-search-results" data-no-results-text="Nothing found"></div>
+  </div>
+</div>
+
+<script>var base_url = "../../..";</script>
+<script src="../../../js/site.js"></script>
+<script src="../../../search/main.js"></script>
+</body>
+</html>

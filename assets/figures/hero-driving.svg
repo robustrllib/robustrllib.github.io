@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="145 90 160 140" fill="none" stroke="#4d4c48" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" role="img" aria-labelledby="title"><title id="title">A car driving through rain</title><g id="scene-driving" transform="translate(172 105) rotate(-9 60 60)">
+      <path d="M-5 57C-13 27 7 8 36 9C60-5 106 6 116 38C132 63 106 94 76 100C44 110 5 91-5 57Z" fill="#e8e6dc" stroke="none" />
+      <path d="M13 37C1 39-3 25 7 21C5 10 20 5 28 13C37 3 52 11 51 20C66 19 67 34 55 36C40 38 25 35 13 37Z" fill="#faf9f5" />
+      <path d="M13 47L10 55M29 45L26 56M45 46L42 53M58 43L55 51" stroke="#87867f" stroke-width="2" />
+      <path d="M0 98C34 88 73 90 121 96M-5 104L20 100M93 102L125 103" stroke="#87867f" stroke-width="1.6" />
+      <path d="M24 80L27 66L40 61L52 46L79 46L96 62L109 68L110 81C84 83 49 81 24 80Z" fill="#c96442" stroke="none" />
+      <path d="M22 79L25 65L40 60L51 44L80 45L97 61L108 65L111 79L100 80M78 80L51 79M32 79L22 79" />
+      <path d="M46 60L55 49L65 49L66 61ZM71 49L79 50L89 62L72 61Z" fill="#faf9f5" stroke-width="1.7" />
+      <path d="M27 69L34 69M102 69L108 70M69 68L74 68" stroke="#faf9f5" stroke-width="2" />
+      <path d="M51 78C51 92 32 92 32 79C32 66 51 66 51 78ZM100 80C100 93 80 93 80 80C80 67 100 67 100 80Z" fill="#4d4c48" />
+      <path d="M42 76L42 82M88 78L89 84" stroke="#faf9f5" stroke-width="2" />
+    </g>
+
+    
+    </svg>

@@ -1,0 +1,147 @@
+# The tasks the benchmark covers, for the task-support block of the shift toolbox on
+# the landing page (sync_landing.py -> the `tasks` field of the shift-data JSON).
+#
+# family   Locomotion | Manipulation | Navigation | Vehicle control | Humanoid | Vision-language-action
+# regime   online, offline, or both (which methods were run on it)
+# shifts   the shift sources the toolbox offers on this task (keys of shifts.yaml)
+# parts    the parts of the paper that report it: 1 library-wide, 2 isolated shifts,
+#          3 compound shifts, 4 Isaac Lab and VLA
+# media    a looping render (gif/mp4) or a drawing; the drawings are placeholders
+#          until the scene is rendered from a checkpoint
+tasks:
+  - key: hopper
+    name: Hopper-v5
+    family: Locomotion
+    backend: MuJoCo
+    regime: [online, offline]
+    parts: [1, 2, 3]
+    datasets: [medium, medium-expert, expert]
+    axes: [gravity, morphology, actuator gear]
+    shifts: [dynamic, observation, action, reward-cost, latency]
+    media: assets/tasks/hopper.gif
+    caption: The one-legged hopper of MuJoCo; the task of the isolated-shift channels.
+  - key: walker2d
+    name: Walker2d-v5
+    family: Locomotion
+    backend: MuJoCo
+    regime: [online, offline]
+    parts: [1]
+    datasets: [medium, medium-expert]
+    axes: [gravity, morphology, actuator gear]
+    shifts: [dynamic, observation, action, reward-cost, latency]
+    media: assets/tasks/walker2d.gif
+    caption: A planar biped.
+  - key: halfcheetah
+    name: HalfCheetah-v5
+    family: Locomotion
+    backend: MuJoCo
+    regime: [online, offline]
+    parts: [1]
+    datasets: [medium, medium-expert]
+    axes: [gravity, morphology, actuator gear]
+    shifts: [dynamic, observation, action, reward-cost, latency]
+    media: assets/tasks/halfcheetah.gif
+    caption: A planar quadruped that runs.
+  - key: pusher
+    name: Pusher-v5s
+    family: Manipulation
+    backend: MuJoCo
+    regime: [online]
+    parts: [3]
+    axes: [dynamics, observation, control rate, goal displacement]
+    shifts: [dynamic, observation, action, reward-cost, latency]
+    media: assets/tasks/pusher.gif
+    caption: A seven-joint arm pushes an object to a goal; the compound deployment profiles of Peng et al.
+  - key: pointmaze
+    name: PointMaze-v3
+    family: Navigation
+    backend: MuJoCo
+    regime: [online, offline]
+    parts: [1]
+    datasets: [open, umaze]
+    axes: [actuator gear, dry friction, adversary]
+    shifts: [dynamic, observation, action, reward-cost, latency]
+    media: assets/tasks/pointmaze.svg
+    caption: A point mass steered through a maze to a goal.
+  - key: fetchreach
+    name: FetchReachDense-v3
+    family: Manipulation
+    backend: MuJoCo
+    regime: [online]
+    parts: [1]
+    axes: [actuator gear, morphology]
+    shifts: [dynamic, observation, action, reward-cost, latency]
+    media: assets/tasks/fetchreach.svg
+    caption: A mobile manipulator reaches a target with its gripper.
+  - key: door
+    name: AdroitHandDoor-v1
+    family: Manipulation
+    backend: MuJoCo
+    regime: [offline]
+    parts: [1]
+    datasets: [human, cloned, expert]
+    axes: [actuator gear, latch]
+    shifts: [dynamic, observation, action, reward-cost, latency]
+    media: assets/tasks/door.svg
+    caption: A 24-joint hand unlatches and opens a door.
+  - key: lunarlander
+    name: LunarLanderContinuous-v3
+    family: Vehicle control
+    backend: Box2D
+    regime: [offline]
+    parts: [1]
+    datasets: [medium, medium-expert, expert, medium-replay]
+    axes: [engine power, gravity, wind]
+    shifts: [dynamic, observation, action, reward-cost, latency]
+    media: assets/tasks/lunarlander.svg
+    caption: A lander touches down between the flags.
+  - key: carracing
+    name: CarRacing-v3
+    family: Vehicle control
+    backend: Box2D
+    regime: [online]
+    parts: [1]
+    axes: [friction, actuator gear, morphology]
+    shifts: [dynamic, observation, action, reward-cost, latency]
+    media: assets/tasks/carracing.svg
+    caption: A car driven from pixels around a procedurally generated track.
+  - key: doorcausal
+    name: DoorCausal
+    family: Manipulation
+    backend: robosuite
+    regime: [online]
+    parts: [2]
+    axes: [scene rebound, appearance]
+    shifts: [dynamic, observation, action, reward-cost, latency, semantic]
+    media: assets/tasks/doorcausal.svg
+    caption: A goal-conditioned door task whose scene semantics can be rebound; the semantic-shift channel.
+  - key: g1
+    name: Unitree G1 locomotion
+    family: Humanoid
+    backend: Isaac Lab
+    regime: [online]
+    parts: [4]
+    axes: [terrain, pushes, physical parameters, cost constraint]
+    shifts: [dynamic, observation, action, reward-cost, latency, semantic]
+    media: assets/tasks/g1.svg
+    caption: A humanoid walks on shifted terrain under a cost constraint; the robust safe methods.
+  - key: drawer
+    name: Drawer opening
+    family: Manipulation
+    backend: Isaac Lab
+    regime: [online]
+    parts: [4]
+    axes: [physical parameters, object placement, cost constraint]
+    shifts: [dynamic, observation, action, reward-cost, latency, semantic]
+    media: assets/tasks/drawer.svg
+    caption: An arm opens a drawer whose physics and placement shift; the robust safe methods.
+  - key: robocasa
+    name: RoboCasa · DrinkwareConsolidation
+    family: Vision-language-action
+    backend: RoboCasa
+    regime: [evaluation]
+    parts: [4]
+    axes: [lighting, camera, object placement]
+    shifts: [dynamic, observation, action, latency, semantic]
+    media: assets/tasks/robocasa.svg
+    caption: A vision-language-action policy in a kitchen scene whose appearance and layout shift.

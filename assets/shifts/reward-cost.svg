@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 220" role="img" aria-label="A reward signal with noise and an offset, next to the clean signal">
+  <rect width="360" height="220" rx="16" fill="#eef3ff"/>
+  <g fill="none" stroke="#14305e" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M40 40 v140 h280" stroke="#8a94a6" stroke-width="4"/>
+    <path d="M52 120 L84 116 L116 110 L148 112 L180 104 L212 100 L244 96 L276 92 L308 90" stroke="#8a94a6" stroke-dasharray="8 7"/>
+    <path d="M52 138 L70 126 L84 148 L100 130 L116 152 L132 128 L148 144 L164 122 L180 140 L196 118 L212 136 L228 114 L244 130 L260 108 L276 126 L292 106 L308 120" stroke="#2f6bff"/>
+    <path d="M320 92 L320 122 M312 112 L320 124 L328 112" stroke="#e5484d" stroke-width="4"/>
+    <text x="52" y="66" font-family="sans-serif" font-size="14" font-weight="700" fill="#8a94a6" stroke="none">reward the policy learned from</text>
+    <text x="52" y="200" font-family="sans-serif" font-size="14" font-weight="700" fill="#2f6bff" stroke="none">reward under shift: noise and an offset</text>
+  </g>
+</svg>
