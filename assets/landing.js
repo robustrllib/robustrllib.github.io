@@ -273,7 +273,7 @@
     detail.appendChild(links);
 
     panel.classList.add("is-changing");
-    panel.replaceChildren(figure, detail);
+    panel.replaceChildren(detail, figure);   // the mode's explanation and code above the demo
     window.requestAnimationFrame(function () { panel.classList.remove("is-changing"); });
   }
 

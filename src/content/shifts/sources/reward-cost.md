@@ -8,6 +8,14 @@ the dynamics untouched.
 
 *The Reward/cost shift acts on the learning signal: the reward and the cost that reach the learner are perturbed.*
 
+<figure class="rl-shift-comparison">
+  <div class="rl-shift-clips">
+    <div><span>Nominal</span><video src="../../../../assets/shifts/reward-hopper_nominal_web.mp4" poster="../../../../assets/shifts/reward-hopper_nominal_web.jpg" autoplay muted loop playsinline controls preload="metadata" aria-label="Hopper policy trained with the reward on time"></video></div>
+    <div><span>Shifted</span><video src="../../../../assets/shifts/reward-hopper_shift_web.mp4" poster="../../../../assets/shifts/reward-hopper_shift_web.jpg" autoplay muted loop playsinline controls preload="metadata" aria-label="Hopper policy trained with the reward released every 64 steps"></video></div>
+  </div>
+  <figcaption>Two SAC policies on the nominal Hopper task: one trained with the reward on time, one with the reward released every 64 steps. A frozen policy does not read the reward, so the shift acts during training.</figcaption>
+</figure>
+
 ![A bar chart with two series of rewards over several steps](../../assets/figures/example-reward-cost.png){ width="440" }
 
 *A Reward/cost shift changes the reward at every step.*

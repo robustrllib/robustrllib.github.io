@@ -52,7 +52,7 @@ BINARY_META = [rb"/Author\s*\(", rb"<dc:creator>\s*<rdf:Seq>\s*<rdf:li>(?!Matplo
 URL = re.compile(r"""(?:https?:)?//[A-Za-z0-9.-]+\.[A-Za-z]{2,}[^\s"'<>)]*""")
 # The site itself, and XML namespace identifiers (never fetched).
 URL_OK = re.compile(r"^(?:https?:)?//(robust-rllib\.site|www\.w3\.org|w3\.org|www\.sitemaps\.org"
-                    r"|schema\.org)(/|$)")
+                    r"|schema\.org|anonymous\.4open\.science)(/|$)")
 
 TEXT_EXT = {".html", ".htm", ".css", ".js", ".json", ".md", ".yml", ".yaml", ".txt", ".xml",
             ".csv", ".py", ".sh", ".in", ".svg", ".map", ""}

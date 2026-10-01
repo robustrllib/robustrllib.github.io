@@ -7,6 +7,14 @@ from the task to the policy and leaves the state of the simulator untouched.
 
 *The Observation shift acts between the environment and the agent: the policy is shown a perturbed observation.*
 
+<figure class="rl-shift-comparison">
+  <div class="rl-shift-clips">
+    <div><span>Nominal</span><video src="../../../../assets/shifts/observation-hopper_nominal_web.mp4" poster="../../../../assets/shifts/observation-hopper_nominal_web.jpg" autoplay muted loop playsinline controls preload="metadata" aria-label="Hopper with nominal observations"></video></div>
+    <div><span>Shifted</span><video src="../../../../assets/shifts/observation-hopper_shift_web.mp4" poster="../../../../assets/shifts/observation-hopper_shift_web.jpg" autoplay muted loop playsinline controls preload="metadata" aria-label="Hopper with Gaussian observation noise"></video></div>
+  </div>
+  <figcaption>The same SAC policy on Hopper, with nominal observations and with Gaussian noise (sigma 0.10) on every observation.</figcaption>
+</figure>
+
 ![A camera image of a robot arm at a table, covered with Gaussian noise](../../assets/figures/example-observation.png){ width="440" }
 
 *An Observation shift that adds Gaussian noise to the camera image.*

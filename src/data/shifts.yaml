@@ -76,8 +76,13 @@ sources:
     blurb: The observation returned to the policy.
     page: docs/shifts/sources/observation/
     example:
-      image: assets/shifts/observation.svg
-      caption: The sensors report a scene that is noisier than the one the policy learned from.
+      videos:
+        nominal: assets/shifts/observation-hopper_nominal_web.mp4
+        shifted: assets/shifts/observation-hopper_shift_web.mp4
+      posters:
+        nominal: assets/shifts/observation-hopper_nominal_web.jpg
+        shifted: assets/shifts/observation-hopper_shift_web.jpg
+      caption: Hopper under nominal and noisy observations (Gaussian noise, sigma 0.10, on every observation).
     modes:
       stochastic:
         names: [gauss, uniform, relative, bias]
@@ -161,8 +166,13 @@ sources:
     blurb: The reward, or the cost of a constrained task.
     page: docs/shifts/sources/reward-cost/
     example:
-      image: assets/shifts/reward-cost.svg
-      caption: The learning signal arrives with noise, or with an offset the policy never saw.
+      videos:
+        nominal: assets/shifts/reward-hopper_nominal_web.mp4
+        shifted: assets/shifts/reward-hopper_shift_web.mp4
+      posters:
+        nominal: assets/shifts/reward-hopper_nominal_web.jpg
+        shifted: assets/shifts/reward-hopper_shift_web.jpg
+      caption: Hopper policies trained with the reward on time and with the reward released every 64 steps, both on the nominal task.
     modes:
       stochastic:
         names: [gauss, uniform]

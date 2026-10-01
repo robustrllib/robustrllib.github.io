@@ -187,6 +187,14 @@
 from the task to the policy and leaves the state of the simulator untouched.</p>
 <p><img alt="The loop between agent and environment, with the Observation shift highlighted" src="../../../assets/figures/shift-loop-observation.svg" width="760" /></p>
 <p><em>The Observation shift acts between the environment and the agent: the policy is shown a perturbed observation.</em></p>
+<figure class="rl-shift-comparison">
+  <div class="rl-shift-clips">
+    <div><span>Nominal</span><video src="../../../../assets/shifts/observation-hopper_nominal_web.mp4" poster="../../../../assets/shifts/observation-hopper_nominal_web.jpg" autoplay muted loop playsinline controls preload="metadata" aria-label="Hopper with nominal observations"></video></div>
+    <div><span>Shifted</span><video src="../../../../assets/shifts/observation-hopper_shift_web.mp4" poster="../../../../assets/shifts/observation-hopper_shift_web.jpg" autoplay muted loop playsinline controls preload="metadata" aria-label="Hopper with Gaussian observation noise"></video></div>
+  </div>
+  <figcaption>The same SAC policy on Hopper, with nominal observations and with Gaussian noise (sigma 0.10) on every observation.</figcaption>
+</figure>
+
 <p><img alt="A camera image of a robot arm at a table, covered with Gaussian noise" src="../../../assets/figures/example-observation.png" width="440" /></p>
 <p><em>An Observation shift that adds Gaussian noise to the camera image.</em></p>
 <h2 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">&para;</a></h2>

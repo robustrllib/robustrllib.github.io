@@ -188,6 +188,14 @@
 the dynamics untouched.</p>
 <p><img alt="The loop between agent and environment, with the Reward/cost shift highlighted" src="../../../assets/figures/shift-loop-reward-cost.svg" width="760" /></p>
 <p><em>The Reward/cost shift acts on the learning signal: the reward and the cost that reach the learner are perturbed.</em></p>
+<figure class="rl-shift-comparison">
+  <div class="rl-shift-clips">
+    <div><span>Nominal</span><video src="../../../../assets/shifts/reward-hopper_nominal_web.mp4" poster="../../../../assets/shifts/reward-hopper_nominal_web.jpg" autoplay muted loop playsinline controls preload="metadata" aria-label="Hopper policy trained with the reward on time"></video></div>
+    <div><span>Shifted</span><video src="../../../../assets/shifts/reward-hopper_shift_web.mp4" poster="../../../../assets/shifts/reward-hopper_shift_web.jpg" autoplay muted loop playsinline controls preload="metadata" aria-label="Hopper policy trained with the reward released every 64 steps"></video></div>
+  </div>
+  <figcaption>Two SAC policies on the nominal Hopper task: one trained with the reward on time, one with the reward released every 64 steps. A frozen policy does not read the reward, so the shift acts during training.</figcaption>
+</figure>
+
 <p><img alt="A bar chart with two series of rewards over several steps" src="../../../assets/figures/example-reward-cost.png" width="440" /></p>
 <p><em>A Reward/cost shift changes the reward at every step.</em></p>
 <h2 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">&para;</a></h2>

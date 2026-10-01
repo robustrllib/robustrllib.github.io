@@ -130,15 +130,15 @@ def toolbox_panel(source, mode_key, modes):
     else:
         media = f'<img src="{esc(example["image"])}" alt="{esc(example["caption"])}">'
     return (
-        f'<figure class="tb-figure">{media}'
-        f'<figcaption>{esc(example["caption"])}</figcaption></figure>\n'
         f'<div class="tb-detail">'
         f'<p class="tb-title"><b>{esc(source["name"])}</b> · {esc(mode["name"])}</p>'
         f'<p class="tb-blurb">{esc(entry.get("note", ""))}</p>'
         + (f'<p class="tb-names">{names}</p>' if names else "")
         + f'<pre class="code tb-code">{esc(entry["code"])}</pre>'
         f'<p class="tb-links"><a href="{esc(source["page"])}">{esc(source["name"])} in the tutorial</a> · '
-        f'<a href="{esc(mode["page"])}">{esc(mode["name"])} mode</a></p></div>')
+        f'<a href="{esc(mode["page"])}">{esc(mode["name"])} mode</a></p></div>\n'
+        f'<figure class="tb-figure">{media}'
+        f'<figcaption>{esc(example["caption"])}</figcaption></figure>')
 
 
 FAMILIES = ["Locomotion", "Manipulation", "Navigation", "Vehicle control", "Humanoid", "Vision-language-action"]
