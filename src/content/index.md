@@ -33,7 +33,7 @@ deployment shifts and one evaluation protocol for all methods.
 : The base learners and references: [IQL](algorithms/standard/iql.md), [TD3+BC](algorithms/standard/td3bc.md), [MOPO](algorithms/standard/mopo.md), [SynthER](algorithms/standard/synther.md), [PPO](algorithms/standard/ppo.md), [SAC](algorithms/standard/sac.md).
 
 [Robust Online Algorithms](algorithms/robust-online/index.md)
-: [ATLA](algorithms/robust-online/atla.md), [ATLA-SA](algorithms/robust-online/atla-sa.md), [RSC](algorithms/robust-online/rsc.md), [RARL](algorithms/robust-online/rarl.md), [DR](algorithms/robust-online/dr.md).
+: [ATLA](algorithms/robust-online/atla.md), [ATLA-SA](algorithms/robust-online/atla-sa.md), [RSC](algorithms/robust-online/rsc.md), [RARL-T](algorithms/robust-online/rarl.md), [RARL-P](algorithms/robust-online/rarl.md), [DR](algorithms/robust-online/dr.md).
 
 [Robust Offline Algorithms](algorithms/robust-offline/index.md)
 : [RFQI](algorithms/robust-offline/rfqi.md), [RORL](algorithms/robust-offline/rorl.md), [ATLA-IQL](algorithms/robust-offline/atla-iql.md), [RSC-IQL](algorithms/robust-offline/rsc-iql.md), [RAMBO](algorithms/robust-offline/rambo.md), [ROMB](algorithms/robust-offline/romb.md), [FWM](algorithms/robust-offline/fwm.md), [PLR-PVL](algorithms/robust-offline/plr-pvl.md).
