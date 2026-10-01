@@ -81,6 +81,8 @@ h2 {
   margin: 0 0 14px; font-size: clamp(30px, 4vw, 46px); font-weight: 700;
   letter-spacing: -.035em; line-height: 1.08;
 }
+/* the counts in a section heading take the accent, so the quantity reads first */
+h2 .n { font-style: normal; color: var(--blue); }
 h3 { margin: 48px 0 14px; font-size: 22px; font-weight: 700; letter-spacing: -.02em; }
 h4 { margin: 0 0 8px; font-size: 18px; font-weight: 700; letter-spacing: -.015em; }
 .sub { margin: 0 0 28px; max-width: 92ch; color: var(--muted); font-size: 17px; }
