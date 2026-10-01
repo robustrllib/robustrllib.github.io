@@ -114,10 +114,10 @@ Where to go next:
 
 | To | Read |
 |---|---|
-| Run an existing method | [Run a Method](../algorithms/run-a-method.md) |
+| Run an existing method | [Train an algorithm](../algorithms/run-a-method.md) |
 | Declare a shift | [Shift Sources and Modes](../shifts/index.md) |
 | Evaluate a checkpoint | [Evaluation Protocol](../evaluation/protocol.md) |
-| Add a method of your own | [Add an Algorithm](../algorithms/add-an-algorithm.md) |
+| Add a method of your own | [Add a new algorithm](../algorithms/add-an-algorithm.md) |
 | Add a simulator | [Add a physics simulation](../shifts/add-a-backend.md) |
 
 To install the library and run a first method, continue with [Quick Start](quick-start.md).

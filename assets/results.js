@@ -362,7 +362,7 @@
                    rows: function () { return [{ text: e.rec.name + " · " + familyOf(e.rec).label, strong: true },
                                                { text: "Score " + fmt(e.value) + " (n = " + e.n + ")", color: FAMILY_COLOR[e.rec.family] },
                                                nom === null ? null : { text: "Score " + fmt(nom) + " at nominal" }].filter(Boolean); } };
-        }), { title: "Channel leaderboard: normalized score per method" }));
+        }), { title: "Specific robustness evaluation: normalized score per method" }));
         return wrap;
       }, function () {
         return table(["Method", "Family", "Regime", "Score", "n", "Score at nominal"],
@@ -379,7 +379,7 @@
     if (!host) { return; }
     var K = DATA.compound, C = {};
     K.columns.forEach(function (c, i) { C[c] = i; });
-    var state = { block: K.blocks[0].key, measure: "score" };
+    var state = { block: K.blocks[0].key };
     function render() {
       var block = K.blocks.filter(function (b) { return b.key === state.block; })[0], bi = K.blocks.indexOf(block);
       var byMethod = {};
@@ -387,37 +387,32 @@
         if (r[C.block] !== bi) { return; }
         var m = r[C.method];
         byMethod[m] = byMethod[m] || {};
-        byMethod[m][r[C.cell]] = { score: r[C.score], sd: r[C.sd], n: r[C.n], retention: r[C.retention] };
+        byMethod[m][r[C.cell]] = { score: r[C.score], sd: r[C.sd], n: r[C.n] };
       });
       var fo = {}; DATA.library.families.forEach(function (f, i) { fo[f.key] = i; });
       var methods = Object.keys(byMethod).map(Number).sort(function (a, b) { return (fo[K.methods[a].family] - fo[K.methods[b].family]) || (a - b); });
-      var cells = block.cells.filter(function (c) { return c !== "pred"; });
+      var cells = block.cells;
       var series = cells.map(function (c) { return { key: c, label: K.cells[c], color: CELL_COLOR[c] }; });
       var groups = methods.map(function (m) {
         var rec = K.methods[m], vals = {};
         cells.forEach(function (c) {
           var v = byMethod[m][c];
           if (!v) { return; }
-          var value = state.measure === "score" ? v.score : v.retention, sd = state.measure === "score" ? v.sd : null;
-          var pred = c === "compound" && byMethod[m].pred ? (state.measure === "score" ? byMethod[m].pred.score : byMethod[m].pred.retention) : undefined;
-          vals[c] = { value: value, sd: sd, mark: pred, rows: function () {
+          vals[c] = { value: v.score, sd: v.sd, rows: function () {
             return [{ text: rec.name + " · " + K.cells[c], strong: true },
-                    { text: (state.measure === "score" ? "Score " : "Retention ") + fmt(value) + (sd ? " ± " + fmt(sd) : "") + (state.measure === "score" ? "" : " %") + " (n = " + v.n + ")", color: CELL_COLOR[c] },
-                    { text: state.measure === "score" ? "Retention " + fmt(v.retention) + " % of nominal" : "Score " + fmt(v.score) },
-                    pred === undefined ? null : { text: "Independence prediction " + fmt(pred) + (state.measure === "score" ? "" : " %") }].filter(Boolean); } };
+                    { text: "Score " + fmt(v.score) + (v.sd ? " ± " + fmt(v.sd) : "") + " (n = " + v.n + ")", color: CELL_COLOR[c] }]; } };
         });
         return { name: rec.name, sub: FAMILY_TAG[rec.family] + " · " + rec.regime, values: vals };
       });
       var controls = [
         select("Scenario", K.blocks.map(function (b) { return { value: b.key, label: b.label }; }), state.block, function (v) { state.block = v; render(); }),
-        select("Measure", [{ value: "score", label: "Normalized score" }, { value: "retention", label: "Retention, % of nominal" }], state.measure, function (v) { state.measure = v; render(); }),
       ];
-      var note = "Every method that was run on this scenario, " + block.note + ". Each isolated shift is one factor at the magnitude of the compound cell; the tick on the compound column is the independence prediction, "
-        + "nominal × Π (shift / nominal): the compound score if the shifts acted independently. Mean ± sd across seeds.";
+      var note = "Every method that was run on this scenario, " + block.note + ". The compound column is the whole scenario; "
+        + "each other column is one of its shift sources alone, at the magnitude it has in the scenario. Mean ± sd across seeds.";
       mount(host, controls, note, function () {
         var wrap = el("div", { class: "viz-chart" });
-        wrap.appendChild(legend(series.map(function (s) { return { color: s.color, label: s.label }; }).concat([{ tick: true, label: "Independence prediction" }])));
-        wrap.appendChild(columnChart(groups, series, { title: "Isolated and compound shifts on " + block.label }));
+        wrap.appendChild(legend(series.map(function (s) { return { color: s.color, label: s.label }; })));
+        wrap.appendChild(columnChart(groups, series, { title: "Compound-shift scenario on " + block.label + ", and its sources in isolation" }));
         return wrap;
       }, function () {
         var head = ["Method", "Family"].concat(block.cells.map(function (c) { return K.cells[c]; }));
@@ -425,7 +420,7 @@
           var rec = K.methods[m];
           return [rec.name, familyOf(rec).label].concat(block.cells.map(function (c) {
             var v = byMethod[m][c]; if (!v) { return "—"; }
-            return state.measure === "score" ? fmt(v.score) + " ± " + fmt(v.sd) : fmt(v.retention) + " %";
+            return fmt(v.score) + " ± " + fmt(v.sd);
           }));
         }));
       });

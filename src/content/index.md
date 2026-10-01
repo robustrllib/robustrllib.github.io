@@ -41,10 +41,10 @@ deployment shifts and one evaluation protocol for all methods.
 [Robust Safe Algorithms](algorithms/robust-safe/index.md)
 : [RAMU](algorithms/robust-safe/ramu.md), [SPiDR](algorithms/robust-safe/spidr.md).
 
-[Run a Method](algorithms/run-a-method.md)
+[Train an algorithm](algorithms/run-a-method.md)
 : The configuration files, the launch commands and the run directory.
 
-[Add an Algorithm](algorithms/add-an-algorithm.md)
+[Add a new algorithm](algorithms/add-an-algorithm.md)
 : Implement the algorithm interface and register a method of your own.
 
 ## Shift sources and modes

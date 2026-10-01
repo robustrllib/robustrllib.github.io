@@ -32,6 +32,7 @@ TABLE = ("<!-- algo-table:start -->", "<!-- algo-table:end -->")
 TOOLBOX = ("<!-- shift-toolbox:start -->", "<!-- shift-toolbox:end -->")
 RESULTS = ("<!-- results-data:start -->", "<!-- results-data:end -->")
 TASKS = ("<!-- task-support:start -->", "<!-- task-support:end -->")
+FIGURES = ("<!-- figures-data:start -->", "<!-- figures-data:end -->")
 
 CLAIMED = {"dynamic": "Dynamic shift", "observation": "Observation shift", "semantics": "Semantic shift"}
 # The table holds robust methods only, so the group follows from the setting.
@@ -236,12 +237,15 @@ def main():
     html = replace(html, TOOLBOX, toolbox_html(shifts))
     tasks = yaml.safe_load(open(SRC / "data" / "tasks.yaml"))["tasks"]
     html = replace(html, TASKS, tasks_html(tasks, shifts["sources"]))
+    figures = {name: yaml.safe_load(open(SRC / "data" / "figures" / f"{name}.json")) for name in ("gain_decay", "part4")}
+    payload = json.dumps(figures, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
+    html = replace(html, FIGURES, '<script type="application/json" id="figures-data">' + payload + "</script>")
     results = gen_results.build()
     print(gen_results.check(results))
     payload = json.dumps(results, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
     html = replace(html, RESULTS, '<script type="application/json" id="results-data">' + payload + "</script>")
     LANDING.write_text(html)
-    print(f"synced algorithm book, table, shift toolbox, task support and results in {LANDING.name}")
+    print(f"synced algorithm book, table, shift toolbox, task support, figures and results in {LANDING.name}")
 
 
 if __name__ == "__main__":

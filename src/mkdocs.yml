@@ -78,8 +78,8 @@ nav:
           - Overview: algorithms/robust-safe/index.md
           - RAMU: algorithms/robust-safe/ramu.md
           - SPiDR: algorithms/robust-safe/spidr.md
-      - Run a Method: algorithms/run-a-method.md
-      - Add an Algorithm: algorithms/add-an-algorithm.md
+      - Train an algorithm: algorithms/run-a-method.md
+      - Add a new algorithm: algorithms/add-an-algorithm.md
   - Shift Sources and Modes:
       - Overview: shifts/index.md
       - Shift Sources:

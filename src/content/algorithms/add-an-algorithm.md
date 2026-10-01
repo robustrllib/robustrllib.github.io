@@ -1,4 +1,4 @@
-# Add an Algorithm
+# Add a new algorithm
 
 A new method is a class with four methods. It is registered from a configuration file, without
 an edit to the library, and runs through the same two commands as the built-in methods.

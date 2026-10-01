@@ -37,7 +37,7 @@ python baselines/train.py \
 python baselines/evaluate.py --run runs/iql_hopper/seed0
 ```
 
-Every method page gives the command for that method. [Run a Method](../run-a-method.md) explains the experiment file, the overrides and the run directory.
+Every method page gives the command for that method. [Train an algorithm](../run-a-method.md) explains the experiment file, the overrides and the run directory.
 
 ## Configuration
 

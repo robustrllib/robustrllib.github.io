@@ -43,7 +43,7 @@ It runs with the original solver and a joint-limit cost budget.
 |---|---|
 | Implementation | `isaac/methods/spidr.py` |
 
-Training rollouts come from the method's own perturbed environment. The configuration files are explained in [Run a Method](../run-a-method.md), and the evaluation of the frozen checkpoint in [Evaluation Protocol](../../evaluation/protocol.md).
+Training rollouts come from the method's own perturbed environment. The configuration files are explained in [Train an algorithm](../run-a-method.md), and the evaluation of the frozen checkpoint in [Evaluation Protocol](../../evaluation/protocol.md).
 
 ## References
 

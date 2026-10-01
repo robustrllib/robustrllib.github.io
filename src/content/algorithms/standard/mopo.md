@@ -42,7 +42,7 @@ python baselines/evaluate.py --run runs/mopo_hopper/seed0
 | Algorithm card | `robustrllib/configs/algorithm/mopo.yaml` |
 | Experiment file | `robustrllib/configs/experiment/mopo_hopper.yaml` |
 
-Training is on the nominal task. The configuration files are explained in [Run a Method](../run-a-method.md), and the evaluation of the frozen checkpoint in [Evaluation Protocol](../../evaluation/protocol.md).
+Training is on the nominal task. The configuration files are explained in [Train an algorithm](../run-a-method.md), and the evaluation of the frozen checkpoint in [Evaluation Protocol](../../evaluation/protocol.md).
 
 ## Robust performance
 

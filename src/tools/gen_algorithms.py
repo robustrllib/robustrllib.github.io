@@ -318,7 +318,7 @@ def method_page(algo, fam, refs, p1):
         where = ("Training rollouts come from the method's own perturbed environment."
                  if algo["traits"]["rollout"] else "Training is on the nominal task.")
         out += [f"{where} The configuration files are explained in "
-                "[Run a Method](../run-a-method.md), and the evaluation of the frozen "
+                "[Train an algorithm](../run-a-method.md), and the evaluation of the frozen "
                 "checkpoint in [Evaluation Protocol](../../evaluation/protocol.md).", ""]
 
     variants = [v for v in algo["variants"] if v.get("part1")]
@@ -384,7 +384,7 @@ def group_page(group, spec, p1):
         out += [f"Every method is launched from an experiment file. {ex['name']} on Hopper:", "",
                 "```bash", *[wrap_command(c) for c in ex["code"]["run"]], "```", "",
                 "Every method page gives the command for that method. "
-                "[Run a Method](../run-a-method.md) explains the experiment file, the "
+                "[Train an algorithm](../run-a-method.md) explains the experiment file, the "
                 "overrides and the run directory.", "",
                 "## Configuration", "",
                 "| Method | Implementation | Experiment file | Training budget |",

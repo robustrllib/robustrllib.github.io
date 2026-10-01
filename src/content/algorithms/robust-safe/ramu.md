@@ -43,7 +43,7 @@ adaptation that applies the same transform to PPO's value targets.
 |---|---|
 | Implementation | `isaac/methods/ramu.py` |
 
-Training is on the nominal task. The configuration files are explained in [Run a Method](../run-a-method.md), and the evaluation of the frozen checkpoint in [Evaluation Protocol](../../evaluation/protocol.md).
+Training is on the nominal task. The configuration files are explained in [Train an algorithm](../run-a-method.md), and the evaluation of the frozen checkpoint in [Evaluation Protocol](../../evaluation/protocol.md).
 
 ## References
 

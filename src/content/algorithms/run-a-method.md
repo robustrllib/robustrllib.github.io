@@ -1,4 +1,4 @@
-# Run a Method
+# Train an algorithm
 
 Every method of the benchmark is trained and evaluated through the same two commands. An
 experiment card names one cell of the benchmark, a method on a task; the launcher resolves it,
@@ -6,7 +6,7 @@ runs the method's own training script, and the evaluator scores the final checkp
 
 ## Summary
 
-| Aspect | Run a method |
+| Aspect | Train an algorithm |
 |---|---|
 | Training | `python baselines/train.py -c <experiment card> --seed N` |
 | Evaluation | `python baselines/evaluate.py --run <run directory>` |

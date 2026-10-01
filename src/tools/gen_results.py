@@ -17,7 +17,7 @@ assets/results.js draws. Three parts, each with the aggregation of the paper:
              and the semantic shift on the door task, online only, as the paper's figure prints it
              (seeds 0, 1, 42, 2024, 3407).
   compound   Part 3, the compound scenarios: nominal, each isolated shift, the compound
-             cell and the independence prediction, per method and block.
+             cell, per method and block.
 
 Every number is a normalized score: 100 (R - R_min) / (R_max - R_min), unclipped.
 The check at the end recomputes the paper's channel scores and stops if they differ
@@ -61,7 +61,7 @@ PAGE = {
 FAMILY_OF = {
     "IQL": "standard", "TD3+BC": "standard", "MOPO": "standard", "SynthER": "standard", "PPO": "standard", "SAC": "standard",
     "ATLA-PPO": "learner_on", "ATLA-SA-PPO": "learner_on", "RSC-SAC": "learner_on", "ATLA-SAC": "learner_on",
-    "RARL-PPO": "data_on", "RARL-TRPO": "data_on", "RARL": "data_on", "DR-SAC": "data_on", "SAC (in)": "data_on",
+    "RARL-PPO": "data_on", "RARL-TRPO": "data_on", "RARL": "data_on", "DR-SAC": "data_on",
     "ATLA-IQL": "learner_off", "RFQI": "learner_off", "RORL": "learner_off",
     "RSC-IQL": "data_off", "RAMBO": "data_off",
     "ROMB-IQL": "generative", "FWM-IQL": "generative", "PLR-PVL-IQL": "generative",
@@ -144,9 +144,8 @@ BLOCK_NOTE = {"hopper_offline": "the coupled physical, actuation and delay facto
               "hopper_online": "the coupled physical, actuation and delay factors of OmniH2O",
               "pusher": "the dynamics, observation and control-rate factors of Peng et al., with the goal displaced"}
 PCELL = {"nominal": "Nominal", "theta_p": "Dynamic shift", "theta_a": "Action shift", "theta_tau": "Latency shift",
-         "theta_o": "Observation shift", "theta_z": "Semantic shift", "compound": "Compound",
-         "pred": "Independence prediction"}
-PCELL_ORDER = ["nominal", "theta_p", "theta_a", "theta_tau", "theta_o", "theta_z", "compound", "pred"]
+         "theta_o": "Observation shift", "theta_z": "Semantic shift", "compound": "Compound"}
+PCELL_ORDER = ["nominal", "theta_p", "theta_a", "theta_tau", "theta_o", "theta_z", "compound"]
 
 
 def rows(name):
@@ -294,18 +293,19 @@ def compound():
     methods, blocks = Index(), Index()
     out = []
     for r in rows("part3_profile_channels.csv"):
+        if r["cell"] not in PCELL or r["method"] == "SAC (in)":   # no independence prediction; no SAC trained under the shifts
+            continue
         b = blocks.add(r["block"], {"key": r["block"], "label": BLOCK[r["block"]], "note": BLOCK_NOTE[r["block"]],
                                     "task": r["task"], "cells": []})
         key = r["method"]
         m = methods.add(key, method_record(key, "offline" if "offline" in r["block"] else "online", family_of(key)))
         if r["cell"] not in blocks.records[b]["cells"]:
             blocks.records[b]["cells"].append(r["cell"])
-        out.append([b, m, r["cell"], r1(r["score_mean"]), r1(r["score_sd"]), int(r["n_seeds"]),
-                    r1(r["retention_pct"])])
+        out.append([b, m, r["cell"], r1(r["score_mean"]), r1(r["score_sd"]), int(r["n_seeds"])])
     for b in blocks.records:
         b["cells"] = [c for c in PCELL_ORDER if c in b["cells"]]
     return {"blocks": blocks.records, "cells": PCELL, "methods": methods.records,
-            "columns": ["block", "method", "cell", "score", "sd", "n", "retention"], "rows": out}
+            "columns": ["block", "method", "cell", "score", "sd", "n"], "rows": out}
 
 
 def build():
