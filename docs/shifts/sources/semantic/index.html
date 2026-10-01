@@ -187,8 +187,14 @@
 objects, the lights and the cameras, and it displaces objects and cameras by a position offset.</p>
 <p><img alt="The loop between agent and environment, with the Semantic shift highlighted" src="../../../assets/figures/shift-loop-semantic.svg" width="760" /></p>
 <p><em>The Semantic shift acts on the scene, and through it on the observation, the transition and the reward.</em></p>
-<p><img alt="Three renderings of a manipulation scene: nominal, with changed object colours, and with a displaced object" src="../../../assets/figures/semantic.png" width="720" /></p>
-<p><em>A nominal scene, an appearance change and a displacement.</em></p>
+<figure class="rl-shift-comparison">
+  <div class="rl-shift-clips">
+    <div><span>Nominal</span><video src="../../../../assets/shifts/fetchreach_semantic_nominal.mp4" poster="../../../../assets/shifts/fetchreach_semantic_nominal.jpg" autoplay muted loop playsinline controls preload="metadata" aria-label="FetchReach with the nominal target"></video></div>
+    <div><span>Shifted</span><video src="../../../../assets/shifts/fetchreach_semantic_shift.mp4" poster="../../../../assets/shifts/fetchreach_semantic_shift.jpg" autoplay muted loop playsinline controls preload="metadata" aria-label="FetchReach with a shifted target"></video></div>
+  </div>
+  <figcaption>FetchReach: the shift moves the reaching target in the scene, changing where the robot arm must move to complete the task.</figcaption>
+</figure>
+
 <h2 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

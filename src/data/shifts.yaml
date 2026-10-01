@@ -40,7 +40,7 @@ sources:
       posters:
         nominal: assets/shifts/dynamic-carrace_nominal_web.jpg
         shifted: assets/shifts/dynamic-carrace_shift_web.jpg
-      caption: CarRacing under nominal and shifted dynamics.
+      caption: 'CarRacing: shifted vehicle dynamics change the response to steering and throttle, making the car deviate from its nominal path.'
     modes:
       stochastic:
         names: [gauss, uniform, loguniform, push]
@@ -208,7 +208,7 @@ sources:
       posters:
         nominal: assets/shifts/halfcheetah_sac_nominal_8s.jpg
         shifted: assets/shifts/halfcheetah_sac_latency_8s.jpg
-      caption: HalfCheetah under nominal control and action latency.
+      caption: 'HalfCheetah: actions reach the simulator 0.20–0.40 s late, disrupting gait timing and forward motion.'
     modes:
       stochastic:
         names: [buffer, substep, interp]
@@ -240,8 +240,13 @@ sources:
     blurb: Colours, lights, cameras and object positions.
     page: docs/shifts/sources/semantic/
     example:
-      image: assets/shifts/semantic.svg
-      caption: The same room, with the lights and the colours the policy did not see in training.
+      videos:
+        nominal: assets/shifts/fetchreach_semantic_nominal.mp4
+        shifted: assets/shifts/fetchreach_semantic_shift.mp4
+      posters:
+        nominal: assets/shifts/fetchreach_semantic_nominal.jpg
+        shifted: assets/shifts/fetchreach_semantic_shift.jpg
+      caption: 'FetchReach: the shift moves the reaching target in the scene, changing where the robot arm must move to complete the task.'
     modes:
       stochastic:
         names: [gauss, uniform, loguniform]

@@ -7,9 +7,13 @@ objects, the lights and the cameras, and it displaces objects and cameras by a p
 
 *The Semantic shift acts on the scene, and through it on the observation, the transition and the reward.*
 
-![Three renderings of a manipulation scene: nominal, with changed object colours, and with a displaced object](../../assets/figures/semantic.png){ width="720" }
-
-*A nominal scene, an appearance change and a displacement.*
+<figure class="rl-shift-comparison">
+  <div class="rl-shift-clips">
+    <div><span>Nominal</span><video src="../../../../assets/shifts/fetchreach_semantic_nominal.mp4" poster="../../../../assets/shifts/fetchreach_semantic_nominal.jpg" autoplay muted loop playsinline controls preload="metadata" aria-label="FetchReach with the nominal target"></video></div>
+    <div><span>Shifted</span><video src="../../../../assets/shifts/fetchreach_semantic_shift.mp4" poster="../../../../assets/shifts/fetchreach_semantic_shift.jpg" autoplay muted loop playsinline controls preload="metadata" aria-label="FetchReach with a shifted target"></video></div>
+  </div>
+  <figcaption>FetchReach: the shift moves the reaching target in the scene, changing where the robot arm must move to complete the task.</figcaption>
+</figure>
 
 ## Properties
 
