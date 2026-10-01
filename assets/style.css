@@ -123,7 +123,7 @@ h4 { margin: 0 0 8px; font-size: 18px; font-weight: 700; letter-spacing: -.015em
 }
 .hero-scene img { display: block; width: 100%; height: auto; }
 .hero-metric {
-  --y: 81%; --w: 17.6%; z-index: 2;
+  --y: 81%; --w: 22%; z-index: 2;
   padding: 14px 8px 13px; border-radius: 8px 11px 9px 12px;
   background: var(--card); border: 1px solid var(--line);
   box-shadow: 1px 3px 0 rgba(77, 76, 72, .035); text-align: center;
@@ -138,20 +138,19 @@ h4 { margin: 0 0 8px; font-size: 18px; font-weight: 700; letter-spacing: -.015em
   font-weight: 400; line-height: 1.35; color: var(--muted);
 }
 .metric-algorithms { --x: 0%; --from-x: 2; --from-y: 44; --tilt: -7; --order: 0; }
-.metric-robust { --x: 20.6%; --from-x: 11; --from-y: 67; --tilt: 4; --order: 1; }
-.metric-sources { --x: 41.2%; --from-x: 41; --from-y: 0; --tilt: 5; --order: 2; }
-.metric-modes { --x: 61.8%; --from-x: 80; --from-y: 44; --tilt: -5; --order: 3; }
-.metric-configurations { --x: 82.4%; --from-x: 72; --from-y: 68; --tilt: 6; --order: 4; }
+.metric-sources { --x: 26%; --from-x: 41; --from-y: 0; --tilt: 5; --order: 1; }
+.metric-modes { --x: 52%; --from-x: 80; --from-y: 44; --tilt: -5; --order: 2; }
+.metric-configurations { --x: 78%; --from-x: 72; --from-y: 68; --tilt: 6; --order: 3; }
 /* the colour sits on the library: the algorithms and the robust methods */
-.metric-algorithms, .metric-robust { background: #f6e9e2; border-color: #e3bfae; }
-.metric-algorithms b, .metric-robust b { color: var(--blue); }
+.metric-algorithms { background: #f6e9e2; border-color: #e3bfae; }
+.metric-algorithms b { color: var(--blue); }
 /* what each number holds, shown once the cards have settled */
 .hero-tags { display: flex; flex-wrap: wrap; justify-content: center; gap: 3px; margin: 8px -2px 0; }
 .hero-tags i {
   font-style: normal; font-size: 10.5px; line-height: 1.25; padding: 2px 6px; border-radius: 999px;
   background: var(--bg); border: 1px solid var(--line); color: var(--ink-2); white-space: nowrap;
 }
-.metric-algorithms .hero-tags i, .metric-robust .hero-tags i { background: #fbf3ee; border-color: #e3bfae; color: #8a4a2f; }
+.metric-algorithms .hero-tags i { background: #fbf3ee; border-color: #e3bfae; color: #8a4a2f; }
 .has-js .hero-collage:not(.is-settled) .hero-tags i { opacity: 0; transform: translateY(5px); }
 .hero-tags i { transition: opacity .4s ease, transform .4s ease; transition-delay: calc(var(--i, 0) * 70ms); }
 .scene-driving { --x: 15%; --y: 9%; --w: 16%; --from-x: 13; --from-y: 18; --tilt: -4; --order: 0; }
@@ -383,15 +382,14 @@ footer::before { content: ""; display: block; max-width: 960px; margin: 0 auto 2
     max-width: 420px; height: 550px; aspect-ratio: auto; margin-top: 28px;
   }
   .hero-collage { height: 760px; }
-  .hero-metric { --w: 32%; padding: 12px 5px; min-height: 87px; }
+  .hero-metric { --w: 48%; padding: 12px 5px; min-height: 87px; }
   .hero-tags i { font-size: 9.5px; padding: 1px 5px; }
   .hero-metric b { font-size: 30px; }
   .hero-metric span { font-size: 11px; overflow-wrap: anywhere; }
   .metric-algorithms { --x: 0%; --y: 52%; --from-x: 0; --from-y: 1; }
-  .metric-robust { --x: 34%; --y: 52%; --from-x: 0; --from-y: 79; }
-  .metric-sources { --x: 68%; --y: 52%; --from-x: 35; --from-y: 0; }
-  .metric-modes { --x: 17%; --y: 78%; --from-x: 70; --from-y: 1; }
-  .metric-configurations { --x: 51%; --y: 78%; --from-x: 70; --from-y: 79; }
+  .metric-sources { --x: 52%; --y: 52%; --from-x: 35; --from-y: 0; }
+  .metric-modes { --x: 0%; --y: 74%; --from-x: 70; --from-y: 1; }
+  .metric-configurations { --x: 52%; --y: 74%; --from-x: 70; --from-y: 79; }
   .scene-driving { --x: 0%; --y: 12%; --w: 25%; --from-x: 0; --from-y: 25; }
   .scene-robot { --x: 26%; --y: 3%; --w: 23%; --from-x: 25; --from-y: 20; }
   .scene-arm { --x: 51%; --y: 3%; --w: 23%; --from-x: 52; --from-y: 20; }
@@ -433,10 +431,11 @@ footer::before { content: ""; display: block; max-width: 960px; margin: 0 auto 2
 @keyframes viz-grow { from { transform: scaleX(0); } }
 @keyframes viz-rise { from { transform: scaleY(0); } }
 
-/* Inter (SIL Open Font License, assets/fonts/LICENSE-Inter.txt), for the formulas of the loop */
+/* Inter (SIL Open Font License, assets/fonts/LICENSE-Inter.txt). */
 @font-face { font-family: "Inter"; font-style: normal; font-weight: 100 900; font-display: swap; src: url("fonts/inter-latin-wght-normal.woff2") format("woff2"); }
 @font-face { font-family: "Inter"; font-style: italic; font-weight: 100 900; font-display: swap; src: url("fonts/inter-latin-wght-italic.woff2") format("woff2"); }
-.loop-scene .lf { font-family: "Inter", -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-feature-settings: "cv11", "ss01"; letter-spacing: .005em; }
+/* Loop formulas use pre-rendered TeX SVG glyphs, so their math typography is
+   available immediately without a font download or a runtime math renderer. */
 
 /* the loop of the six sources: nodes, edges, tags and cards appear one step after
    another (`--i`); then a dash pattern in the colour of each signal creeps along the rails */

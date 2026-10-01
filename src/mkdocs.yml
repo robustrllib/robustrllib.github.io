@@ -95,7 +95,7 @@ nav:
           - Parametric: shifts/modes/parametric.md
           - Non-stationary: shifts/modes/non-stationary.md
           - Composition: shifts/modes/composition.md
-      - Add a Backend: shifts/add-a-backend.md
+      - Add a physics simulation: shifts/add-a-backend.md
   - Evaluation:
       - Evaluation Protocol: evaluation/protocol.md
   - Project Page: /

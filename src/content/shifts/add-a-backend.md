@@ -1,4 +1,4 @@
-# Add a Backend
+# Add a physics simulation
 
 A backend is a simulator the shift wrappers can reach into. Most shifts act on what passes
 through `reset` and `step` and need nothing from it; the shifts that edit the simulator go

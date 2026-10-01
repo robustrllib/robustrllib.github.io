@@ -62,7 +62,7 @@ Shift modes
   [Parametric](shifts/modes/parametric.md), [Non-stationary](shifts/modes/non-stationary.md),
   [Composition](shifts/modes/composition.md).
 
-[Add a Backend](shifts/add-a-backend.md)
+[Add a physics simulation](shifts/add-a-backend.md)
 : Carry the shifts to a simulator of your own.
 
 ## Evaluation

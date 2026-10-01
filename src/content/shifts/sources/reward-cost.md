@@ -16,10 +16,6 @@ the dynamics untouched.
   <figcaption>Two SAC policies on the nominal Hopper task: one trained with the reward on time, one with the reward released every 64 steps. A frozen policy does not read the reward, so the shift acts during training.</figcaption>
 </figure>
 
-![A bar chart with two series of rewards over several steps](../../assets/figures/example-reward-cost.png){ width="440" }
-
-*A Reward/cost shift changes the reward at every step.*
-
 ## Properties
 
 | Aspect | Reward/cost shift |

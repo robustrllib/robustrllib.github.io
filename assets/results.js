@@ -274,7 +274,7 @@
         select("Task family", [{ value: "all", label: "All task families" }].concat(FAMILIES.map(function (f) { return { value: f, label: f }; })), state.family, function (v) { state.family = v; render(); }),
         select("Task", taskOptions, state.task, function (v) { state.task = v; render(); }),
         select("Shift axis", axisOptions, state.axis, function (v) { state.axis = v; render(); }),
-        select("Severity", [{ value: "all", label: "All severities" }, { value: "1", label: "Q1 · mildest" }, { value: "2", label: "Q2" }, { value: "3", label: "Q3" }, { value: "4", label: "Q4 · harshest" }], state.quartile, function (v) { state.quartile = v; render(); }),
+        select("Magnitude", [{ value: "all", label: "All magnitudes" }, { value: "1", label: "Q1 · mildest" }, { value: "2", label: "Q2" }, { value: "3", label: "Q3" }, { value: "4", label: "Q4 · harshest" }], state.quartile, function (v) { state.quartile = v; render(); }),
         select("Order", [{ value: "family", label: "Order by family" }, { value: "score", label: "Order by score" }], state.order, function (v) { state.order = v; render(); }),
       ];
       var note = "Normalized score, 0 = a policy that does not solve the task and 100 = competent performance, unclipped. "
@@ -291,7 +291,7 @@
                                                { text: "Score " + fmt(e.value) + " under shift", color: FAMILY_COLOR[e.rec.family] },
                                                { text: "Score " + fmt(e.nominal) + " at nominal" },
                                                { text: e.conditions + " conditions on " + e.tasks + " task" + (e.tasks === 1 ? "" : "s") }]; } };
-        }), { title: "Library-wide results: normalized score per method under the selected shifts" }));
+        }), { title: "Robust RL algorithm library evaluation: normalized score per method under the selected shifts" }));
         return wrap;
       }, function () {
         return table(["Method", "Family", "Regime", "Score under shift", "Score at nominal", "Tasks", "Conditions"],
@@ -412,7 +412,7 @@
         select("Scenario", K.blocks.map(function (b) { return { value: b.key, label: b.label }; }), state.block, function (v) { state.block = v; render(); }),
         select("Measure", [{ value: "score", label: "Normalized score" }, { value: "retention", label: "Retention, % of nominal" }], state.measure, function (v) { state.measure = v; render(); }),
       ];
-      var note = "Every method that was run on this scenario, " + block.note + ". Each isolated shift is one factor at the severity of the compound cell; the tick on the compound column is the independence prediction, "
+      var note = "Every method that was run on this scenario, " + block.note + ". Each isolated shift is one factor at the magnitude of the compound cell; the tick on the compound column is the independence prediction, "
         + "nominal × Π (shift / nominal): the compound score if the shifts acted independently. Mean ± sd across seeds.";
       mount(host, controls, note, function () {
         var wrap = el("div", { class: "viz-chart" });

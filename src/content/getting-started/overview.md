@@ -118,6 +118,6 @@ Where to go next:
 | Declare a shift | [Shift Sources and Modes](../shifts/index.md) |
 | Evaluate a checkpoint | [Evaluation Protocol](../evaluation/protocol.md) |
 | Add a method of your own | [Add an Algorithm](../algorithms/add-an-algorithm.md) |
-| Add a simulator | [Add a Backend](../shifts/add-a-backend.md) |
+| Add a simulator | [Add a physics simulation](../shifts/add-a-backend.md) |
 
 To install the library and run a first method, continue with [Quick Start](quick-start.md).
