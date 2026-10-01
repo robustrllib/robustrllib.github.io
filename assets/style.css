@@ -83,7 +83,7 @@ h2 {
 }
 h3 { margin: 48px 0 14px; font-size: 22px; font-weight: 700; letter-spacing: -.02em; }
 h4 { margin: 0 0 8px; font-size: 18px; font-weight: 700; letter-spacing: -.015em; }
-.sub { margin: 0 0 28px; max-width: 70ch; color: var(--muted); font-size: 17px; }
+.sub { margin: 0 0 28px; max-width: 92ch; color: var(--muted); font-size: 17px; }
 .more { margin: 26px 0 0; }
 
 /* ---------------- buttons ---------------- */
