@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 430" fill="none" role="img" aria-labelledby="title desc">
   <title id="title">A field guide to robust reinforcement learning</title>
-  <desc id="desc">An open book with a shield labeled robustRL and a performance curve labeled Evaluation, surrounded by ink drawings of a car in rain, a four-legged robot stepping over rocks, a robot arm reaching for a displaced object, and a maze with a successful route and two wrong turns marked with crosses.</desc>
+  <desc id="desc">An open book with a shield labeled RobustRL and a performance curve labeled Evaluation, surrounded by ink drawings of a car in rain, a four-legged robot stepping over rocks, a robot arm reaching for a displaced object, and a maze with a successful route and two wrong turns marked with crosses.</desc>
   <!-- Warm paper, quiet pigment, and deliberately irregular pen contours. -->
   <g stroke="#4d4c48" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
     <!-- Driving in changing weather. -->
@@ -100,7 +100,7 @@
         <path d="M-31-33C-15-33-4-39 1-43C13-34 27-30 38-29L35 4C32 23 16 36 3 43C-15 34-28 21-30 3Z" fill="#c96442" stroke="none"/>
         <path d="M-35-37C-19-38-7-42-1-47C12-39 25-34 34-33L33 0C31 20 14 34 0 40C-18 30-33 17-34-2Z" stroke-width="2.3"/>
         <path d="M-15-3L-4 10L17-15" stroke="#faf9f5" stroke-width="4"/>
-        <text x="0" y="63" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="18" font-style="italic" font-weight="400" fill="#4d4c48" stroke="none">robustRL</text>
+        <text x="0" y="63" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="18" font-style="italic" font-weight="400" fill="#4d4c48" stroke="none">RobustRL</text>
       </g>
       <!-- A measured curve, drawn like a field observation. -->
       <g transform="translate(523 287) rotate(-8)">
