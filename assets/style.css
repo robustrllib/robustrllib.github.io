@@ -359,7 +359,7 @@ footer::before { content: ""; display: block; max-width: 960px; margin: 0 auto 2
   .cols2 { grid-template-columns: 1fr; }
   .tb-panel { grid-template-columns: 1fr; }
   .tb-row { flex-direction: column; gap: 6px; }
-  .tb-label { padding-top: 0; }
+  .tb-label { flex: none; padding-top: 0; }   /* the 74px basis would become a height in a column */
 }
 @media (max-width: 700px) {
   body { font-size: 16px; }
@@ -392,9 +392,8 @@ footer::before { content: ""; display: block; max-width: 960px; margin: 0 auto 2
   .scene-book { --x: 17%; --y: 28%; --w: 66%; --from-x: 17; --from-y: 43; }
 }
 
-/* task support, inside the toolbox */
-.tb-tasks { margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--line); }
-.tb-subheading { margin: 0 0 6px; font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+/* task support, below the loop of the six sources */
+.tb-tasks { margin-top: 0; }
 .tb-tasks-note { margin: 0 0 12px; font-size: 14px; color: var(--muted); max-width: 70ch; }
 .tb-task-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 6px; }
 .tb-task { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 10px 12px 12px; transition: opacity .2s ease, transform .2s ease; }

@@ -7,6 +7,27 @@
   var observe = window.IntersectionObserver && !reduced;
   document.documentElement.classList.add("has-js");
 
+  // ---- the five numbers keep one height, however many lines their tags wrap to
+  //      (the cards are placed absolutely for the intro, so the layout cannot stretch them)
+  (function () {
+    var cards = Array.prototype.slice.call(document.querySelectorAll(".hero-metric"));
+    var stage = document.querySelector(".hero-stage");
+    if (!cards.length || !stage) { return; }
+    function level() {
+      cards.forEach(function (card) { card.style.minHeight = ""; });
+      stage.style.marginBottom = "";
+      var tallest = Math.max.apply(null, cards.map(function (card) { return card.offsetHeight; }));
+      cards.forEach(function (card) { card.style.minHeight = tallest + "px"; });
+      // the cards hang below the stage; on mid-width screens they need more room than the stylesheet's margin
+      var below = Math.max.apply(null, cards.map(function (card) { return card.offsetTop + card.offsetHeight; })) - stage.clientHeight;
+      var margin = parseFloat(window.getComputedStyle(stage).marginBottom) || 0;
+      if (below + 14 > margin) { stage.style.marginBottom = (below + 14) + "px"; }
+    }
+    level();
+    window.addEventListener("resize", level, { passive: true });
+    if (document.fonts && document.fonts.ready) { document.fonts.ready.then(level); }
+  }());
+
   // ---- the hero floats briefly, then settles into illustrations / book / numbers
   (function () {
     var scene = document.querySelector(".hero-collage");
@@ -235,10 +256,12 @@
 
   // ---- task support: filters, and the selected source dims the tasks that do not carry it
   var taskState = { family: "all", regime: "all" };
-  var taskCards = Array.prototype.slice.call(box.querySelectorAll(".tb-task"));
-  var familyButtons = Array.prototype.slice.call(box.querySelectorAll(".tb-family"));
-  var regimeButtons = Array.prototype.slice.call(box.querySelectorAll(".tb-regime"));
-  var emptyNote = box.querySelector(".tb-tasks-empty");
+  //      (the block sits below the loop of the six sources, outside the toolbox card)
+  var tasksBox = document.getElementById("tb-tasks") || box;
+  var taskCards = Array.prototype.slice.call(tasksBox.querySelectorAll(".tb-task"));
+  var familyButtons = Array.prototype.slice.call(tasksBox.querySelectorAll(".tb-family"));
+  var regimeButtons = Array.prototype.slice.call(tasksBox.querySelectorAll(".tb-regime"));
+  var emptyNote = tasksBox.querySelector(".tb-tasks-empty");
   function renderTasks() {
     var shown = 0;
     taskCards.forEach(function (card) {

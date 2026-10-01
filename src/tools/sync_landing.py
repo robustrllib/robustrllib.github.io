@@ -9,7 +9,9 @@ mkdocs.yml turn it into HTML; only the addresses differ, because the landing pag
 one directory above the documentation); between the `algo-table` markers, the
 paper's structural comparison of the robust methods, one row per method; and between
 the `shift-toolbox` markers, the shift toolbox from data/shifts.yaml, with the
-first source and mode already shown, so that the page reads without scripts.
+first source and mode already shown, so that the page reads without scripts; between
+the `task-support` markers (below the loop of the six sources), one card per task of
+data/tasks.yaml; and between the `results-data` markers, the leaderboard data.
 """
 from __future__ import annotations
 
@@ -29,6 +31,7 @@ BOOK = ("<!-- algo-book:start -->", "<!-- algo-book:end -->")
 TABLE = ("<!-- algo-table:start -->", "<!-- algo-table:end -->")
 TOOLBOX = ("<!-- shift-toolbox:start -->", "<!-- shift-toolbox:end -->")
 RESULTS = ("<!-- results-data:start -->", "<!-- results-data:end -->")
+TASKS = ("<!-- task-support:start -->", "<!-- task-support:end -->")
 
 CLAIMED = {"dynamic": "Dynamic shift", "observation": "Observation shift", "semantics": "Semantic shift"}
 # The table holds robust methods only, so the group follows from the setting.
@@ -133,7 +136,9 @@ def task_card(task, sources):
     """One task of the support block, as the script renders it."""
     media = task["media"]
     if media.endswith((".mp4", ".webm")):
-        fig = f'<video src="{esc(media)}" autoplay muted loop playsinline preload="metadata"></video>'
+        poster = f' poster="{esc(task["poster"])}"' if task.get("poster") else ""
+        fig = (f'<video src="{esc(media)}"{poster} autoplay muted loop playsinline preload="metadata" '
+               f'aria-label="{esc(task["caption"])}"></video>')
     else:
         fig = f'<img src="{esc(media)}" alt="{esc(task["caption"])}" loading="lazy">'
     dots = "".join(f'<span class="tb-dot tb-{k}" title="{esc(next(s["name"] for s in sources if s["key"] == k))}"></span>'
@@ -150,24 +155,24 @@ def task_card(task, sources):
 
 
 def tasks_html(tasks, sources):
-    out = ['  <div class="tb-tasks" id="tb-tasks">',
-           '    <p class="tb-subheading">Task support</p>',
-           '    <p class="tb-tasks-note">Every task the paper reports, with the shift sources the toolbox offers on it. A source selected above dims the tasks that do not carry it.</p>',
-           '    <div class="tb-row"><span class="tb-label">Family</span><div class="tb-buttons" role="group" aria-label="Task family">',
-           '      <button type="button" class="tb-btn tb-family is-active" data-family="all">All</button>']
+    """The task-support block, below the loop of the six sources (outside the toolbox card)."""
+    out = ['<div class="tb-tasks" id="tb-tasks">',
+           '  <p class="tb-tasks-note">Every task the paper reports, with the shift sources the toolbox offers on it. A source selected in the toolbox above dims the tasks that do not carry it.</p>',
+           '  <div class="tb-row"><span class="tb-label">Family</span><div class="tb-buttons" role="group" aria-label="Task family">',
+           '    <button type="button" class="tb-btn tb-family is-active" data-family="all">All</button>']
     for f in FAMILIES:
-        out.append(f'      <button type="button" class="tb-btn tb-family" data-family="{esc(f)}">{esc(f)}</button>')
-    out.append('    </div></div>')
-    out.append('    <div class="tb-row"><span class="tb-label">Regime</span><div class="tb-buttons" role="group" aria-label="Regime">')
+        out.append(f'    <button type="button" class="tb-btn tb-family" data-family="{esc(f)}">{esc(f)}</button>')
+    out.append('  </div></div>')
+    out.append('  <div class="tb-row"><span class="tb-label">Regime</span><div class="tb-buttons" role="group" aria-label="Regime">')
     for key, label in (("all", "All"), ("online", "Online"), ("offline", "Offline")):
-        out.append(f'      <button type="button" class="tb-btn tb-regime{" is-active" if key == "all" else ""}" data-regime="{key}">{label}</button>')
-    out.append('    </div></div>')
-    out.append('    <div class="tb-task-grid">')
-    out.extend("      " + task_card(t, sources) for t in tasks)
-    out.append('    </div>')
-    out.append('    <p class="tb-tasks-empty" hidden>No task matches this filter.</p>')
+        out.append(f'    <button type="button" class="tb-btn tb-regime{" is-active" if key == "all" else ""}" data-regime="{key}">{label}</button>')
+    out.append('  </div></div>')
+    out.append('  <div class="tb-task-grid">')
+    out.extend("    " + task_card(t, sources) for t in tasks)
     out.append('  </div>')
-    return out
+    out.append('  <p class="tb-tasks-empty" hidden>No task matches this filter.</p>')
+    out.append('</div>')
+    return "\n".join("    " + line for line in out)
 
 
 def toolbox_html(data):
@@ -194,7 +199,6 @@ def toolbox_html(data):
     out.append('  <div class="tb-panel" id="tb-panel" aria-live="polite">')
     out.append(toolbox_panel(first, first_mode, modes))
     out.append('  </div>')
-    out.extend(tasks_html(data["tasks"], sources))
     out.append('  <script type="application/json" id="shift-data">' + json.dumps(data, ensure_ascii=False).replace("</", "<\\/") + '</script>')
     out.append('</div>')
     return "\n".join("    " + line for line in out)
@@ -217,14 +221,15 @@ def main():
     html = replace(html, BOOK, book_html(spec, refs).replace('id="algorithm-book"', 'id="algorithm-book" data-open-on-view=""', 1))
     html = replace(html, TABLE, table_html(spec))
     shifts = yaml.safe_load(open(SRC / "data" / "shifts.yaml"))
-    shifts["tasks"] = yaml.safe_load(open(SRC / "data" / "tasks.yaml"))["tasks"]
     html = replace(html, TOOLBOX, toolbox_html(shifts))
+    tasks = yaml.safe_load(open(SRC / "data" / "tasks.yaml"))["tasks"]
+    html = replace(html, TASKS, tasks_html(tasks, shifts["sources"]))
     results = gen_results.build()
     print(gen_results.check(results))
     payload = json.dumps(results, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
     html = replace(html, RESULTS, '<script type="application/json" id="results-data">' + payload + "</script>")
     LANDING.write_text(html)
-    print(f"synced algorithm book, table, shift toolbox and results in {LANDING.name}")
+    print(f"synced algorithm book, table, shift toolbox, task support and results in {LANDING.name}")
 
 
 if __name__ == "__main__":
