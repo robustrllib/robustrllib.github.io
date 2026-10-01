@@ -36,7 +36,7 @@ It runs with the original solver and a joint-limit cost budget.
 ```bash
 ./isaaclab.sh -p isaac/train.py --task g1 --method spidr --seed 0 --headless
 ./isaaclab.sh \
-    -p isaac/evaluate.py --task g1 --checkpoint runs/isaac/g1_spidr/seed0/model_899.pt --training_seed 0 --condition all --headless
+    -p isaac/evaluate.py --task g1 --checkpoint runs/isaac/g1_spidr/seed0/model_899.pt --condition all --headless
 ```
 
 | File | Path |

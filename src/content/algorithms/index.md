@@ -914,8 +914,7 @@ RAMU applies a risk measure over sampled next-state perturbations to both the re
 ./isaaclab.sh \
     -p isaac/evaluate.py --task g1 \
     --checkpoint runs/isaac/g1_ramu/seed0/model_1499.pt \
-    --training_seed 0 --condition all \
-    --headless
+    --condition all --headless
 ```
 
 <p class="rl-book-more" markdown>[Open the full page](robust-safe/ramu.md)</p>
@@ -961,8 +960,7 @@ SPiDR trains a constrained policy under domain randomisation and adds a pessimis
 ./isaaclab.sh \
     -p isaac/evaluate.py --task g1 \
     --checkpoint runs/isaac/g1_spidr/seed0/model_899.pt \
-    --training_seed 0 --condition all \
-    --headless
+    --condition all --headless
 ```
 
 <p class="rl-book-more" markdown>[Open the full page](robust-safe/spidr.md)</p>

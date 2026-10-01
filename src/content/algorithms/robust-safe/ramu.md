@@ -36,7 +36,7 @@ adaptation that applies the same transform to PPO's value targets.
 ```bash
 ./isaaclab.sh -p isaac/train.py --task g1 --method ramu --seed 0 --headless
 ./isaaclab.sh \
-    -p isaac/evaluate.py --task g1 --checkpoint runs/isaac/g1_ramu/seed0/model_1499.pt --training_seed 0 --condition all --headless
+    -p isaac/evaluate.py --task g1 --checkpoint runs/isaac/g1_ramu/seed0/model_1499.pt --condition all --headless
 ```
 
 | File | Path |
