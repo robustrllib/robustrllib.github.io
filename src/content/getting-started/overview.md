@@ -50,7 +50,7 @@ The library has four groups. Robust methods are split further by where robustnes
   address and the base algorithm that realises it.
 - **Six shift sources and five modes.** Shifts are declared as data and stacked in any order.
   See [Shift Sources and Modes](../shifts/index.md).
-- **One evaluation protocol.** The frozen last checkpoint of every method is evaluated on the
+- **One evaluation protocol.** One frozen checkpoint of every method is evaluated on the
   same grid. See [Evaluation Protocol](../evaluation/protocol.md).
 - **Extensible.** A new algorithm implements four methods, and a new simulator
   implements one adapter.

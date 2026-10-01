@@ -96,7 +96,7 @@ test of the plumbing.
 
 ## Evaluate it under shift
 
-The evaluator loads the final checkpoint of the run and scores it on every condition of the
+The evaluator loads the checkpoint the run's rule selects, the final one by default, and scores it on every condition of the
 grid. Each condition is a list of shifts, and the grid of this card holds Dynamic shifts in the
 Parametric mode: gravity, limb length and actuator gear at eight factors each. The result is
 written to `eval/part1_mujoco.json` in the run directory.

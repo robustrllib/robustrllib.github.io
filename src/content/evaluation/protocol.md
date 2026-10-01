@@ -1,15 +1,15 @@
 # Evaluation Protocol
 
 Every score of the benchmark is produced by one evaluator under one protocol. A policy is
-trained on the nominal task, its final checkpoint is frozen, and the checkpoint is scored on a
-grid of shift conditions.
+trained on the nominal task, a checkpoint rule fixed before evaluation picks the checkpoint
+to freeze, and the frozen checkpoint is scored on a grid of shift conditions.
 
 ## Summary
 
 | Aspect | Evaluation protocol |
 |---|---|
 | Interface | `baselines/evaluate.py --run <run directory> [--eval <grid>]` |
-| Checkpoint | The final checkpoint of the run; never selected on evaluation results |
+| Checkpoint | A rule fixed before evaluation: the final checkpoint by default, the last *k* checkpoints pooled, or the run's own best checkpoint; never selected on evaluation results |
 | Conditions | The `grid` of an eval card; each condition is a list of shifts |
 | Episodes | 20 per condition, deterministic actions, the task's time limit |
 | Seeds | A fixed evaluation seed, offset by the episode index; conditions are paired |
@@ -127,8 +127,35 @@ python baselines/evaluate.py --run runs/rorl_hopper/seed0
 | `--run` | The training run directory, with `config.yaml` and `ckpt/` |
 | `--eval` | Another grid to evaluate on; the result is named after it |
 | `--episodes` | Override the number of episodes of the grid |
-| `--ckpt` | An explicit checkpoint, for diagnostics |
+| `--checkpoint` | The checkpoint rule for this run: `last`, `last:k` or `best`; overrides the algorithm card |
+| `--ckpt` | One explicit checkpoint file, for diagnostics |
 | `--device` | Device of the policy |
+
+## Checkpoint selection
+
+The checkpoint is chosen by a rule that is written down before any evaluation, so that the
+grid never selects the policy it scores. The rule can be set per method, in the `checkpoint`
+key of the algorithm card, and per run on the command line.
+
+| Rule | Checkpoints evaluated | Use |
+|---|---|---|
+| `last` | The highest-numbered file in `ckpt/` | The default of the benchmark: the final policy, with no selection |
+| `last:k` | The *k* highest-numbered files, oldest first | A smoother estimate when the final policies of a method fluctuate; each checkpoint plays the same episode seeds and the episodes are pooled |
+| `best` | The file named `best*` in `ckpt/` | Methods whose own paper keeps a selection rule and write that checkpoint during training |
+| `--ckpt <file>` | That file | A diagnostic of one checkpoint, not a protocol score |
+
+```bash
+python baselines/evaluate.py --run runs/rorl_hopper/seed0 --checkpoint last:3
+python baselines/evaluate.py --run runs/rorl_hopper/seed0 --checkpoint best
+```
+
+```yaml title="robustrllib/configs/algorithm/<method>.yaml"
+checkpoint: last     # last, last:k or best; the default of every run of the method
+```
+
+With `last:k` the result file lists the *k* checkpoints, and `returns` of each condition holds
+*k* times `episodes` values. The rule in force is recorded next to the numbers, so results from
+different rules are never mixed unnoticed.
 
 The Part 2 and Part 3 grids score the Part 1 Hopper runs a second and a third time.
 
@@ -151,6 +178,7 @@ Two kinds of shift need more than a frozen policy and a condition.
 ```json
 {
   "run": "rorl_hopper",
+  "checkpoint_rule": "last",
   "checkpoint": "runs/rorl_hopper/seed0/ckpt/update_3000000.pt",
   "seed": 10000,
   "episodes": 20,
@@ -208,7 +236,7 @@ return below the random reference gives a negative score.
 
 | Field | Default | Purpose |
 |---|---|---|
-| Checkpoint | The highest-numbered file in `ckpt/` | The final checkpoint; no selection on results |
+| Checkpoint rule | `last`, the highest-numbered file in `ckpt/` | The final checkpoint; `last:k` or `best` when the card or the command line says so |
 | Episodes | 20 per condition | The `episodes` key of the grid |
 | Evaluation seed | The `seed` key of the grid, 10000 for every grid | The same initial states for every method |
 | Episode seed | Evaluation seed plus episode index | Paired conditions |
@@ -243,8 +271,8 @@ for name in runs[0]["conditions"]:
   across training seeds.
 - Episodes of one checkpoint are not independent samples, and their spread is not reported as
   the uncertainty of a method.
-- The evaluated checkpoint is the final one; evaluation results are never used to select a
-  checkpoint.
+- The checkpoint rule is fixed before evaluation and recorded with the result; evaluation
+  results are never used to select a checkpoint.
 - Every method is scored on the same grid, with the same evaluation seed and the same number of
   episodes.
 - Scores are normalized with the fixed reference pair of the environment and are not clipped.

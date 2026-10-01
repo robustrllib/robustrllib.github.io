@@ -185,7 +185,7 @@
         <h1 id="train-an-algorithm">Train an algorithm<a class="headerlink" href="#train-an-algorithm" title="Permanent link">&para;</a></h1>
 <p>Every method of the benchmark is trained and evaluated through the same two commands. An
 experiment card names one cell of the benchmark, a method on a task; the launcher resolves it,
-runs the method's own training script, and the evaluator scores the final checkpoint.</p>
+runs the method's own training script, and the evaluator scores the frozen checkpoint.</p>
 <h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -315,7 +315,7 @@ python<span class="w"> </span>baselines/evaluate.py<span class="w"> </span>--run
 </tr>
 <tr>
 <td>Evaluate</td>
-<td>The class the algorithm card names under <code>class</code> loads the final checkpoint and acts on every condition of the card's grid</td>
+<td>The class the algorithm card names under <code>class</code> loads the checkpoint the card's rule selects and acts on every condition of the card's grid</td>
 </tr>
 </tbody>
 </table>
@@ -373,7 +373,7 @@ resolved configuration, overrides included, is written to <code>&lt;run&gt;/conf
 </tr>
 <tr>
 <td><code>ckpt/</code></td>
-<td>Checkpoints named by their step or update count; the highest-numbered one is the final checkpoint</td>
+<td>Checkpoints named by their step or update count; the highest-numbered one is the final checkpoint, and a method with a selection rule of its own also writes <code>best.pt</code></td>
 </tr>
 <tr>
 <td><code>progress.csv</code></td>
@@ -385,9 +385,9 @@ resolved configuration, overrides included, is written to <code>&lt;run&gt;/conf
 </tr>
 </tbody>
 </table>
-<p><strong>The final checkpoint is the one the benchmark evaluates.</strong> One method keeps the selection rule
-of its own paper: <a href="../robust-offline/rfqi/">RFQI</a> also writes <code>ckpt/best.pt</code> and its algorithm
-card sets <code>checkpoint: best</code>.</p>
+<p><strong>By default the benchmark evaluates the final checkpoint.</strong> The <code>checkpoint</code> key of the algorithm
+card, or <code>--checkpoint</code> on the evaluator, selects the last <em>k</em> checkpoints or the run's best one
+instead; see <a href="../../evaluation/protocol/#checkpoint-selection">Evaluation Protocol</a>.</p>
 <h2 id="online-methods">Online methods<a class="headerlink" href="#online-methods" title="Permanent link">&para;</a></h2>
 <p>An online method has no dataset and measures its budget in environment steps. Its training
 environment is the task card's environment, built by the same function the evaluator uses, so a

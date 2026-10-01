@@ -87,7 +87,7 @@
   <rect class="band" x="20" y="512" width="920" height="108" fill="#e9f5e6" stroke="#7fb86f"/>
   <text class="h1" x="40" y="542">Evaluation</text>
   <text class="mono" x="920" y="542" text-anchor="end">baselines/evaluate.py · robustrllib.metrics</text>
-  <text class="note" x="40" y="568">The frozen last checkpoint of a method is run on every condition of the evaluation grid.</text>
+  <text class="note" x="40" y="568">The frozen checkpoint of a method is run on every condition of the evaluation grid.</text>
   <text class="note" x="40" y="590">The grid is the same for every method.</text>
   <text class="note" x="800" y="590" text-anchor="end">Result:</text>
   <text class="mono" x="920" y="590" text-anchor="end">final_eval.json</text>

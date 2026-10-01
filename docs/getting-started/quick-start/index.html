@@ -250,7 +250,7 @@ writes checkpoints to <code>runs/rorl_hopper/seed0/ckpt/</code>.</p>
 <p>The full run performs three million updates. <strong><code>--set train.updates=1000</code> shortens it</strong> to a
 test of the plumbing.</p>
 <h2 id="evaluate-it-under-shift">Evaluate it under shift<a class="headerlink" href="#evaluate-it-under-shift" title="Permanent link">&para;</a></h2>
-<p>The evaluator loads the final checkpoint of the run and scores it on every condition of the
+<p>The evaluator loads the checkpoint the run's rule selects, the final one by default, and scores it on every condition of the
 grid. Each condition is a list of shifts, and the grid of this card holds Dynamic shifts in the
 Parametric mode: gravity, limb length and actuator gear at eight factors each. The result is
 written to <code>eval/part1_mujoco.json</code> in the run directory.</p>

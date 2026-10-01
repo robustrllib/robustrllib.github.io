@@ -67,19 +67,19 @@ GROUP_GLANCE = {
                  ("Interface", "One experiment file per run, launched with a training script"),
                  ("Method selection", "The `algorithm` card named by the experiment file"),
                  ("Training", "On the nominal task, with the native recipe of each algorithm"),
-                 ("Evaluation", "The frozen last checkpoint, on the grid named by the `eval` card")],
+                 ("Evaluation", "The frozen checkpoint, on the grid named by the `eval` card")],
     "robust-online": [("Interface", "One experiment file per run, launched with a training script"),
                       ("Method selection", "The `algorithm` card named by the experiment file"),
                       ("Training data", "Rollouts collected during training"),
                       ("Training environment", "Nominal, except for environment-centric methods"),
                       ("Budget", "Environment steps, native to each method"),
-                      ("Evaluation", "The frozen last checkpoint, on the grid named by the `eval` card")],
+                      ("Evaluation", "The frozen checkpoint, on the grid named by the `eval` card")],
     "robust-offline": [("Interface", "One experiment file per run, launched with a training script"),
                        ("Method selection", "The `algorithm` card named by the experiment file"),
                        ("Training data", "A fixed dataset, named by the `task` card"),
                        ("Training environment", "None. The environment is used for evaluation only"),
                        ("Budget", "Gradient updates, native to each method"),
-                       ("Evaluation", "The frozen last checkpoint, on the grid named by the `eval` card")],
+                       ("Evaluation", "The frozen checkpoint, on the grid named by the `eval` card")],
     "robust-safe": [("Interface", "The Isaac Lab training and evaluation recipe"),
                     ("Shared learner", "One PPO implementation for every method"),
                     ("Constraint", "A cost budget on joint-limit violations"),
@@ -89,7 +89,7 @@ GROUP_EXAMPLE = {"standard": "iql", "robust-online": "atla-sa", "robust-offline"
 COLS = ("nominal", "q1", "q2", "q3", "q4", "all")
 GRID_HEAD = "| Nominal | Q1 | Q2 | Q3 | Q4 | All |"
 GRID_RULE = "--:|--:|--:|--:|--:|--:|"
-GRID_NOTE = ("Normalized score of the frozen last checkpoint. Q1 to Q4 are the severity "
+GRID_NOTE = ("Normalized score of the frozen checkpoint. Q1 to Q4 are the severity "
              "quartiles of each perturbation ladder, ordered by displacement from the nominal "
              "setting, and *All* covers every shifted condition.")
 

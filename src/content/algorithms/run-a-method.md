@@ -2,7 +2,7 @@
 
 Every method of the benchmark is trained and evaluated through the same two commands. An
 experiment card names one cell of the benchmark, a method on a task; the launcher resolves it,
-runs the method's own training script, and the evaluator scores the final checkpoint.
+runs the method's own training script, and the evaluator scores the frozen checkpoint.
 
 ## Summary
 
@@ -87,7 +87,7 @@ python baselines/evaluate.py --run runs/rorl_hopper/seed0
 |---|---|
 | Resolve | The card, its three references and the seed become `runs/rorl_hopper/seed0/config.yaml` |
 | Train | The script the algorithm card names under `entry`, here `baselines/rorl/train.py`, runs on that file |
-| Evaluate | The class the algorithm card names under `class` loads the final checkpoint and acts on every condition of the card's grid |
+| Evaluate | The class the algorithm card names under `class` loads the checkpoint the card's rule selects and acts on every condition of the card's grid |
 
 Commands run from the root of the checkout. Each training seed is one run with its own run
 directory, `runs/<card>/seed<k>` unless `--out` names another.
@@ -121,13 +121,13 @@ resolved configuration, overrides included, is written to `<run>/config.yaml` wi
 | File | Content |
 |---|---|
 | `config.yaml` | The resolved configuration the training script ran on |
-| `ckpt/` | Checkpoints named by their step or update count; the highest-numbered one is the final checkpoint |
+| `ckpt/` | Checkpoints named by their step or update count; the highest-numbered one is the final checkpoint, and a method with a selection rule of its own also writes `best.pt` |
 | `progress.csv` | One row per log interval: the step or update count, the training return and the losses |
 | `eval/<grid>.json` | Written by the evaluator: per condition the returns, their mean, spread and lower tail, the normalized score |
 
-**The final checkpoint is the one the benchmark evaluates.** One method keeps the selection rule
-of its own paper: [RFQI](robust-offline/rfqi.md) also writes `ckpt/best.pt` and its algorithm
-card sets `checkpoint: best`.
+**By default the benchmark evaluates the final checkpoint.** The `checkpoint` key of the algorithm
+card, or `--checkpoint` on the evaluator, selects the last *k* checkpoints or the run's best one
+instead; see [Evaluation Protocol](../evaluation/protocol.md#checkpoint-selection).
 
 ## Online methods
 

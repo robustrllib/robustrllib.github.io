@@ -15,7 +15,7 @@ Robust online methods learn through continued interaction with the environment. 
 | Training data | Rollouts collected during training |
 | Training environment | Nominal, except for environment-centric methods |
 | Budget | Environment steps, native to each method |
-| Evaluation | The frozen last checkpoint, on the grid named by the `eval` card |
+| Evaluation | The frozen checkpoint, on the grid named by the `eval` card |
 
 ## Supported methods
 
@@ -55,7 +55,7 @@ Experiment files are in `robustrllib/configs/experiment/`. Each names the algori
 
 ## Robust performance
 
-Normalized score of the frozen last checkpoint. Q1 to Q4 are the severity quartiles of each perturbation ladder, ordered by displacement from the nominal setting, and *All* covers every shifted condition.
+Normalized score of the frozen checkpoint. Q1 to Q4 are the severity quartiles of each perturbation ladder, ordered by displacement from the nominal setting, and *All* covers every shifted condition.
 
 | Method | Nominal | Q1 | Q2 | Q3 | Q4 | All |
 |---|--:|--:|--:|--:|--:|--:|

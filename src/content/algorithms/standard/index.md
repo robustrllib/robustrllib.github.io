@@ -14,7 +14,7 @@ Standard algorithms carry no robustness mechanism. They are the base learners th
 | Interface | One experiment file per run, launched with a training script |
 | Method selection | The `algorithm` card named by the experiment file |
 | Training | On the nominal task, with the native recipe of each algorithm |
-| Evaluation | The frozen last checkpoint, on the grid named by the `eval` card |
+| Evaluation | The frozen checkpoint, on the grid named by the `eval` card |
 
 ## Supported methods
 
@@ -54,7 +54,7 @@ Experiment files are in `robustrllib/configs/experiment/`. Each names the algori
 
 ## Robust performance
 
-Normalized score of the frozen last checkpoint. Q1 to Q4 are the severity quartiles of each perturbation ladder, ordered by displacement from the nominal setting, and *All* covers every shifted condition.
+Normalized score of the frozen checkpoint. Q1 to Q4 are the severity quartiles of each perturbation ladder, ordered by displacement from the nominal setting, and *All* covers every shifted condition.
 
 | Method | Nominal | Q1 | Q2 | Q3 | Q4 | All |
 |---|--:|--:|--:|--:|--:|--:|

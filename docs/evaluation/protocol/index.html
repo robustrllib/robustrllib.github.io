@@ -184,8 +184,8 @@
       <main class="bk-article" id="bk-content">
         <h1 id="evaluation-protocol">Evaluation Protocol<a class="headerlink" href="#evaluation-protocol" title="Permanent link">&para;</a></h1>
 <p>Every score of the benchmark is produced by one evaluator under one protocol. A policy is
-trained on the nominal task, its final checkpoint is frozen, and the checkpoint is scored on a
-grid of shift conditions.</p>
+trained on the nominal task, a checkpoint rule fixed before evaluation picks the checkpoint
+to freeze, and the frozen checkpoint is scored on a grid of shift conditions.</p>
 <h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -201,7 +201,7 @@ grid of shift conditions.</p>
 </tr>
 <tr>
 <td>Checkpoint</td>
-<td>The final checkpoint of the run; never selected on evaluation results</td>
+<td>A rule fixed before evaluation: the final checkpoint by default, the last <em>k</em> checkpoints pooled, or the run's own best checkpoint; never selected on evaluation results</td>
 </tr>
 <tr>
 <td>Conditions</td>
@@ -421,8 +421,12 @@ gear, each at eight factors from 0.6 to 1.4: 25 conditions.</p>
 <td>Override the number of episodes of the grid</td>
 </tr>
 <tr>
+<td><code>--checkpoint</code></td>
+<td>The checkpoint rule for this run: <code>last</code>, <code>last:k</code> or <code>best</code>; overrides the algorithm card</td>
+</tr>
+<tr>
 <td><code>--ckpt</code></td>
-<td>An explicit checkpoint, for diagnostics</td>
+<td>One explicit checkpoint file, for diagnostics</td>
 </tr>
 <tr>
 <td><code>--device</code></td>
@@ -430,6 +434,49 @@ gear, each at eight factors from 0.6 to 1.4: 25 conditions.</p>
 </tr>
 </tbody>
 </table>
+<h2 id="checkpoint-selection">Checkpoint selection<a class="headerlink" href="#checkpoint-selection" title="Permanent link">&para;</a></h2>
+<p>The checkpoint is chosen by a rule that is written down before any evaluation, so that the
+grid never selects the policy it scores. The rule can be set per method, in the <code>checkpoint</code>
+key of the algorithm card, and per run on the command line.</p>
+<table>
+<thead>
+<tr>
+<th>Rule</th>
+<th>Checkpoints evaluated</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>last</code></td>
+<td>The highest-numbered file in <code>ckpt/</code></td>
+<td>The default of the benchmark: the final policy, with no selection</td>
+</tr>
+<tr>
+<td><code>last:k</code></td>
+<td>The <em>k</em> highest-numbered files, oldest first</td>
+<td>A smoother estimate when the final policies of a method fluctuate; each checkpoint plays the same episode seeds and the episodes are pooled</td>
+</tr>
+<tr>
+<td><code>best</code></td>
+<td>The file named <code>best*</code> in <code>ckpt/</code></td>
+<td>Methods whose own paper keeps a selection rule and write that checkpoint during training</td>
+</tr>
+<tr>
+<td><code>--ckpt &lt;file&gt;</code></td>
+<td>That file</td>
+<td>A diagnostic of one checkpoint, not a protocol score</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>baselines/evaluate.py<span class="w"> </span>--run<span class="w"> </span>runs/rorl_hopper/seed0<span class="w"> </span>--checkpoint<span class="w"> </span>last:3
+python<span class="w"> </span>baselines/evaluate.py<span class="w"> </span>--run<span class="w"> </span>runs/rorl_hopper/seed0<span class="w"> </span>--checkpoint<span class="w"> </span>best
+</code></pre></div>
+<div class="highlight"><span class="filename">robustrllib/configs/algorithm/&lt;method&gt;.yaml</span><pre><span></span><code><span class="nt">checkpoint</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">last</span><span class="w">     </span><span class="c1"># last, last:k or best; the default of every run of the method</span>
+</code></pre></div>
+<p>With <code>last:k</code> the result file lists the <em>k</em> checkpoints, and <code>returns</code> of each condition holds
+<em>k</em> times <code>episodes</code> values. The rule in force is recorded next to the numbers, so results from
+different rules are never mixed unnoticed.</p>
 <p>The Part 2 and Part 3 grids score the Part 1 Hopper runs a second and a third time.</p>
 <div class="highlight"><pre><span></span><code>python<span class="w"> </span>baselines/evaluate.py<span class="w"> </span>--run<span class="w"> </span>runs/rorl_hopper/seed0<span class="w"> </span>--eval<span class="w"> </span>robustrllib/configs/eval/part2_hopper.yaml
 python<span class="w"> </span>baselines/evaluate.py<span class="w"> </span>--run<span class="w"> </span>runs/rorl_hopper/seed0<span class="w"> </span>--eval<span class="w"> </span>robustrllib/configs/eval/part3_hopper.yaml
@@ -457,6 +504,7 @@ python<span class="w"> </span>baselines/evaluate.py<span class="w"> </span>--run
 <p><code>eval/&lt;grid&gt;.json</code> records the protocol next to the numbers. Values are replaced by their types.</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">"run"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rorl_hopper"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"checkpoint_rule"</span><span class="p">:</span><span class="w"> </span><span class="s2">"last"</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">"checkpoint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"runs/rorl_hopper/seed0/ckpt/update_3000000.pt"</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">"seed"</span><span class="p">:</span><span class="w"> </span><span class="mi">10000</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">"episodes"</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span>
@@ -546,9 +594,9 @@ reference return of a random and of an expert policy.</p>
 </thead>
 <tbody>
 <tr>
-<td>Checkpoint</td>
-<td>The highest-numbered file in <code>ckpt/</code></td>
-<td>The final checkpoint; no selection on results</td>
+<td>Checkpoint rule</td>
+<td><code>last</code>, the highest-numbered file in <code>ckpt/</code></td>
+<td>The final checkpoint; <code>last:k</code> or <code>best</code> when the card or the command line says so</td>
 </tr>
 <tr>
 <td>Episodes</td>
@@ -612,8 +660,8 @@ reference return of a random and of an expert policy.</p>
   across training seeds.</li>
 <li>Episodes of one checkpoint are not independent samples, and their spread is not reported as
   the uncertainty of a method.</li>
-<li>The evaluated checkpoint is the final one; evaluation results are never used to select a
-  checkpoint.</li>
+<li>The checkpoint rule is fixed before evaluation and recorded with the result; evaluation
+  results are never used to select a checkpoint.</li>
 <li>Every method is scored on the same grid, with the same evaluation seed and the same number of
   episodes.</li>
 <li>Scores are normalized with the fixed reference pair of the environment and are not clipped.</li>
@@ -642,6 +690,8 @@ reference return of a random and of an expert policy.</p>
   <li><a class="bk-toc-link" href="#evaluation-grids">Evaluation grids</a>
   </li>
   <li><a class="bk-toc-link" href="#run-an-evaluation">Run an evaluation</a>
+  </li>
+  <li><a class="bk-toc-link" href="#checkpoint-selection">Checkpoint selection</a>
   </li>
   <li><a class="bk-toc-link" href="#result-file">Result file</a>
   </li>
