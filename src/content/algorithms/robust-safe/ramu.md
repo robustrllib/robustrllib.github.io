@@ -33,7 +33,17 @@ adaptation that applies the same transform to PPO's value targets.
 
 ## Run the method
 
-The method is trained and evaluated with the Isaac Lab recipe, on the PPO implementation that every method of this group shares.
+```bash
+./isaaclab.sh -p isaac/train.py --task g1 --method ramu --seed 0 --headless
+./isaaclab.sh \
+    -p isaac/evaluate.py --task g1 --checkpoint runs/isaac/g1_ramu/seed0/model_1499.pt --training_seed 0 --condition all --headless
+```
+
+| File | Path |
+|---|---|
+| Implementation | `isaac/methods/ramu.py` |
+
+Training is on the nominal task. The configuration files are explained in [Run a Method](../run-a-method.md), and the evaluation of the frozen checkpoint in [Evaluation Protocol](../../evaluation/protocol.md).
 
 ## References
 

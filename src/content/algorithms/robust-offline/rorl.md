@@ -36,15 +36,16 @@ RORL is a standalone recipe rather than a mechanism added to a shared base algor
 ## Run the method
 
 ```bash
-python baselines/rorl/train_rorl.py \
-    -c robustrllib/configs/experiment/rorl_hopper_bcreg_full.yaml --seed 0
+python baselines/train.py \
+    -c robustrllib/configs/experiment/rorl_hopper.yaml --seed 0
+python baselines/evaluate.py --run runs/rorl_hopper/seed0
 ```
 
 | File | Path |
 |---|---|
 | Implementation | `baselines/rorl` |
 | Algorithm card | `robustrllib/configs/algorithm/rorl.yaml` |
-| Experiment file | `robustrllib/configs/experiment/rorl_hopper_bcreg_full.yaml` |
+| Experiment file | `robustrllib/configs/experiment/rorl_hopper.yaml` |
 
 Training is on the nominal task. The configuration files are explained in [Run a Method](../run-a-method.md), and the evaluation of the frozen checkpoint in [Evaluation Protocol](../../evaluation/protocol.md).
 

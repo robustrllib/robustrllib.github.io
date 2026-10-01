@@ -83,29 +83,26 @@ Gravity is 1.3 times its nominal value of -9.81, and the observation carries Gau
 
 ## Train a first method
 
-An experiment file names an algorithm, a task and an evaluation grid. The command trains RORL
+An experiment card names an algorithm, a task and an evaluation grid. The command trains RORL
 on the nominal `Hopper-v5` task from an offline dataset, which is downloaded on first use, and
-writes checkpoints to `runs/rorl/hopper_medium_seed0/ckpt/`.
+writes checkpoints to `runs/rorl_hopper/seed0/ckpt/`.
 
 ```bash
-python baselines/rorl/train_rorl.py \
-    -c robustrllib/configs/experiment/rorl_hopper.yaml --seed 0
+python baselines/train.py -c robustrllib/configs/experiment/rorl_hopper.yaml --seed 0
 ```
 
-The full run performs three million updates. **`--smoke` runs one update** and only tests the
-plumbing; it writes to a run directory of its own.
+The full run performs three million updates. **`--set train.updates=1000` shortens it** to a
+test of the plumbing.
 
 ## Evaluate it under shift
 
-The evaluator loads the last checkpoint of the run and scores it on every condition of the
-grid. Each condition is a list of shifts, and the grid of this experiment holds Dynamic shifts
-in the Parametric mode: gravity, limb length and actuator gear at four factors each. The result
-is written to `final_eval.json` in the run directory.
+The evaluator loads the final checkpoint of the run and scores it on every condition of the
+grid. Each condition is a list of shifts, and the grid of this card holds Dynamic shifts in the
+Parametric mode: gravity, limb length and actuator gear at eight factors each. The result is
+written to `eval/part1_mujoco.json` in the run directory.
 
 ```bash
-python baselines/eval_final.py \
-    -c robustrllib/configs/experiment/rorl_hopper.yaml \
-    --run-dir runs/rorl/hopper_medium_seed0
+python baselines/evaluate.py --run runs/rorl_hopper/seed0
 ```
 
 The documentation continues in three groups: [Algorithms](../algorithms/index.md),

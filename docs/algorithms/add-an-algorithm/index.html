@@ -184,8 +184,7 @@
       <main class="bk-article" id="bk-content">
         <h1 id="add-an-algorithm">Add an Algorithm<a class="headerlink" href="#add-an-algorithm" title="Permanent link">&para;</a></h1>
 <p>A new method is a class with four methods. It is registered from a configuration file, without
-an edit to the library, and runs through the same train and evaluate pipeline as the built-in
-algorithms.</p>
+an edit to the library, and runs through the same two commands as the built-in methods.</p>
 <h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -208,16 +207,16 @@ algorithms.</p>
 <td><code>hparams</code> of the algorithm config, passed to the constructor</td>
 </tr>
 <tr>
-<td>Runner</td>
-<td><code>examples/run_experiment.py -c &lt;experiment.yaml&gt;</code></td>
+<td>Training</td>
+<td><code>baselines/train.py -c &lt;experiment.yaml&gt;</code>, through the generic trainer <code>baselines/train_algo.py</code></td>
 </tr>
 <tr>
 <td>Evaluation</td>
-<td>The shift grid of the experiment's <code>eval</code> section</td>
+<td><code>baselines/evaluate.py --run &lt;run directory&gt;</code>, on the experiment card's grid</td>
 </tr>
 <tr>
 <td>Limits</td>
-<td>The shared evaluator reads checkpoints named <code>ckpt/ep*.pt</code></td>
+<td>The generic trainer calls <code>train</code> once with the whole budget</td>
 </tr>
 </tbody>
 </table>
@@ -242,26 +241,26 @@ algorithms.</p>
 <tr>
 <td>Constructor</td>
 <td><code>__init__(self, **hparams)</code></td>
-<td>Accepts the <code>hparams</code> of the config as keyword arguments</td>
+<td>Accepts the <code>hparams</code> of the card as keyword arguments</td>
 <td><code>build_algo</code></td>
 </tr>
 <tr>
 <td><code>train</code></td>
 <td><code>train(self, env, total_timesteps, seed=None)</code></td>
 <td>Fits the policy on <code>env</code></td>
-<td>The experiment runner</td>
+<td><code>baselines/train_algo.py</code></td>
 </tr>
 <tr>
 <td><code>predict</code></td>
 <td><code>predict(self, obs, deterministic=True)</code></td>
 <td>Returns the action for one observation</td>
-<td>Every evaluator</td>
+<td><code>baselines/evaluate.py</code></td>
 </tr>
 <tr>
 <td><code>save</code></td>
 <td><code>save(self, path)</code></td>
-<td>Writes what <code>load</code> needs</td>
-<td>The runner, after training</td>
+<td>Writes what <code>load</code> needs to <code>path</code></td>
+<td><code>baselines/train_algo.py</code>, after training</td>
 </tr>
 <tr>
 <td><code>load</code></td>
@@ -271,7 +270,8 @@ algorithms.</p>
 </tr>
 </tbody>
 </table>
-<p>The evaluators call <code>load</code> with <code>env=...</code>; <code>baselines/eval_final.py</code> also passes <code>device=...</code>.
+<p>The evaluator calls <code>load</code> with <code>env=</code>, <code>device=</code> and <code>config=</code>, the resolved configuration of
+the run, from which the template reads its <code>hparams</code>.
 <strong>A subclass that leaves out one of the four methods cannot be instantiated</strong>: Python raises
 <code>TypeError: Can't instantiate abstract class</code>.</p>
 <h2 id="implement-a-method">Implement a method<a class="headerlink" href="#implement-a-method" title="Permanent link">&para;</a></h2>
@@ -310,25 +310,30 @@ class does not know.</p>
             <span class="n">a</span> <span class="o">=</span> <span class="n">dist</span><span class="o">.</span><span class="n">mean</span> <span class="k">if</span> <span class="n">deterministic</span> <span class="k">else</span> <span class="n">dist</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">a</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
 </code></pre></div>
-<p><code>load</code> rebuilds the network from the environment and restores the weights.</p>
+<p><code>load</code> rebuilds the network from the environment and the run's hyperparameters, and restores
+the weights.</p>
 <div class="highlight"><pre><span></span><code>    <span class="k">def</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
-        <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span> <span class="n">path</span> <span class="o">+</span> <span class="s2">".pt"</span><span class="p">)</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span> <span class="n">path</span><span class="p">)</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">env</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="n">algo</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">env</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s2">"cpu"</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">hparams</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">config</span> <span class="ow">or</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"algorithm"</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"hparams"</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{})</span>
+        <span class="n">algo</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="o">**</span><span class="n">hparams</span><span class="p">)</span>
         <span class="n">algo</span><span class="o">.</span><span class="n">_build</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
-        <span class="n">algo</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="s2">".pt"</span><span class="p">,</span> <span class="n">map_location</span><span class="o">=</span><span class="n">algo</span><span class="o">.</span><span class="n">device</span><span class="p">))</span>
+        <span class="n">algo</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">map_location</span><span class="o">=</span><span class="n">algo</span><span class="o">.</span><span class="n">device</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">algo</span>
 </code></pre></div>
 <p>The training loop uses only <code>reset</code> and <code>step</code>, so it does not need to know which shifts are
-stacked on the environment. <strong><code>save</code> and <code>load</code> must agree on the file name</strong>; the template
-appends <code>.pt</code> to the path in both.</p>
+stacked on the environment. <strong><code>save</code> and <code>load</code> use the path as given</strong>; the trainer names the
+file and the evaluator finds it.</p>
 <h2 id="register-a-method">Register a method<a class="headerlink" href="#register-a-method" title="Permanent link">&para;</a></h2>
 <p>Registration is one line in an algorithm config.</p>
-<div class="highlight"><span class="filename">robustrllib/configs/algorithm/reinforce.yaml</span><pre><span></span><code><span class="c1"># Custom algorithm plugged in by import path -- no framework edit needed.</span>
+<div class="highlight"><span class="filename">robustrllib/configs/algorithm/reinforce.yaml</span><pre><span></span><code><span class="c1"># A custom algorithm plugged in by import path: the REINFORCE template of</span>
+<span class="c1"># robustrllib.algos, trained by the generic Algo trainer. No edit to the library is needed.</span>
 <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reinforce</span>
+<span class="nt">entry</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">baselines/train_algo.py</span>
 <span class="nt">class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">robustrllib.algos.template_reinforce:Reinforce</span>
+<span class="nt">checkpoint</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">last</span>
 <span class="nt">hparams</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">lr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0003</span>
 <span class="w">  </span><span class="nt">gamma</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.99</span>
@@ -344,11 +349,19 @@ appends <code>.pt</code> to the path in both.</p>
 <tbody>
 <tr>
 <td><code>name</code></td>
-<td>A label. Without <code>class</code> it selects a built-in: <code>random</code>, <code>ppo</code>, <code>sac</code>, <code>td3</code>, <code>a2c</code>, <code>ddpg</code>.</td>
+<td>A label</td>
+</tr>
+<tr>
+<td><code>entry</code></td>
+<td>The training script; <code>baselines/train_algo.py</code> trains any <code>Algo</code> class</td>
 </tr>
 <tr>
 <td><code>class</code></td>
-<td><code>module.path:ClassName</code>, importable from where the launcher runs</td>
+<td><code>module.path:ClassName</code>, importable from the root of the checkout</td>
+</tr>
+<tr>
+<td><code>checkpoint</code></td>
+<td>Which checkpoint the evaluator loads: <code>last</code></td>
 </tr>
 <tr>
 <td><code>hparams</code></td>
@@ -356,11 +369,6 @@ appends <code>.pt</code> to the path in both.</p>
 </tr>
 </tbody>
 </table>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The file spells the module by its implementation path. The public name,
-<code>robustrllib.algos.template_reinforce:Reinforce</code>, resolves to the same class.</p>
-</div>
 <p>The contract can be checked before any training. A budget of zero timesteps builds the network
 without running an episode.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
@@ -381,42 +389,25 @@ without running an episode.</p>
 <span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">algo</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">algo</span><span class="p">,</span> <span class="n">Algo</span><span class="p">),</span> <span class="n">action</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 
 <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">tmp</span><span class="p">:</span>
-    <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span> <span class="s2">"checkpoint"</span><span class="p">)</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span> <span class="s2">"step_0.pt"</span><span class="p">)</span>
     <span class="n">algo</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
     <span class="n">clone</span> <span class="o">=</span> <span class="n">load_algo</span><span class="p">(</span><span class="s2">"reinforce"</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">CLASS</span><span class="p">,</span> <span class="n">env</span><span class="o">=</span><span class="n">env</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">tmp</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">clone</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">obs</span><span class="p">),</span> <span class="n">action</span><span class="p">))</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>Reinforce True (3,)
-['checkpoint.pt'] True
+['step_0.pt'] True
 </code></pre></div>
 <h2 id="run-a-method">Run a method<a class="headerlink" href="#run-a-method" title="Permanent link">&para;</a></h2>
-<p>An experiment file names the algorithm, the task, the budget and the grid. Every section is a
-path to a card or an inline dictionary.</p>
-<div class="highlight"><span class="filename">hopper_reinforce.yaml</span><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hopper_reinforce</span>
-<span class="nt">task</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">env_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Hopper-v5</span>
-<span class="w">  </span><span class="nt">make_kwargs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">max_episode_steps</span><span class="p">:</span><span class="w"> </span><span class="nv">1000</span><span class="p p-Indicator">}</span>
-<span class="w">  </span><span class="nt">train_shifts</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
-<span class="nt">algorithm</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reinforce</span>
-<span class="w">  </span><span class="nt">class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">robustrllib.algos.template_reinforce:Reinforce</span>
-<span class="w">  </span><span class="nt">hparams</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">lr</span><span class="p">:</span><span class="w"> </span><span class="nv">0.0003</span><span class="p p-Indicator">,</span><span class="nt"> gamma</span><span class="p">:</span><span class="w"> </span><span class="nv">0.99</span><span class="p p-Indicator">,</span><span class="nt"> hidden</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">64</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">64</span><span class="p p-Indicator">]}</span>
-<span class="nt">train</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">total_timesteps</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20000</span>
-<span class="w">  </span><span class="nt">seed</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
-<span class="nt">eval</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">episodes</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
-<span class="w">  </span><span class="nt">seeds</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">0</span><span class="p p-Indicator">]</span>
-<span class="w">  </span><span class="nt">grid</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="nv">nominal</span><span class="p p-Indicator">,</span><span class="nt"> shifts</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[],</span><span class="nt"> severity</span><span class="p">:</span><span class="w"> </span><span class="nv">1.0</span><span class="p p-Indicator">}</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gravity_1.2</span>
-<span class="w">      </span><span class="nt">severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.2</span>
-<span class="w">      </span><span class="nt">shifts</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[{</span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="nv">dynamics</span><span class="p p-Indicator">,</span><span class="nt"> mode</span><span class="p">:</span><span class="w"> </span><span class="nv">scale</span><span class="p p-Indicator">,</span><span class="nt"> params</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">param</span><span class="p">:</span><span class="w"> </span><span class="nv">gravity</span><span class="p p-Indicator">,</span><span class="nt"> factor</span><span class="p">:</span><span class="w"> </span><span class="nv">1.2</span><span class="p p-Indicator">}}]</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">obs_noise_0.05</span>
-<span class="w">      </span><span class="nt">shifts</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[{</span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="nv">observation</span><span class="p p-Indicator">,</span><span class="nt"> mode</span><span class="p">:</span><span class="w"> </span><span class="nv">gauss</span><span class="p p-Indicator">,</span><span class="nt"> params</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">sigma</span><span class="p">:</span><span class="w"> </span><span class="nv">0.05</span><span class="p p-Indicator">}}]</span>
-<span class="nt">output_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">results/reinforce</span>
+<p>An experiment card names the algorithm, the task, the grid and the budget. Every section is a
+path to a card or an inline mapping.</p>
+<div class="highlight"><span class="filename">examples/reinforce_hopper.yaml</span><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reinforce_hopper</span>
+<span class="nt">algorithm</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">robustrllib/configs/algorithm/reinforce.yaml</span>
+<span class="nt">task</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">robustrllib/configs/task/hopper.yaml</span>
+<span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">robustrllib/configs/eval/part1_mujoco.yaml</span>
+<span class="nt">train</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">steps</span><span class="p">:</span><span class="w"> </span><span class="nv">20000</span><span class="p p-Indicator">}</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>python<span class="w"> </span>examples/run_experiment.py<span class="w"> </span>-c<span class="w"> </span>hopper_reinforce.yaml
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>baselines/train.py<span class="w"> </span>-c<span class="w"> </span>examples/reinforce_hopper.yaml<span class="w"> </span>--seed<span class="w"> </span><span class="m">0</span>
+python<span class="w"> </span>baselines/evaluate.py<span class="w"> </span>--run<span class="w"> </span>runs/reinforce_hopper/seed0
 </code></pre></div>
 <table>
 <thead>
@@ -428,65 +419,31 @@ path to a card or an inline dictionary.</p>
 <tbody>
 <tr>
 <td>Build</td>
-<td><code>make_robust(env_id, shifts=train_shifts, **make_kwargs)</code></td>
+<td><code>make_env(task, shifts=train.shifts, seed)</code>, the task card's environment</td>
 </tr>
 <tr>
 <td>Train</td>
-<td><code>algo.train(env, total_timesteps, seed)</code></td>
+<td><code>algo.train(env, total_timesteps=train.steps, seed=seed)</code></td>
 </tr>
 <tr>
 <td>Save</td>
-<td><code>algo.save("&lt;run dir&gt;/checkpoint")</code></td>
+<td><code>algo.save("&lt;run&gt;/ckpt/step_&lt;steps&gt;.pt")</code></td>
 </tr>
 <tr>
 <td>Evaluate</td>
-<td>Every condition of <code>grid</code>, <code>episodes</code> episodes per entry of <code>seeds</code></td>
-</tr>
-<tr>
-<td>Write</td>
-<td>The files below, in <code>&lt;output_dir&gt;/&lt;name&gt;-&lt;hash&gt;/</code></td>
+<td><code>Reinforce.load(...)</code>, then every condition of the grid, 20 episodes each</td>
 </tr>
 </tbody>
 </table>
-<p>The same run is available from Python.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">robustrllib.run</span><span class="w"> </span><span class="kn">import</span> <span class="n">run_from_file</span>
-
-<span class="c1"># result = run_from_file("hopper_reinforce.yaml")</span>
-</code></pre></div>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
-<p>Shifts listed under <code>task.train_shifts</code>, in the dictionary form of the grid, are applied to
-the training environment. The shifts and their mode names are listed under
+<p><code>--train-shift &lt;arm&gt;</code> trains under a shift of <code>robustrllib/configs/train_shifts.yaml</code>, and an
+experiment card may list its own under <code>train.shifts</code>, in the dictionary form of the grid.
+The shifts and their mode names are listed under
 <a href="../../shifts/">Shift Sources and Modes</a>.</p>
 </div>
 <h2 id="evaluation-and-metrics">Evaluation and metrics<a class="headerlink" href="#evaluation-and-metrics" title="Permanent link">&para;</a></h2>
-<p>The runner prints one row per condition and writes four files.</p>
-<table>
-<thead>
-<tr>
-<th>File</th>
-<th>Content</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>checkpoint.pt</code></td>
-<td>What <code>save</code> wrote</td>
-</tr>
-<tr>
-<td><code>config.json</code></td>
-<td>The four resolved sections and the hash</td>
-</tr>
-<tr>
-<td><code>summary.json</code></td>
-<td>Metrics per condition and the summary across conditions</td>
-</tr>
-<tr>
-<td><code>episodes.csv</code></td>
-<td>One row per evaluation episode</td>
-</tr>
-</tbody>
-</table>
+<p>The evaluator prints one row per condition and writes <code>&lt;run&gt;/eval/&lt;grid&gt;.json</code>.</p>
 <table>
 <thead>
 <tr>
@@ -504,32 +461,27 @@ the training environment. The shifts and their mode names are listed under
 <tr>
 <td><code>cvar</code></td>
 <td>Condition</td>
-<td>Mean of the worst <code>cvar_alpha</code> fraction of the episodes</td>
+<td>Mean of the worst 10% of the episodes</td>
 </tr>
 <tr>
-<td><code>cost_mean</code>, <code>constraint_violation</code></td>
+<td><code>score</code></td>
 <td>Condition</td>
-<td>Mean episode cost and share of episodes with a positive cost</td>
+<td><code>100 (R - R_min) / (R_max - R_min)</code> with the task card's anchors</td>
 </tr>
 <tr>
 <td><code>success_rate</code></td>
 <td>Condition</td>
-<td>Share of episodes that report success</td>
+<td>Share of episodes that report success, where the task does</td>
 </tr>
 <tr>
-<td><code>return_mean_avg</code>, <code>worst_case_return</code></td>
-<td>Summary</td>
-<td>Mean and minimum of <code>return_mean</code> over the conditions</td>
-</tr>
-<tr>
-<td><code>auc</code></td>
-<td>Summary</td>
-<td>Area under return against <code>severity</code>, when the grid has severities</td>
+<td><code>returns</code></td>
+<td>Condition</td>
+<td>The return of every episode</td>
 </tr>
 </tbody>
 </table>
-<p>The shared evaluator applies the <a href="../../evaluation/protocol/">Evaluation Protocol</a> to any class
-that follows the contract, under four assumptions.</p>
+<p>The evaluator applies the <a href="../../evaluation/protocol/">Evaluation Protocol</a> to any class that
+follows the contract.</p>
 <table>
 <thead>
 <tr>
@@ -540,7 +492,7 @@ that follows the contract, under four assumptions.</p>
 <tbody>
 <tr>
 <td>Checkpoint location</td>
-<td>Files named <code>ckpt/ep*.pt</code> in the run directory</td>
+<td>The highest-numbered file in <code>&lt;run&gt;/ckpt/</code></td>
 </tr>
 <tr>
 <td>Path used verbatim</td>
@@ -548,16 +500,14 @@ that follows the contract, under four assumptions.</p>
 </tr>
 <tr>
 <td><code>load</code> keywords</td>
-<td><code>load</code> is called with <code>env=</code> and <code>device=</code></td>
+<td><code>load</code> is called with <code>env=</code>, <code>device=</code> and <code>config=</code></td>
 </tr>
 <tr>
-<td>Config references</td>
-<td>The experiment file names its cards as paths relative to the root of the checkout</td>
+<td>Card references</td>
+<td>Paths relative to the root of the checkout</td>
 </tr>
 </tbody>
 </table>
-<p><strong>The template appends <code>.pt</code> to the path</strong>, so its checkpoints are not found by
-<code>baselines/eval_final.py</code>. A copy that is meant for the shared evaluator uses the path verbatim.</p>
 <h2 id="registration-rules">Registration rules<a class="headerlink" href="#registration-rules" title="Permanent link">&para;</a></h2>
 <ul>
 <li>A method subclasses <code>Algo</code> and implements all four methods.</li>
@@ -566,8 +516,9 @@ that follows the contract, under four assumptions.</p>
 <li><code>predict</code> returns one action for one observation and honours <code>deterministic=True</code>.</li>
 <li><code>save</code> and <code>load</code> agree on the file name, and use the path verbatim for the shared evaluator.</li>
 <li>The training loop uses only <code>reset</code> and <code>step</code>, so that it runs on any shifted environment.</li>
-<li>An optional <code>set_eval_seed(seed)</code> method is called by the shared evaluator before every
-  episode.</li>
+<li>An optional <code>reset()</code> method is called by the evaluator before every episode, for policies
+  with a recurrent state; an optional <code>actor</code> attribute, a differentiable map from observation to
+  action, lets the evaluator run the adversarial observation conditions.</li>
 </ul>
       </main>
 

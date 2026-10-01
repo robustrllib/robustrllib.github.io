@@ -27,6 +27,14 @@
 .bk-article img + br + em { display: block; text-align: center; font-size: .92rem; color: var(--bk-muted); }
 .bk-article .rl-pair { display: flex; gap: 12px; margin: 0 0 12px; }
 .bk-article .rl-pair img { width: 50%; min-width: 0; height: auto; }
+.bk-article .rl-shift-comparison { margin: 1rem 0 1.25rem; }
+.bk-article .rl-shift-clips { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.bk-article .rl-shift-clips > div { min-width: 0; }
+.bk-article .rl-shift-clips span { display: block; margin-bottom: 6px; color: var(--bk-muted); font-size: .8rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+.bk-article .rl-shift-clips video { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: contain; background: #151c24; border-radius: 8px; }
+.bk-article .rl-shift-comparison-tall video { aspect-ratio: 4 / 3; }
+.bk-article .rl-shift-comparison figcaption { margin-top: 8px; color: var(--bk-muted); font-size: .92rem; text-align: center; }
+@media (max-width: 560px) { .bk-article .rl-shift-clips { grid-template-columns: minmax(0, 1fr); } }
 
 /* ---- comparison table: features in rows, benchmarks in columns ---- */
 .bk-article .rl-scroll { overflow-x: auto; margin: 0 0 .8rem; }

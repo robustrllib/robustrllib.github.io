@@ -74,7 +74,7 @@ PARAMETRIC = ShiftSpec("observation", "shift", {"shift": 0.01})
 ```
 
 The values of `HOPPER_STD` are those of the grid
-`robustrllib/configs/eval/spec_obsadv_hopper.yaml`.
+`robustrllib/configs/eval/part2_hopper.yaml`.
 
 Adversarial, with a small hand-made actor:
 

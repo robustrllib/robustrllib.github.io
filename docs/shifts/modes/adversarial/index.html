@@ -402,9 +402,9 @@ first, and <code>bind_actor</code> attaches the actor to every adversarial Obser
 adversarial Observation shift returns 0.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The observation-attack grid of the benchmark is run by <code>scripts/spec_obs_attack_eval.py</code>,
-which applies the same attack to every method. <code>baselines/eval_final.py</code> does not attach an
-actor.</p>
+<p><code>baselines/evaluate.py</code> binds the actor of the evaluated policy, which the method's loader
+exposes as <code>actor</code>, so the attack cells of <code>robustrllib/configs/eval/part2_hopper.yaml</code> run
+on every feed-forward policy with the same search.</p>
 </div>
 <h2 id="rules">Rules<a class="headerlink" href="#rules" title="Permanent link">&para;</a></h2>
 <ul>

@@ -31,8 +31,9 @@ mixture of real and model data.
 ## Run the method
 
 ```bash
-python baselines/mopo/train_mopo.py \
+python baselines/train.py \
     -c robustrllib/configs/experiment/mopo_hopper.yaml --seed 0
+python baselines/evaluate.py --run runs/mopo_hopper/seed0
 ```
 
 | File | Path |

@@ -242,22 +242,19 @@ is the stacking order.</p>
 parse arguments of its own.</p>
 </div>
 <h2 id="train-a-first-method">Train a first method<a class="headerlink" href="#train-a-first-method" title="Permanent link">&para;</a></h2>
-<p>An experiment file names an algorithm, a task and an evaluation grid. The command trains RORL
+<p>An experiment card names an algorithm, a task and an evaluation grid. The command trains RORL
 on the nominal <code>Hopper-v5</code> task from an offline dataset, which is downloaded on first use, and
-writes checkpoints to <code>runs/rorl/hopper_medium_seed0/ckpt/</code>.</p>
-<div class="highlight"><pre><span></span><code>python<span class="w"> </span>baselines/rorl/train_rorl.py<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>-c<span class="w"> </span>robustrllib/configs/experiment/rorl_hopper.yaml<span class="w"> </span>--seed<span class="w"> </span><span class="m">0</span>
+writes checkpoints to <code>runs/rorl_hopper/seed0/ckpt/</code>.</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>baselines/train.py<span class="w"> </span>-c<span class="w"> </span>robustrllib/configs/experiment/rorl_hopper.yaml<span class="w"> </span>--seed<span class="w"> </span><span class="m">0</span>
 </code></pre></div>
-<p>The full run performs three million updates. <strong><code>--smoke</code> runs one update</strong> and only tests the
-plumbing; it writes to a run directory of its own.</p>
+<p>The full run performs three million updates. <strong><code>--set train.updates=1000</code> shortens it</strong> to a
+test of the plumbing.</p>
 <h2 id="evaluate-it-under-shift">Evaluate it under shift<a class="headerlink" href="#evaluate-it-under-shift" title="Permanent link">&para;</a></h2>
-<p>The evaluator loads the last checkpoint of the run and scores it on every condition of the
-grid. Each condition is a list of shifts, and the grid of this experiment holds Dynamic shifts
-in the Parametric mode: gravity, limb length and actuator gear at four factors each. The result
-is written to <code>final_eval.json</code> in the run directory.</p>
-<div class="highlight"><pre><span></span><code>python<span class="w"> </span>baselines/eval_final.py<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>-c<span class="w"> </span>robustrllib/configs/experiment/rorl_hopper.yaml<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--run-dir<span class="w"> </span>runs/rorl/hopper_medium_seed0
+<p>The evaluator loads the final checkpoint of the run and scores it on every condition of the
+grid. Each condition is a list of shifts, and the grid of this card holds Dynamic shifts in the
+Parametric mode: gravity, limb length and actuator gear at eight factors each. The result is
+written to <code>eval/part1_mujoco.json</code> in the run directory.</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>baselines/evaluate.py<span class="w"> </span>--run<span class="w"> </span>runs/rorl_hopper/seed0
 </code></pre></div>
 <p>The documentation continues in three groups: <a href="../../algorithms/">Algorithms</a>,
 <a href="../../shifts/">Shift Sources and Modes</a> and the

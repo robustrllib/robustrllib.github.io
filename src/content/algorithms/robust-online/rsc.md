@@ -35,15 +35,16 @@ correlations a policy would otherwise exploit.
 ## Run the method
 
 ```bash
-python baselines/causaldro_online/train_causaldro.py \
-    --config robustrllib/configs/experiment/causaldro_online_hopper.yaml --seed 0
+python baselines/train.py \
+    -c robustrllib/configs/experiment/rsc_hopper.yaml --seed 0
+python baselines/evaluate.py --run runs/rsc_hopper/seed0
 ```
 
 | File | Path |
 |---|---|
-| Implementation | `baselines/causaldro_online` |
-| Algorithm card | `robustrllib/configs/algorithm/causaldro_online.yaml` |
-| Experiment file | `robustrllib/configs/experiment/causaldro_online_hopper.yaml` |
+| Implementation | `baselines/rsc` |
+| Algorithm card | `robustrllib/configs/algorithm/rsc.yaml` |
+| Experiment file | `robustrllib/configs/experiment/rsc_hopper.yaml` |
 
 Training is on the nominal task. The configuration files are explained in [Run a Method](../run-a-method.md), and the evaluation of the frozen checkpoint in [Evaluation Protocol](../../evaluation/protocol.md).
 

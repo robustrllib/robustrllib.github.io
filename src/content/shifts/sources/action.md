@@ -7,9 +7,13 @@ action and the task executes another; the result is always clipped to the action
 
 *The Action shift acts between the agent and the environment: the environment executes a perturbed action.*
 
-![A point-mass maze seen from above; two arrows show the intended and the perturbed action](../../assets/figures/example-action.png){ width="440" }
-
-*An Action shift that turns the action the policy issued.*
+<figure class="rl-shift-comparison">
+  <div class="rl-shift-clips">
+    <div><span>Nominal</span><video src="../../../../assets/shifts/action-maze_nominal_web.mp4" poster="../../../../assets/shifts/action-maze_nominal_web.jpg" autoplay muted loop playsinline controls preload="metadata" aria-label="PointMaze with nominal actions"></video></div>
+    <div><span>Shifted</span><video src="../../../../assets/shifts/action-maze_shift_web.mp4" poster="../../../../assets/shifts/action-maze_shift_web.jpg" autoplay muted loop playsinline controls preload="metadata" aria-label="PointMaze with shifted actions"></video></div>
+  </div>
+  <figcaption>PointMaze under nominal and shifted actions.</figcaption>
+</figure>
 
 ## Properties
 

@@ -88,12 +88,12 @@ delay = ShiftSpec("latency", "buffer", {"low": 0, "high": 2})
 The training environment of domain randomization is a list of stochastic Dynamic shifts, one
 per randomized parameter.
 
-```yaml title="robustrllib/configs/dr/mujoco_axis_narrow.yaml (comments omitted)"
-randomization:
-  - {param: gravity,                    distribution: uniform, low: 0.90, high: 1.10}
-  - {param: body_pos_xyz, index: all,   distribution: uniform, low: 0.90, high: 1.10}
-  - {param: actuator_gear, index: all,  distribution: uniform, low: 0.90, high: 1.10}
-curriculum: {type: constant, end: 1.0}
+```yaml title="robustrllib/configs/experiment/dr_sac_hopper.yaml (excerpt)"
+hparams:
+  randomize:
+  - {target: dynamics, mode: uniform, params: {param: gravity, low: 0.9, high: 1.1}}
+  - {target: dynamics, mode: uniform, params: {param: body_pos_xyz, index: all, low: 0.9, high: 1.1}}
+  - {target: dynamics, mode: uniform, params: {param: actuator_gear, index: all, low: 0.9, high: 1.1}}
 ```
 
 ```python

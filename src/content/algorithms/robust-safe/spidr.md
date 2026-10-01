@@ -33,7 +33,17 @@ It runs with the original solver and a joint-limit cost budget.
 
 ## Run the method
 
-The method is trained and evaluated with the Isaac Lab recipe, on the PPO implementation that every method of this group shares.
+```bash
+./isaaclab.sh -p isaac/train.py --task g1 --method spidr --seed 0 --headless
+./isaaclab.sh \
+    -p isaac/evaluate.py --task g1 --checkpoint runs/isaac/g1_spidr/seed0/model_899.pt --training_seed 0 --condition all --headless
+```
+
+| File | Path |
+|---|---|
+| Implementation | `isaac/methods/spidr.py` |
+
+Training rollouts come from the method's own perturbed environment. The configuration files are explained in [Run a Method](../run-a-method.md), and the evaluation of the frozen checkpoint in [Evaluation Protocol](../../evaluation/protocol.md).
 
 ## References
 

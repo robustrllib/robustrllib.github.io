@@ -34,19 +34,16 @@ futures conditioned on the current state and turn them into critic targets.
 ## Run the method
 
 ```bash
-# 1. fit the diffusion model on the logged data and sample the synthetic dataset the task card reads
-python baselines/synther/train_diffuser.py \
-    --task hopper --quality medium --results_folder runs/synther/hopper_medium --save_samples
-# 2. train the unmodified IQL learner on the synthetic dataset
-python baselines/iql/train_iql.py \
-    -c robustrllib/configs/experiment/iql_hopper_synther.yaml --seed 0
+python baselines/train.py \
+    -c robustrllib/configs/experiment/synther_hopper.yaml --seed 0
+python baselines/evaluate.py --run runs/synther_hopper/seed0
 ```
 
 | File | Path |
 |---|---|
 | Implementation | `baselines/synther` |
-| Algorithm card | `robustrllib/configs/algorithm/synther_iql.yaml` |
-| Experiment file | `robustrllib/configs/experiment/iql_hopper_synther.yaml` |
+| Algorithm card | `robustrllib/configs/algorithm/synther.yaml` |
+| Experiment file | `robustrllib/configs/experiment/synther_hopper.yaml` |
 
 Training is on the nominal task. The configuration files are explained in [Run a Method](../run-a-method.md), and the evaluation of the frozen checkpoint in [Evaluation Protocol](../../evaluation/protocol.md).
 

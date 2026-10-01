@@ -294,8 +294,9 @@
 </table>
 <h2 id="run-a-method">Run a method<a class="headerlink" href="#run-a-method" title="Permanent link">&para;</a></h2>
 <p>Every method is launched from an experiment file. IQL on Hopper:</p>
-<div class="highlight"><pre><span></span><code>python<span class="w"> </span>baselines/iql/train_iql.py<span class="w"> </span><span class="se">\</span>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>baselines/train.py<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>-c<span class="w"> </span>robustrllib/configs/experiment/iql_hopper.yaml<span class="w"> </span>--seed<span class="w"> </span><span class="m">0</span>
+python<span class="w"> </span>baselines/evaluate.py<span class="w"> </span>--run<span class="w"> </span>runs/iql_hopper/seed0
 </code></pre></div>
 <p>Every method page gives the command for that method. <a href="../run-a-method/">Run a Method</a> explains the experiment file, the overrides and the run directory.</p>
 <h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
@@ -330,18 +331,18 @@
 <tr>
 <td><a href="synther/">SynthER</a></td>
 <td><code>baselines/synther</code></td>
-<td><code>iql_hopper_synther.yaml</code></td>
+<td><code>synther_hopper.yaml</code></td>
 <td>1M updates, batch 256</td>
 </tr>
 <tr>
 <td><a href="ppo/">PPO</a></td>
-<td><code>robustrllib.algos</code></td>
+<td><code>baselines/sb3</code></td>
 <td><code>ppo_hopper.yaml</code></td>
 <td>2M environment steps</td>
 </tr>
 <tr>
 <td><a href="sac/">SAC</a></td>
-<td><code>robustrllib.algos</code></td>
+<td><code>baselines/sb3</code></td>
 <td><code>sac_hopper.yaml</code></td>
 <td>1M environment steps</td>
 </tr>

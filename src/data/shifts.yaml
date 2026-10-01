@@ -2,8 +2,8 @@
 # source offers in each mode. tools/sync_landing.py writes the toolbox from this file.
 # The mode names and the examples follow the tutorial pages under content/shifts/.
 #
-# example.image is a drawing that stands in for a rendered scene; replace the file
-# (or the path) when a rendering is ready, and keep the caption in step with it.
+# example.image is a still illustration. For filmed comparisons, example.videos
+# provides nominal and shifted clips with matching durations and poster frames.
 
 modes:
   - key: stochastic
@@ -34,8 +34,13 @@ sources:
     blurb: Physical parameters, external forces, the simulator state.
     page: docs/shifts/sources/dynamic/
     example:
-      image: assets/shifts/dynamic.svg
-      caption: A legged robot on ground that is rougher than the ground it was trained on.
+      videos:
+        nominal: assets/shifts/dynamic-carrace_nominal_web.mp4
+        shifted: assets/shifts/dynamic-carrace_shift_web.mp4
+      posters:
+        nominal: assets/shifts/dynamic-carrace_nominal_web.jpg
+        shifted: assets/shifts/dynamic-carrace_shift_web.jpg
+      caption: CarRacing under nominal and shifted dynamics.
     modes:
       stochastic:
         names: [gauss, uniform, loguniform, push]
@@ -109,8 +114,13 @@ sources:
     blurb: The action between policy and simulator.
     page: docs/shifts/sources/action/
     example:
-      image: assets/shifts/action.svg
-      caption: The arm was told one motion and executed another.
+      videos:
+        nominal: assets/shifts/action-maze_nominal_web.mp4
+        shifted: assets/shifts/action-maze_shift_web.mp4
+      posters:
+        nominal: assets/shifts/action-maze_nominal_web.jpg
+        shifted: assets/shifts/action-maze_shift_web.jpg
+      caption: PointMaze under nominal and shifted actions.
     modes:
       stochastic:
         names: [gauss, uniform]
@@ -182,8 +192,13 @@ sources:
     blurb: When actions, observations and rewards arrive.
     page: docs/shifts/sources/latency/
     example:
-      image: assets/shifts/latency.svg
-      caption: A command issued now takes effect two control steps later.
+      videos:
+        nominal: assets/shifts/halfcheetah_sac_nominal_8s.mp4
+        shifted: assets/shifts/halfcheetah_sac_latency_8s.mp4
+      posters:
+        nominal: assets/shifts/halfcheetah_sac_nominal_8s.jpg
+        shifted: assets/shifts/halfcheetah_sac_latency_8s.jpg
+      caption: HalfCheetah under nominal control and action latency.
     modes:
       stochastic:
         names: [buffer, substep, interp]

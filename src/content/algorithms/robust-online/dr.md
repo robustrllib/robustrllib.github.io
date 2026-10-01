@@ -39,19 +39,16 @@ training range. DR-PPO is used on the Isaac Lab tasks.
 ## Run the method
 
 ```bash
-python baselines/dr/train_dr.py \
-    -c robustrllib/configs/experiment/dr_hopper_axis_narrow.yaml --seed 0
-# the isolated-shift rows of the paper: the SB3 trainer of the online methods
-python experiments/dr_sac_mujoco_v5/train.py \
-    --env Hopper-v5 --seed 0 --total-steps 1000000
+python baselines/train.py \
+    -c robustrllib/configs/experiment/dr_sac_hopper.yaml --seed 0
+python baselines/evaluate.py --run runs/dr_sac_hopper/seed0
 ```
 
 | File | Path |
 |---|---|
-| Implementation | `baselines/dr` |
-| Algorithm card | `robustrllib/configs/algorithm/sac_dr.yaml` |
-| Experiment file | `robustrllib/configs/experiment/dr_hopper_axis_narrow.yaml` |
-| Randomization ranges | `robustrllib/configs/dr/mujoco_axis_narrow.yaml` |
+| Implementation | `baselines/dr_sac` |
+| Algorithm card | `robustrllib/configs/algorithm/dr_sac.yaml` |
+| Experiment file | `robustrllib/configs/experiment/dr_sac_hopper.yaml` |
 
 Training rollouts come from the method's own perturbed environment. The configuration files are explained in [Run a Method](../run-a-method.md), and the evaluation of the frozen checkpoint in [Evaluation Protocol](../../evaluation/protocol.md).
 

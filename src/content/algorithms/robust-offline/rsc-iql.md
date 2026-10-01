@@ -34,20 +34,16 @@ perturbing the dimensions the mask marks as non-causal.
 ## Run the method
 
 ```bash
-# 1. fit the causal mask the experiment card names under mask_path
-python baselines/causaldro_iql/fit_causal_mask.py \
-    -c robustrllib/configs/experiment/causaldro_iql_hopper.yaml --out runs/causaldro_iql/masks/hopper_medium_seed0_sw05.npz --seed 0
-# 2. train
-python baselines/run_baseline.py \
-    -c robustrllib/configs/experiment/causaldro_iql_hopper.yaml \
-    -- --seed 0
+python baselines/train.py \
+    -c robustrllib/configs/experiment/rsc_iql_hopper.yaml --seed 0
+python baselines/evaluate.py --run runs/rsc_iql_hopper/seed0
 ```
 
 | File | Path |
 |---|---|
-| Implementation | `baselines/causaldro_iql` |
-| Algorithm card | `robustrllib/configs/algorithm/causaldro_iql.yaml` |
-| Experiment file | `robustrllib/configs/experiment/causaldro_iql_hopper.yaml` |
+| Implementation | `baselines/rsc_iql` |
+| Algorithm card | `robustrllib/configs/algorithm/rsc_iql.yaml` |
+| Experiment file | `robustrllib/configs/experiment/rsc_iql_hopper.yaml` |
 
 Training is on the nominal task. The configuration files are explained in [Run a Method](../run-a-method.md), and the evaluation of the frozen checkpoint in [Evaluation Protocol](../../evaluation/protocol.md).
 

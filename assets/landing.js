@@ -225,10 +225,33 @@
 
     // the panel is built from text, never from markup
     var figure = element("figure", "tb-figure");
-    var img = element("img");
-    img.src = source.example.image;
-    img.alt = source.example.caption;
-    figure.appendChild(img);
+    var comparison = source.example.videos;
+    panel.classList.toggle("is-comparison", !!comparison);
+    if (comparison) {
+      var pair = element("div", "tb-comparison" + (source.key === "latency" ? " tb-comparison-tall" : ""));
+      [["nominal", "Nominal"], ["shifted", "Shifted"]].forEach(function (item) {
+        var clip = element("div", "tb-clip");
+        clip.appendChild(element("span", "", item[1]));
+        var video = element("video");
+        video.src = comparison[item[0]];
+        video.poster = source.example.posters[item[0]];
+        video.autoplay = true;
+        video.muted = true;
+        video.loop = true;
+        video.playsInline = true;
+        video.controls = true;
+        video.preload = "metadata";
+        video.setAttribute("aria-label", item[1] + ": " + source.example.caption);
+        clip.appendChild(video);
+        pair.appendChild(clip);
+      });
+      figure.appendChild(pair);
+    } else {
+      var img = element("img");
+      img.src = source.example.image;
+      img.alt = source.example.caption;
+      figure.appendChild(img);
+    }
     figure.appendChild(element("figcaption", "", source.example.caption));
 
     var detail = element("div", "tb-detail");

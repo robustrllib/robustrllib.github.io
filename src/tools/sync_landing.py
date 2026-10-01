@@ -117,9 +117,21 @@ def toolbox_panel(source, mode_key, modes):
     mode = next(m for m in modes if m["key"] == mode_key)
     entry = source["modes"][mode_key]
     names = "".join(f"<code>{esc(n)}</code>" for n in entry.get("names", []))
+    example = source["example"]
+    if "videos" in example:
+        clips = "".join(
+            f'<div class="tb-clip"><span>{label}</span>'
+            f'<video src="{esc(example["videos"][key])}" poster="{esc(example["posters"][key])}" '
+            f'autoplay muted loop playsinline controls preload="metadata" '
+            f'aria-label="{label}: {esc(example["caption"])}"></video></div>'
+            for key, label in (("nominal", "Nominal"), ("shifted", "Shifted"))
+        )
+        media = f'<div class="tb-comparison{" tb-comparison-tall" if source["key"] == "latency" else ""}">{clips}</div>'
+    else:
+        media = f'<img src="{esc(example["image"])}" alt="{esc(example["caption"])}">'
     return (
-        f'<figure class="tb-figure"><img src="{esc(source["example"]["image"])}" alt="{esc(source["example"]["caption"])}">'
-        f'<figcaption>{esc(source["example"]["caption"])}</figcaption></figure>\n'
+        f'<figure class="tb-figure">{media}'
+        f'<figcaption>{esc(example["caption"])}</figcaption></figure>\n'
         f'<div class="tb-detail">'
         f'<p class="tb-title"><b>{esc(source["name"])}</b> · {esc(mode["name"])}</p>'
         f'<p class="tb-blurb">{esc(entry.get("note", ""))}</p>'
@@ -196,7 +208,7 @@ def toolbox_html(data):
         out.append(f'    <button type="button" class="tb-btn tb-mode{active}" data-mode="{m["key"]}" '
                    f'role="tab" aria-selected="{selected}"{disabled}>{esc(m["name"])}</button>')
     out.append('  </div></div>')
-    out.append('  <div class="tb-panel" id="tb-panel" aria-live="polite">')
+    out.append(f'  <div class="tb-panel{" is-comparison" if "videos" in first["example"] else ""}" id="tb-panel" aria-live="polite">')
     out.append(toolbox_panel(first, first_mode, modes))
     out.append('  </div>')
     out.append('  <script type="application/json" id="shift-data">' + json.dumps(data, ensure_ascii=False).replace("</", "<\\/") + '</script>')

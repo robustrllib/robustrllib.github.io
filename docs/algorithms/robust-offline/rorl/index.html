@@ -245,8 +245,9 @@ regularised to vary little within a small ball around dataset states, and Q-valu
 perturbed states are penalised by the disagreement of a ten-critic ensemble.</p>
 <p>RORL is a standalone recipe rather than a mechanism added to a shared base algorithm.</p>
 <h2 id="run-the-method">Run the method<a class="headerlink" href="#run-the-method" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code>python<span class="w"> </span>baselines/rorl/train_rorl.py<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>-c<span class="w"> </span>robustrllib/configs/experiment/rorl_hopper_bcreg_full.yaml<span class="w"> </span>--seed<span class="w"> </span><span class="m">0</span>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>baselines/train.py<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-c<span class="w"> </span>robustrllib/configs/experiment/rorl_hopper.yaml<span class="w"> </span>--seed<span class="w"> </span><span class="m">0</span>
+python<span class="w"> </span>baselines/evaluate.py<span class="w"> </span>--run<span class="w"> </span>runs/rorl_hopper/seed0
 </code></pre></div>
 <table>
 <thead>
@@ -266,7 +267,7 @@ perturbed states are penalised by the disagreement of a ten-critic ensemble.</p>
 </tr>
 <tr>
 <td>Experiment file</td>
-<td><code>robustrllib/configs/experiment/rorl_hopper_bcreg_full.yaml</code></td>
+<td><code>robustrllib/configs/experiment/rorl_hopper.yaml</code></td>
 </tr>
 </tbody>
 </table>

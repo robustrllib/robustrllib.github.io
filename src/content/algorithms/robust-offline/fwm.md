@@ -43,19 +43,16 @@ unconditional velocity.
 ## Run the method
 
 ```bash
-# 1. pretrain the flow-matching world model (shared with PLR-PVL)
-python baselines/fwm_iql/pretrain_fm.py \
-    --dataset mujoco/hopper/medium-v0 --fm-seeds 0
-# 2. train the policy
-python baselines/fwm_iql/train_fwm_iql.py \
-    -c robustrllib/configs/experiment/fwm_iql_hopper.yaml
+python baselines/train.py \
+    -c robustrllib/configs/experiment/fwm_hopper.yaml --seed 0
+python baselines/evaluate.py --run runs/fwm_hopper/seed0
 ```
 
 | File | Path |
 |---|---|
-| Implementation | `baselines/fwm_iql` |
-| Algorithm card | `robustrllib/configs/algorithm/fwm_iql.yaml` |
-| Experiment file | `robustrllib/configs/experiment/fwm_iql_hopper.yaml` |
+| Implementation | `baselines/fwm` |
+| Algorithm card | `robustrllib/configs/algorithm/fwm.yaml` |
+| Experiment file | `robustrllib/configs/experiment/fwm_hopper.yaml` |
 
 Training is on the nominal task. The configuration files are explained in [Run a Method](../run-a-method.md), and the evaluation of the frozen checkpoint in [Evaluation Protocol](../../evaluation/protocol.md).
 

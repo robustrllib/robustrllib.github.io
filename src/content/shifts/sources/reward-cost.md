@@ -104,26 +104,20 @@ print(first_step([ShiftSpec("cost", "shift", {"shift": 0.1})]))
 (0.999, 0.1)
 ```
 
-The shift is carried into training through the training environment. An online method receives
-it in the shift list of that environment, for example through the `extra_shifts` key of a
-domain-randomization card.
+The shift is carried into training by the launcher: `robustrllib/configs/train_shifts.yaml`
+defines the arms the benchmark uses, and `baselines/train.py --train-shift reward_gauss` selects
+one.
 
-```yaml title="robustrllib/configs/dr/rgauss05.yaml (comments omitted)"
-randomization: []
-extra_shifts:
-  - {target: reward, mode: gauss, params: {sigma: 0.5}}
-curriculum: {type: constant, end: 1.0}
-```
-
-An offline method learns from a dataset, so the same corruption is applied to the rewards of
-the dataset, through the `reward_channel` key of the experiment file.
-
-```yaml
-reward_channel:
+```yaml title="robustrllib/configs/train_shifts.yaml (excerpt)"
+reward_gauss:
+- target: reward
   mode: gauss
-  params:
-    sigma: 0.5
+  params: {sigma: 0.5}
 ```
+
+An online method receives the shift in the shift list of its training environment. An offline
+method learns from a dataset, so the same corruption is applied to the rewards of the dataset,
+seeded from the run's seed.
 
 !!! note
     A frozen policy does not read the reward. Applied at evaluation time, a Reward/cost shift

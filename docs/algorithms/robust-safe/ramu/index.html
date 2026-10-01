@@ -244,7 +244,25 @@
 cost targets. The original method is defined for TD learners; the library's row is a PPO
 adaptation that applies the same transform to PPO's value targets.</p>
 <h2 id="run-the-method">Run the method<a class="headerlink" href="#run-the-method" title="Permanent link">&para;</a></h2>
-<p>The method is trained and evaluated with the Isaac Lab recipe, on the PPO implementation that every method of this group shares.</p>
+<div class="highlight"><pre><span></span><code>./isaaclab.sh<span class="w"> </span>-p<span class="w"> </span>isaac/train.py<span class="w"> </span>--task<span class="w"> </span>g1<span class="w"> </span>--method<span class="w"> </span>ramu<span class="w"> </span>--seed<span class="w"> </span><span class="m">0</span><span class="w"> </span>--headless
+./isaaclab.sh<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-p<span class="w"> </span>isaac/evaluate.py<span class="w"> </span>--task<span class="w"> </span>g1<span class="w"> </span>--checkpoint<span class="w"> </span>runs/isaac/g1_ramu/seed0/model_1499.pt<span class="w"> </span>--training_seed<span class="w"> </span><span class="m">0</span><span class="w"> </span>--condition<span class="w"> </span>all<span class="w"> </span>--headless
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Path</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Implementation</td>
+<td><code>isaac/methods/ramu.py</code></td>
+</tr>
+</tbody>
+</table>
+<p>Training is on the nominal task. The configuration files are explained in <a href="../../run-a-method/">Run a Method</a>, and the evaluation of the frozen checkpoint in <a href="../../../evaluation/protocol/">Evaluation Protocol</a>.</p>
 <h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Queeney and Benosman <em>Risk-Averse Model Uncertainty for Distributionally Robust Safe Reinforcement Learning</em>. NeurIPS, 2023.</li>

@@ -252,8 +252,10 @@
 </table>
 <p class="rl-book-h">Run the method</p>
 <div class="highlight"><pre><span></span><code><span class="nv">CFG</span><span class="o">=</span>robustrllib/configs/experiment
-python<span class="w"> </span>baselines/iql/train_iql.py<span class="w"> </span><span class="se">\</span>
+python<span class="w"> </span>baselines/train.py<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>-c<span class="w"> </span><span class="nv">$CFG</span>/iql_hopper.yaml<span class="w"> </span>--seed<span class="w"> </span><span class="m">0</span>
+python<span class="w"> </span>baselines/evaluate.py<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--run<span class="w"> </span>runs/iql_hopper/seed0
 </code></pre></div>
 <p class="rl-book-more"><a href="standard/iql/">Open the full page</a></p>
 <p class="rl-book-folio">4</p>
@@ -292,8 +294,10 @@ python<span class="w"> </span>baselines/iql/train_iql.py<span class="w"> </span>
 </table>
 <p class="rl-book-h">Run the method</p>
 <div class="highlight"><pre><span></span><code><span class="nv">CFG</span><span class="o">=</span>robustrllib/configs/experiment
-python<span class="w"> </span>baselines/td3bc/train_td3bc.py<span class="w"> </span><span class="se">\</span>
+python<span class="w"> </span>baselines/train.py<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>-c<span class="w"> </span><span class="nv">$CFG</span>/td3bc_hopper.yaml<span class="w"> </span>--seed<span class="w"> </span><span class="m">0</span>
+python<span class="w"> </span>baselines/evaluate.py<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--run<span class="w"> </span>runs/td3bc_hopper/seed0
 </code></pre></div>
 <p class="rl-book-more"><a href="standard/td3bc/">Open the full page</a></p>
 <p class="rl-book-folio">6</p>
@@ -332,8 +336,10 @@ python<span class="w"> </span>baselines/td3bc/train_td3bc.py<span class="w"> </s
 </table>
 <p class="rl-book-h">Run the method</p>
 <div class="highlight"><pre><span></span><code><span class="nv">CFG</span><span class="o">=</span>robustrllib/configs/experiment
-python<span class="w"> </span>baselines/mopo/train_mopo.py<span class="w"> </span><span class="se">\</span>
+python<span class="w"> </span>baselines/train.py<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>-c<span class="w"> </span><span class="nv">$CFG</span>/mopo_hopper.yaml<span class="w"> </span>--seed<span class="w"> </span><span class="m">0</span>
+python<span class="w"> </span>baselines/evaluate.py<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--run<span class="w"> </span>runs/mopo_hopper/seed0
 </code></pre></div>
 <p class="rl-book-more"><a href="standard/mopo/">Open the full page</a></p>
 <p class="rl-book-folio">8</p>
@@ -372,17 +378,10 @@ python<span class="w"> </span>baselines/mopo/train_mopo.py<span class="w"> </spa
 </table>
 <p class="rl-book-h">Run the method</p>
 <div class="highlight"><pre><span></span><code><span class="nv">CFG</span><span class="o">=</span>robustrllib/configs/experiment
-<span class="c1"># 1. fit the diffusion model on the logged</span>
-<span class="c1">#    data and sample the synthetic dataset the</span>
-<span class="c1">#    task card reads</span>
-python<span class="w"> </span>baselines/synther/train_diffuser.py<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--task<span class="w"> </span>hopper<span class="w"> </span>--quality<span class="w"> </span>medium<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--results_folder<span class="w"> </span>runs/synther/hopper_medium<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--save_samples
-<span class="c1"># 2. train the unmodified IQL learner on the</span>
-<span class="c1">#    synthetic dataset</span>
-python<span class="w"> </span>baselines/iql/train_iql.py<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>-c<span class="w"> </span><span class="nv">$CFG</span>/iql_hopper_synther.yaml<span class="w"> </span>--seed<span class="w"> </span><span class="m">0</span>
+python<span class="w"> </span>baselines/train.py<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-c<span class="w"> </span><span class="nv">$CFG</span>/synther_hopper.yaml<span class="w"> </span>--seed<span class="w"> </span><span class="m">0</span>
+python<span class="w"> </span>baselines/evaluate.py<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--run<span class="w"> </span>runs/synther_hopper/seed0
 </code></pre></div>
 <p class="rl-book-more"><a href="standard/synther/">Open the full page</a></p>
 <p class="rl-book-folio">10</p>
@@ -421,14 +420,10 @@ python<span class="w"> </span>baselines/iql/train_iql.py<span class="w"> </span>
 </table>
 <p class="rl-book-h">Run the method</p>
 <div class="highlight"><pre><span></span><code><span class="nv">CFG</span><span class="o">=</span>robustrllib/configs/experiment
-<span class="c1"># the paper's checkpoints: Stable-Baselines3</span>
-<span class="c1"># defaults, 2M steps</span>
-python<span class="w"> </span>experiments/sb3_default_runs/train.py<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--algorithm<span class="w"> </span>ppo<span class="w"> </span>--task<span class="w"> </span>hopper<span class="w"> </span>--seed<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--total-steps<span class="w"> </span><span class="m">2000000</span>
-<span class="c1"># the same learner through the library runner</span>
-python<span class="w"> </span>examples/run_experiment.py<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>-c<span class="w"> </span><span class="nv">$CFG</span>/ppo_hopper.yaml
+python<span class="w"> </span>baselines/train.py<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-c<span class="w"> </span><span class="nv">$CFG</span>/ppo_hopper.yaml<span class="w"> </span>--seed<span class="w"> </span><span class="m">0</span>
+python<span class="w"> </span>baselines/evaluate.py<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--run<span class="w"> </span>runs/ppo_hopper/seed0
 </code></pre></div>
 <p class="rl-book-more"><a href="standard/ppo/">Open the full page</a></p>
 <p class="rl-book-folio">12</p>
@@ -467,14 +462,10 @@ python<span class="w"> </span>examples/run_experiment.py<span class="w"> </span>
 </table>
 <p class="rl-book-h">Run the method</p>
 <div class="highlight"><pre><span></span><code><span class="nv">CFG</span><span class="o">=</span>robustrllib/configs/experiment
-<span class="c1"># the paper's checkpoints: Stable-Baselines3</span>
-<span class="c1"># defaults, 1M steps</span>
-python<span class="w"> </span>experiments/sb3_default_runs/train.py<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--algorithm<span class="w"> </span>sac<span class="w"> </span>--task<span class="w"> </span>hopper<span class="w"> </span>--seed<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--total-steps<span class="w"> </span><span class="m">1000000</span>
-<span class="c1"># the same learner through the library runner</span>
-python<span class="w"> </span>examples/run_experiment.py<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>-c<span class="w"> </span><span class="nv">$CFG</span>/sac_hopper.yaml
+python<span class="w"> </span>baselines/train.py<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-c<span class="w"> </span><span class="nv">$CFG</span>/sac_hopper.yaml<span class="w"> </span>--seed<span class="w"> </span><span class="m">0</span>
+python<span class="w"> </span>baselines/evaluate.py<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--run<span class="w"> </span>runs/sac_hopper/seed0
 </code></pre></div>
 <p class="rl-book-more"><a href="standard/sac/">Open the full page</a></p>
 <p class="rl-book-folio">14</p>
@@ -525,8 +516,10 @@ python<span class="w"> </span>examples/run_experiment.py<span class="w"> </span>
 </table>
 <p class="rl-book-h">Run the method</p>
 <div class="highlight"><pre><span></span><code><span class="nv">CFG</span><span class="o">=</span>robustrllib/configs/experiment
-python<span class="w"> </span>baselines/atla/train_atla.py<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>-c<span class="w"> </span><span class="nv">$CFG</span>/atla_online_hopper.yaml<span class="w"> </span>--seed<span class="w"> </span><span class="m">0</span>
+python<span class="w"> </span>baselines/train.py<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-c<span class="w"> </span><span class="nv">$CFG</span>/atla_hopper.yaml<span class="w"> </span>--seed<span class="w"> </span><span class="m">0</span>
+python<span class="w"> </span>baselines/evaluate.py<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--run<span class="w"> </span>runs/atla_hopper/seed0
 </code></pre></div>
 <p class="rl-book-more"><a href="robust-online/atla/">Open the full page</a></p>
 <p class="rl-book-folio">16</p>
@@ -577,9 +570,10 @@ python<span class="w"> </span>baselines/atla/train_atla.py<span class="w"> </spa
 </table>
 <p class="rl-book-h">Run the method</p>
 <div class="highlight"><pre><span></span><code><span class="nv">CFG</span><span class="o">=</span>robustrllib/configs/experiment
-python<span class="w"> </span>baselines/atla/train_atla.py<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>-c<span class="w"> </span><span class="nv">$CFG</span>/atla_lstm_sa_hopper.yaml<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--seed<span class="w"> </span><span class="m">0</span>
+python<span class="w"> </span>baselines/train.py<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-c<span class="w"> </span><span class="nv">$CFG</span>/atla_sa_hopper.yaml<span class="w"> </span>--seed<span class="w"> </span><span class="m">0</span>
+python<span class="w"> </span>baselines/evaluate.py<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--run<span class="w"> </span>runs/atla_sa_hopper/seed0
 </code></pre></div>
 <p class="rl-book-more"><a href="robust-online/atla-sa/">Open the full page</a></p>
 <p class="rl-book-folio">18</p>
@@ -630,10 +624,10 @@ python<span class="w"> </span>baselines/atla/train_atla.py<span class="w"> </spa
 </table>
 <p class="rl-book-h">Run the method</p>
 <div class="highlight"><pre><span></span><code><span class="nv">CFG</span><span class="o">=</span>robustrllib/configs/experiment
-python<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>baselines/causaldro_online/train_causaldro.py<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--config<span class="w"> </span><span class="nv">$CFG</span>/causaldro_online_hopper.yaml<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--seed<span class="w"> </span><span class="m">0</span>
+python<span class="w"> </span>baselines/train.py<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-c<span class="w"> </span><span class="nv">$CFG</span>/rsc_hopper.yaml<span class="w"> </span>--seed<span class="w"> </span><span class="m">0</span>
+python<span class="w"> </span>baselines/evaluate.py<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--run<span class="w"> </span>runs/rsc_hopper/seed0
 </code></pre></div>
 <p class="rl-book-more"><a href="robust-online/rsc/">Open the full page</a></p>
 <p class="rl-book-folio">20</p>
@@ -683,14 +677,13 @@ python<span class="w"> </span><span class="se">\</span>
 </tbody>
 </table>
 <p class="rl-book-h">Run the method</p>
-<div class="highlight"><pre><span></span><code>python<span class="w"> </span>experiments/rarl_hopper_v5/train.py<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--algo<span class="w"> </span>ppo<span class="w"> </span>--env<span class="w"> </span>Hopper-v5<span class="w"> </span>--seed<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--total-steps<span class="w"> </span><span class="m">2000000</span>
-python<span class="w"> </span>experiments/rarl_hopper_v5/train.py<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--algo<span class="w"> </span>trpo<span class="w"> </span>--env<span class="w"> </span>Hopper-v5<span class="w"> </span>--seed<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--total-steps<span class="w"> </span><span class="m">2000000</span>
-<span class="c1"># the same recipe on Pusher-v5s:</span>
-<span class="c1"># baselines/rarl_pusher/train.py</span>
+<div class="highlight"><pre><span></span><code><span class="nv">CFG</span><span class="o">=</span>robustrllib/configs/experiment
+python<span class="w"> </span>baselines/train.py<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-c<span class="w"> </span><span class="nv">$CFG</span>/rarl_ppo_hopper.yaml<span class="w"> </span>--seed<span class="w"> </span><span class="m">0</span>
+python<span class="w"> </span>baselines/train.py<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-c<span class="w"> </span><span class="nv">$CFG</span>/rarl_trpo_hopper.yaml<span class="w"> </span>--seed<span class="w"> </span><span class="m">0</span>
+python<span class="w"> </span>baselines/evaluate.py<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--run<span class="w"> </span>runs/rarl_ppo_hopper/seed0
 </code></pre></div>
 <p class="rl-book-more"><a href="robust-online/rarl/">Open the full page</a></p>
 <p class="rl-book-folio">22</p>
@@ -741,14 +734,10 @@ python<span class="w"> </span>experiments/rarl_hopper_v5/train.py<span class="w"
 </table>
 <p class="rl-book-h">Run the method</p>
 <div class="highlight"><pre><span></span><code><span class="nv">CFG</span><span class="o">=</span>robustrllib/configs/experiment
-python<span class="w"> </span>baselines/dr/train_dr.py<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>-c<span class="w"> </span><span class="nv">$CFG</span>/dr_hopper_axis_narrow.yaml<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--seed<span class="w"> </span><span class="m">0</span>
-<span class="c1"># the isolated-shift rows of the paper: the</span>
-<span class="c1"># SB3 trainer of the online methods</span>
-python<span class="w"> </span>experiments/dr_sac_mujoco_v5/train.py<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--env<span class="w"> </span>Hopper-v5<span class="w"> </span>--seed<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--total-steps<span class="w"> </span><span class="m">1000000</span>
+python<span class="w"> </span>baselines/train.py<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-c<span class="w"> </span><span class="nv">$CFG</span>/dr_sac_hopper.yaml<span class="w"> </span>--seed<span class="w"> </span><span class="m">0</span>
+python<span class="w"> </span>baselines/evaluate.py<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--run<span class="w"> </span>runs/dr_sac_hopper/seed0
 </code></pre></div>
 <p class="rl-book-more"><a href="robust-online/dr/">Open the full page</a></p>
 <p class="rl-book-folio">24</p>
@@ -799,8 +788,10 @@ python<span class="w"> </span>experiments/dr_sac_mujoco_v5/train.py<span class="
 </table>
 <p class="rl-book-h">Run the method</p>
 <div class="highlight"><pre><span></span><code><span class="nv">CFG</span><span class="o">=</span>robustrllib/configs/experiment
-python<span class="w"> </span>baselines/rfqi/train_rfqi.py<span class="w"> </span><span class="se">\</span>
+python<span class="w"> </span>baselines/train.py<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>-c<span class="w"> </span><span class="nv">$CFG</span>/rfqi_hopper.yaml<span class="w"> </span>--seed<span class="w"> </span><span class="m">0</span>
+python<span class="w"> </span>baselines/evaluate.py<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--run<span class="w"> </span>runs/rfqi_hopper/seed0
 </code></pre></div>
 <p class="rl-book-more"><a href="robust-offline/rfqi/">Open the full page</a></p>
 <p class="rl-book-folio">26</p>
@@ -851,9 +842,10 @@ python<span class="w"> </span>baselines/rfqi/train_rfqi.py<span class="w"> </spa
 </table>
 <p class="rl-book-h">Run the method</p>
 <div class="highlight"><pre><span></span><code><span class="nv">CFG</span><span class="o">=</span>robustrllib/configs/experiment
-python<span class="w"> </span>baselines/rorl/train_rorl.py<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>-c<span class="w"> </span><span class="nv">$CFG</span>/rorl_hopper_bcreg_full.yaml<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--seed<span class="w"> </span><span class="m">0</span>
+python<span class="w"> </span>baselines/train.py<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-c<span class="w"> </span><span class="nv">$CFG</span>/rorl_hopper.yaml<span class="w"> </span>--seed<span class="w"> </span><span class="m">0</span>
+python<span class="w"> </span>baselines/evaluate.py<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--run<span class="w"> </span>runs/rorl_hopper/seed0
 </code></pre></div>
 <p class="rl-book-more"><a href="robust-offline/rorl/">Open the full page</a></p>
 <p class="rl-book-folio">28</p>
@@ -904,9 +896,10 @@ python<span class="w"> </span>baselines/rorl/train_rorl.py<span class="w"> </spa
 </table>
 <p class="rl-book-h">Run the method</p>
 <div class="highlight"><pre><span></span><code><span class="nv">CFG</span><span class="o">=</span>robustrllib/configs/experiment
-python<span class="w"> </span>baselines/run_baseline.py<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>-c<span class="w"> </span><span class="nv">$CFG</span>/offline_atla_iql_hopper.yaml<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--<span class="w"> </span>--seed<span class="w"> </span><span class="m">0</span>
+python<span class="w"> </span>baselines/train.py<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-c<span class="w"> </span><span class="nv">$CFG</span>/atla_iql_hopper.yaml<span class="w"> </span>--seed<span class="w"> </span><span class="m">0</span>
+python<span class="w"> </span>baselines/evaluate.py<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--run<span class="w"> </span>runs/atla_iql_hopper/seed0
 </code></pre></div>
 <p class="rl-book-more"><a href="robust-offline/atla-iql/">Open the full page</a></p>
 <p class="rl-book-folio">30</p>
@@ -957,17 +950,10 @@ python<span class="w"> </span>baselines/run_baseline.py<span class="w"> </span><
 </table>
 <p class="rl-book-h">Run the method</p>
 <div class="highlight"><pre><span></span><code><span class="nv">CFG</span><span class="o">=</span>robustrllib/configs/experiment
-<span class="c1"># 1. fit the causal mask the experiment card</span>
-<span class="c1">#    names under mask_path</span>
-python<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>baselines/causaldro_iql/fit_causal_mask.py<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>-c<span class="w"> </span><span class="nv">$CFG</span>/causaldro_iql_hopper.yaml<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--out<span class="w"> </span>runs/causaldro_iql/masks/hopper_medium_seed0_sw05.npz<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--seed<span class="w"> </span><span class="m">0</span>
-<span class="c1"># 2. train</span>
-python<span class="w"> </span>baselines/run_baseline.py<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>-c<span class="w"> </span><span class="nv">$CFG</span>/causaldro_iql_hopper.yaml<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--<span class="w"> </span>--seed<span class="w"> </span><span class="m">0</span>
+python<span class="w"> </span>baselines/train.py<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-c<span class="w"> </span><span class="nv">$CFG</span>/rsc_iql_hopper.yaml<span class="w"> </span>--seed<span class="w"> </span><span class="m">0</span>
+python<span class="w"> </span>baselines/evaluate.py<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--run<span class="w"> </span>runs/rsc_iql_hopper/seed0
 </code></pre></div>
 <p class="rl-book-more"><a href="robust-offline/rsc-iql/">Open the full page</a></p>
 <p class="rl-book-folio">32</p>
@@ -1018,8 +1004,10 @@ python<span class="w"> </span>baselines/run_baseline.py<span class="w"> </span><
 </table>
 <p class="rl-book-h">Run the method</p>
 <div class="highlight"><pre><span></span><code><span class="nv">CFG</span><span class="o">=</span>robustrllib/configs/experiment
-python<span class="w"> </span>baselines/rambo/train_rambo.py<span class="w"> </span><span class="se">\</span>
+python<span class="w"> </span>baselines/train.py<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>-c<span class="w"> </span><span class="nv">$CFG</span>/rambo_hopper.yaml<span class="w"> </span>--seed<span class="w"> </span><span class="m">0</span>
+python<span class="w"> </span>baselines/evaluate.py<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--run<span class="w"> </span>runs/rambo_hopper/seed0
 </code></pre></div>
 <p class="rl-book-more"><a href="robust-offline/rambo/">Open the full page</a></p>
 <p class="rl-book-folio">34</p>
@@ -1070,8 +1058,10 @@ python<span class="w"> </span>baselines/rambo/train_rambo.py<span class="w"> </s
 </table>
 <p class="rl-book-h">Run the method</p>
 <div class="highlight"><pre><span></span><code><span class="nv">CFG</span><span class="o">=</span>robustrllib/configs/experiment
-python<span class="w"> </span>baselines/run_baseline.py<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>-c<span class="w"> </span><span class="nv">$CFG</span>/romb_iql_hopper.yaml<span class="w"> </span>--<span class="w"> </span>--seed<span class="w"> </span><span class="m">0</span>
+python<span class="w"> </span>baselines/train.py<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-c<span class="w"> </span><span class="nv">$CFG</span>/romb_hopper.yaml<span class="w"> </span>--seed<span class="w"> </span><span class="m">0</span>
+python<span class="w"> </span>baselines/evaluate.py<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--run<span class="w"> </span>runs/romb_hopper/seed0
 </code></pre></div>
 <p class="rl-book-more"><a href="robust-offline/romb/">Open the full page</a></p>
 <p class="rl-book-folio">36</p>
@@ -1122,14 +1112,10 @@ python<span class="w"> </span>baselines/run_baseline.py<span class="w"> </span><
 </table>
 <p class="rl-book-h">Run the method</p>
 <div class="highlight"><pre><span></span><code><span class="nv">CFG</span><span class="o">=</span>robustrllib/configs/experiment
-<span class="c1"># 1. pretrain the flow-matching world model</span>
-<span class="c1">#    (shared with PLR-PVL)</span>
-python<span class="w"> </span>baselines/fwm_iql/pretrain_fm.py<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--dataset<span class="w"> </span>mujoco/hopper/medium-v0<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--fm-seeds<span class="w"> </span><span class="m">0</span>
-<span class="c1"># 2. train the policy</span>
-python<span class="w"> </span>baselines/fwm_iql/train_fwm_iql.py<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>-c<span class="w"> </span><span class="nv">$CFG</span>/fwm_iql_hopper.yaml
+python<span class="w"> </span>baselines/train.py<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-c<span class="w"> </span><span class="nv">$CFG</span>/fwm_hopper.yaml<span class="w"> </span>--seed<span class="w"> </span><span class="m">0</span>
+python<span class="w"> </span>baselines/evaluate.py<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--run<span class="w"> </span>runs/fwm_hopper/seed0
 </code></pre></div>
 <p class="rl-book-more"><a href="robust-offline/fwm/">Open the full page</a></p>
 <p class="rl-book-folio">38</p>
@@ -1180,15 +1166,10 @@ python<span class="w"> </span>baselines/fwm_iql/train_fwm_iql.py<span class="w">
 </table>
 <p class="rl-book-h">Run the method</p>
 <div class="highlight"><pre><span></span><code><span class="nv">CFG</span><span class="o">=</span>robustrllib/configs/experiment
-<span class="c1"># 1. pretrain the flow-matching ensemble (seed</span>
-<span class="c1">#    0 is shared with FWM)</span>
-python<span class="w"> </span>baselines/fwm_iql/pretrain_fm.py<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--dataset<span class="w"> </span>mujoco/hopper/medium-v0<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--fm-seeds<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">42</span><span class="w"> </span><span class="m">3047</span>
-<span class="c1"># 2. train the policy</span>
-python<span class="w"> </span>baselines/run_baseline.py<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>-c<span class="w"> </span><span class="nv">$CFG</span>/fmgan_iql_hopper.yaml<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--<span class="w"> </span>--seed<span class="w"> </span><span class="m">0</span>
+python<span class="w"> </span>baselines/train.py<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-c<span class="w"> </span><span class="nv">$CFG</span>/plr_pvl_hopper.yaml<span class="w"> </span>--seed<span class="w"> </span><span class="m">0</span>
+python<span class="w"> </span>baselines/evaluate.py<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--run<span class="w"> </span>runs/plr_pvl_hopper/seed0
 </code></pre></div>
 <p class="rl-book-more"><a href="robust-offline/plr-pvl/">Open the full page</a></p>
 <p class="rl-book-folio">40</p>
@@ -1238,7 +1219,15 @@ python<span class="w"> </span>baselines/run_baseline.py<span class="w"> </span><
 </tbody>
 </table>
 <p class="rl-book-h">Run the method</p>
-<p>Trained and evaluated with the Isaac Lab recipe, on the PPO implementation that the methods of this group share.</p>
+<div class="highlight"><pre><span></span><code>./isaaclab.sh<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-p<span class="w"> </span>isaac/train.py<span class="w"> </span>--task<span class="w"> </span>g1<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--method<span class="w"> </span>ramu<span class="w"> </span>--seed<span class="w"> </span><span class="m">0</span><span class="w"> </span>--headless
+./isaaclab.sh<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-p<span class="w"> </span>isaac/evaluate.py<span class="w"> </span>--task<span class="w"> </span>g1<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--checkpoint<span class="w"> </span>runs/isaac/g1_ramu/seed0/model_1499.pt<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--training_seed<span class="w"> </span><span class="m">0</span><span class="w"> </span>--condition<span class="w"> </span>all<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--headless
+</code></pre></div>
 <p class="rl-book-more"><a href="robust-safe/ramu/">Open the full page</a></p>
 <p class="rl-book-folio">42</p>
 </div>
@@ -1287,7 +1276,15 @@ python<span class="w"> </span>baselines/run_baseline.py<span class="w"> </span><
 </tbody>
 </table>
 <p class="rl-book-h">Run the method</p>
-<p>Trained and evaluated with the Isaac Lab recipe, on the PPO implementation that the methods of this group share.</p>
+<div class="highlight"><pre><span></span><code>./isaaclab.sh<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-p<span class="w"> </span>isaac/train.py<span class="w"> </span>--task<span class="w"> </span>g1<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--method<span class="w"> </span>spidr<span class="w"> </span>--seed<span class="w"> </span><span class="m">0</span><span class="w"> </span>--headless
+./isaaclab.sh<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-p<span class="w"> </span>isaac/evaluate.py<span class="w"> </span>--task<span class="w"> </span>g1<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--checkpoint<span class="w"> </span>runs/isaac/g1_spidr/seed0/model_899.pt<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--training_seed<span class="w"> </span><span class="m">0</span><span class="w"> </span>--condition<span class="w"> </span>all<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--headless
+</code></pre></div>
 <p class="rl-book-more"><a href="robust-safe/spidr/">Open the full page</a></p>
 <p class="rl-book-folio">44</p>
 </div>

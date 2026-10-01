@@ -248,11 +248,9 @@ randomises gravity, morphology and actuator gear, each drawn uniformly between
 evaluation grid on the same three axes, so the outer half of the grid lies outside the
 training range. DR-PPO is used on the Isaac Lab tasks.</p>
 <h2 id="run-the-method">Run the method<a class="headerlink" href="#run-the-method" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code>python<span class="w"> </span>baselines/dr/train_dr.py<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>-c<span class="w"> </span>robustrllib/configs/experiment/dr_hopper_axis_narrow.yaml<span class="w"> </span>--seed<span class="w"> </span><span class="m">0</span>
-<span class="c1"># the isolated-shift rows of the paper: the SB3 trainer of the online methods</span>
-python<span class="w"> </span>experiments/dr_sac_mujoco_v5/train.py<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--env<span class="w"> </span>Hopper-v5<span class="w"> </span>--seed<span class="w"> </span><span class="m">0</span><span class="w"> </span>--total-steps<span class="w"> </span><span class="m">1000000</span>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>baselines/train.py<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-c<span class="w"> </span>robustrllib/configs/experiment/dr_sac_hopper.yaml<span class="w"> </span>--seed<span class="w"> </span><span class="m">0</span>
+python<span class="w"> </span>baselines/evaluate.py<span class="w"> </span>--run<span class="w"> </span>runs/dr_sac_hopper/seed0
 </code></pre></div>
 <table>
 <thead>
@@ -264,19 +262,15 @@ python<span class="w"> </span>experiments/dr_sac_mujoco_v5/train.py<span class="
 <tbody>
 <tr>
 <td>Implementation</td>
-<td><code>baselines/dr</code></td>
+<td><code>baselines/dr_sac</code></td>
 </tr>
 <tr>
 <td>Algorithm card</td>
-<td><code>robustrllib/configs/algorithm/sac_dr.yaml</code></td>
+<td><code>robustrllib/configs/algorithm/dr_sac.yaml</code></td>
 </tr>
 <tr>
 <td>Experiment file</td>
-<td><code>robustrllib/configs/experiment/dr_hopper_axis_narrow.yaml</code></td>
-</tr>
-<tr>
-<td>Randomization ranges</td>
-<td><code>robustrllib/configs/dr/mujoco_axis_narrow.yaml</code></td>
+<td><code>robustrllib/configs/experiment/dr_sac_hopper.yaml</code></td>
 </tr>
 </tbody>
 </table>

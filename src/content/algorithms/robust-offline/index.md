@@ -37,8 +37,9 @@ Robust offline methods learn from a fixed dataset and never interact with the en
 Every method is launched from an experiment file. RORL on Hopper:
 
 ```bash
-python baselines/rorl/train_rorl.py \
-    -c robustrllib/configs/experiment/rorl_hopper_bcreg_full.yaml --seed 0
+python baselines/train.py \
+    -c robustrllib/configs/experiment/rorl_hopper.yaml --seed 0
+python baselines/evaluate.py --run runs/rorl_hopper/seed0
 ```
 
 Every method page gives the command for that method. [Run a Method](../run-a-method.md) explains the experiment file, the overrides and the run directory.
@@ -48,13 +49,13 @@ Every method page gives the command for that method. [Run a Method](../run-a-met
 | Method | Implementation | Experiment file | Training budget |
 |---|---|---|---|
 | [RFQI](rfqi.md) | `baselines/rfqi` | `rfqi_hopper.yaml` | 500k updates, batch 1000 |
-| [RORL](rorl.md) | `baselines/rorl` | `rorl_hopper_bcreg_full.yaml` | 3M updates on MuJoCo and Door, 1M elsewhere |
-| [ATLA-IQL](atla-iql.md) | `baselines/offline_atla_iql` | `offline_atla_iql_hopper.yaml` | 1M updates, batch 256 |
-| [RSC-IQL](rsc-iql.md) | `baselines/causaldro_iql` | `causaldro_iql_hopper.yaml` | 1M updates, batch 256 |
+| [RORL](rorl.md) | `baselines/rorl` | `rorl_hopper.yaml` | 3M updates on MuJoCo and Door, 1M elsewhere |
+| [ATLA-IQL](atla-iql.md) | `baselines/atla_iql` | `atla_iql_hopper.yaml` | 1M updates, batch 256 |
+| [RSC-IQL](rsc-iql.md) | `baselines/rsc_iql` | `rsc_iql_hopper.yaml` | 1M updates, batch 256 |
 | [RAMBO](rambo.md) | `baselines/rambo` | `rambo_hopper.yaml` | 2M updates on MuJoCo and Door, 1M elsewhere |
-| [ROMB](romb.md) | `baselines/romb_iql` | `romb_iql_hopper.yaml` | 1M updates, batch 256 |
-| [FWM](fwm.md) | `baselines/fwm_iql` | `fwm_iql_hopper.yaml` | 1M updates, batch 256 |
-| [PLR-PVL](plr-pvl.md) | `baselines/fmgan_iql` | `fmgan_iql_hopper.yaml` | 1M updates, batch 256 |
+| [ROMB](romb.md) | `baselines/romb` | `romb_hopper.yaml` | 1M updates, batch 256 |
+| [FWM](fwm.md) | `baselines/fwm` | `fwm_hopper.yaml` | 1M updates, batch 256 |
+| [PLR-PVL](plr-pvl.md) | `baselines/plr_pvl` | `plr_pvl_hopper.yaml` | 1M updates, batch 256 |
 
 Experiment files are in `robustrllib/configs/experiment/`. Each names the algorithm card, the task card and the evaluation grid of the run. **Every method keeps its native training recipe and budget**; what is shared is the evaluation.
 

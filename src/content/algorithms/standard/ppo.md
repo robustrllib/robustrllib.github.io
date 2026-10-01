@@ -33,18 +33,15 @@ PPO is the backbone of ATLA, ATLA-SA and RARL-PPO.
 ## Run the method
 
 ```bash
-# the paper's checkpoints: Stable-Baselines3 defaults, 2M steps
-python experiments/sb3_default_runs/train.py \
-    --algorithm ppo --task hopper --seed 0 --total-steps 2000000
-# the same learner through the library runner
-python examples/run_experiment.py \
-    -c robustrllib/configs/experiment/ppo_hopper.yaml
+python baselines/train.py \
+    -c robustrllib/configs/experiment/ppo_hopper.yaml --seed 0
+python baselines/evaluate.py --run runs/ppo_hopper/seed0
 ```
 
 | File | Path |
 |---|---|
-| Implementation | `robustrllib.algos (Stable-Baselines3 adapter)` |
-| Algorithm card | `robustrllib/configs/algorithm/ppo_hopper.yaml` |
+| Implementation | `baselines/sb3` |
+| Algorithm card | `robustrllib/configs/algorithm/ppo.yaml` |
 | Experiment file | `robustrllib/configs/experiment/ppo_hopper.yaml` |
 
 Training is on the nominal task. The configuration files are explained in [Run a Method](../run-a-method.md), and the evaluation of the frozen checkpoint in [Evaluation Protocol](../../evaluation/protocol.md).

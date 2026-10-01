@@ -48,7 +48,8 @@ algorithms:
       config: robustrllib/configs/algorithm/iql.yaml
       experiment: robustrllib/configs/experiment/iql_hopper.yaml
       run:
-        - "python baselines/iql/train_iql.py -c robustrllib/configs/experiment/iql_hopper.yaml --seed 0"
+        - "python baselines/train.py -c robustrllib/configs/experiment/iql_hopper.yaml --seed 0"
+        - "python baselines/evaluate.py --run runs/iql_hopper/seed0"
     variants:
       - {label: IQL, part1: [offline, IQL], part3: [[hopper_offline, IQL]]}
 
@@ -71,7 +72,8 @@ algorithms:
       config: robustrllib/configs/algorithm/td3bc.yaml
       experiment: robustrllib/configs/experiment/td3bc_hopper.yaml
       run:
-        - "python baselines/td3bc/train_td3bc.py -c robustrllib/configs/experiment/td3bc_hopper.yaml --seed 0"
+        - "python baselines/train.py -c robustrllib/configs/experiment/td3bc_hopper.yaml --seed 0"
+        - "python baselines/evaluate.py --run runs/td3bc_hopper/seed0"
     variants:
       - {label: TD3+BC, part1: [offline, "TD3+BC"], part3: [[hopper_offline, "TD3+BC"]]}
 
@@ -95,7 +97,8 @@ algorithms:
       config: robustrllib/configs/algorithm/mopo.yaml
       experiment: robustrllib/configs/experiment/mopo_hopper.yaml
       run:
-        - "python baselines/mopo/train_mopo.py -c robustrllib/configs/experiment/mopo_hopper.yaml --seed 0"
+        - "python baselines/train.py -c robustrllib/configs/experiment/mopo_hopper.yaml --seed 0"
+        - "python baselines/evaluate.py --run runs/mopo_hopper/seed0"
     variants:
       - {label: MOPO, part1: [offline, MOPO], part3: [[hopper_offline, MOPO]]}
 
@@ -119,13 +122,11 @@ algorithms:
     ref: {key: lu2023synthetic}
     code:
       dir: baselines/synther
-      config: robustrllib/configs/algorithm/synther_iql.yaml
-      experiment: robustrllib/configs/experiment/iql_hopper_synther.yaml
+      config: robustrllib/configs/algorithm/synther.yaml
+      experiment: robustrllib/configs/experiment/synther_hopper.yaml
       run:
-        - "# 1. fit the diffusion model on the logged data and sample the synthetic dataset the task card reads"
-        - "python baselines/synther/train_diffuser.py --task hopper --quality medium --results_folder runs/synther/hopper_medium --save_samples"
-        - "# 2. train the unmodified IQL learner on the synthetic dataset"
-        - "python baselines/iql/train_iql.py -c robustrllib/configs/experiment/iql_hopper_synther.yaml --seed 0"
+        - "python baselines/train.py -c robustrllib/configs/experiment/synther_hopper.yaml --seed 0"
+        - "python baselines/evaluate.py --run runs/synther_hopper/seed0"
     variants:
       - {label: SynthER, part1: [offline, SynthER], part3: [[hopper_offline, SynthER]]}
 
@@ -153,7 +154,8 @@ algorithms:
       config: robustrllib/configs/algorithm/rfqi.yaml
       experiment: robustrllib/configs/experiment/rfqi_hopper.yaml
       run:
-        - "python baselines/rfqi/train_rfqi.py -c robustrllib/configs/experiment/rfqi_hopper.yaml --seed 0"
+        - "python baselines/train.py -c robustrllib/configs/experiment/rfqi_hopper.yaml --seed 0"
+        - "python baselines/evaluate.py --run runs/rfqi_hopper/seed0"
     variants:
       - {label: RFQI, part1: [offline, RFQI], part2: [offline, RFQI], part3: [[hopper_offline, RFQI]]}
 
@@ -177,9 +179,10 @@ algorithms:
     code:
       dir: baselines/rorl
       config: robustrllib/configs/algorithm/rorl.yaml
-      experiment: robustrllib/configs/experiment/rorl_hopper_bcreg_full.yaml
+      experiment: robustrllib/configs/experiment/rorl_hopper.yaml
       run:
-        - "python baselines/rorl/train_rorl.py -c robustrllib/configs/experiment/rorl_hopper_bcreg_full.yaml --seed 0"
+        - "python baselines/train.py -c robustrllib/configs/experiment/rorl_hopper.yaml --seed 0"
+        - "python baselines/evaluate.py --run runs/rorl_hopper/seed0"
     variants:
       - {label: RORL, part1: [offline, RORL], part2: [offline, RORL], part3: [[hopper_offline, RORL]]}
 
@@ -200,11 +203,12 @@ algorithms:
       policy's action under the perturbed state.
     ref: {key: zhang2021robust}
     code:
-      dir: baselines/offline_atla_iql
-      config: robustrllib/configs/algorithm/offline_atla_iql.yaml
-      experiment: robustrllib/configs/experiment/offline_atla_iql_hopper.yaml
+      dir: baselines/atla_iql
+      config: robustrllib/configs/algorithm/atla_iql.yaml
+      experiment: robustrllib/configs/experiment/atla_iql_hopper.yaml
       run:
-        - "python baselines/run_baseline.py -c robustrllib/configs/experiment/offline_atla_iql_hopper.yaml -- --seed 0"
+        - "python baselines/train.py -c robustrllib/configs/experiment/atla_iql_hopper.yaml --seed 0"
+        - "python baselines/evaluate.py --run runs/atla_iql_hopper/seed0"
     variants:
       - {label: ATLA-IQL, part1: [offline, ATLA_off], part2: [offline, ATLA-IQL], part3: [[hopper_offline, ATLA-IQL]], backbone: IQL}
 
@@ -225,14 +229,12 @@ algorithms:
       perturbing the dimensions the mask marks as non-causal.
     ref: {key: ding2023seeing}
     code:
-      dir: baselines/causaldro_iql
-      config: robustrllib/configs/algorithm/causaldro_iql.yaml
-      experiment: robustrllib/configs/experiment/causaldro_iql_hopper.yaml
+      dir: baselines/rsc_iql
+      config: robustrllib/configs/algorithm/rsc_iql.yaml
+      experiment: robustrllib/configs/experiment/rsc_iql_hopper.yaml
       run:
-        - "# 1. fit the causal mask the experiment card names under mask_path"
-        - "python baselines/causaldro_iql/fit_causal_mask.py -c robustrllib/configs/experiment/causaldro_iql_hopper.yaml --out runs/causaldro_iql/masks/hopper_medium_seed0_sw05.npz --seed 0"
-        - "# 2. train"
-        - "python baselines/run_baseline.py -c robustrllib/configs/experiment/causaldro_iql_hopper.yaml -- --seed 0"
+        - "python baselines/train.py -c robustrllib/configs/experiment/rsc_iql_hopper.yaml --seed 0"
+        - "python baselines/evaluate.py --run runs/rsc_iql_hopper/seed0"
     variants:
       - {label: RSC-IQL, part1: [offline, RSC], part2: [offline, RSC-IQL], part3: [[hopper_offline, RSC-IQL]], backbone: IQL}
 
@@ -259,7 +261,8 @@ algorithms:
       config: robustrllib/configs/algorithm/rambo.yaml
       experiment: robustrllib/configs/experiment/rambo_hopper.yaml
       run:
-        - "python baselines/rambo/train_rambo.py -c robustrllib/configs/experiment/rambo_hopper.yaml --seed 0"
+        - "python baselines/train.py -c robustrllib/configs/experiment/rambo_hopper.yaml --seed 0"
+        - "python baselines/evaluate.py --run runs/rambo_hopper/seed0"
     variants:
       - {label: RAMBO, part1: [offline, RAMBO], part2: [offline, RAMBO], part3: [[hopper_offline, RAMBO]]}
 
@@ -280,11 +283,12 @@ algorithms:
       keeps it on the data, and the policy is trained on rollouts from the adapted model.
     ref: {key: chen2025policy}
     code:
-      dir: baselines/romb_iql
-      config: robustrllib/configs/algorithm/romb_iql.yaml
-      experiment: robustrllib/configs/experiment/romb_iql_hopper.yaml
+      dir: baselines/romb
+      config: robustrllib/configs/algorithm/romb.yaml
+      experiment: robustrllib/configs/experiment/romb_hopper.yaml
       run:
-        - "python baselines/run_baseline.py -c robustrllib/configs/experiment/romb_iql_hopper.yaml -- --seed 0"
+        - "python baselines/train.py -c robustrllib/configs/experiment/romb_hopper.yaml --seed 0"
+        - "python baselines/evaluate.py --run runs/romb_hopper/seed0"
     variants:
       - {label: ROMB, part1: [offline, ROMB], part2: [offline, ROMB-IQL], part3: [[hopper_offline, ROMB-IQL]], backbone: IQL}
 
@@ -313,14 +317,12 @@ algorithms:
       unconditional velocity.
     ref: {key: ding2024diffusion, extra: [lipman2022flow]}
     code:
-      dir: baselines/fwm_iql
-      config: robustrllib/configs/algorithm/fwm_iql.yaml
-      experiment: robustrllib/configs/experiment/fwm_iql_hopper.yaml
+      dir: baselines/fwm
+      config: robustrllib/configs/algorithm/fwm.yaml
+      experiment: robustrllib/configs/experiment/fwm_hopper.yaml
       run:
-        - "# 1. pretrain the flow-matching world model (shared with PLR-PVL)"
-        - "python baselines/fwm_iql/pretrain_fm.py --dataset mujoco/hopper/medium-v0 --fm-seeds 0"
-        - "# 2. train the policy"
-        - "python baselines/fwm_iql/train_fwm_iql.py -c robustrllib/configs/experiment/fwm_iql_hopper.yaml"
+        - "python baselines/train.py -c robustrllib/configs/experiment/fwm_hopper.yaml --seed 0"
+        - "python baselines/evaluate.py --run runs/fwm_hopper/seed0"
     variants:
       - {label: FWM, part1: [offline, FWM], part2: [offline, FWM-IQL], part3: [[hopper_offline, FWM-IQL]], backbone: IQL}
 
@@ -349,14 +351,12 @@ algorithms:
       - "The flow models are frozen during policy learning. No network is trained adversarially."
     ref: {key: berdica2024robust}
     code:
-      dir: baselines/fmgan_iql
-      config: robustrllib/configs/algorithm/fmgan_iql.yaml
-      experiment: robustrllib/configs/experiment/fmgan_iql_hopper.yaml
+      dir: baselines/plr_pvl
+      config: robustrllib/configs/algorithm/plr_pvl.yaml
+      experiment: robustrllib/configs/experiment/plr_pvl_hopper.yaml
       run:
-        - "# 1. pretrain the flow-matching ensemble (seed 0 is shared with FWM)"
-        - "python baselines/fwm_iql/pretrain_fm.py --dataset mujoco/hopper/medium-v0 --fm-seeds 0 42 3047"
-        - "# 2. train the policy"
-        - "python baselines/run_baseline.py -c robustrllib/configs/experiment/fmgan_iql_hopper.yaml -- --seed 0"
+        - "python baselines/train.py -c robustrllib/configs/experiment/plr_pvl_hopper.yaml --seed 0"
+        - "python baselines/evaluate.py --run runs/plr_pvl_hopper/seed0"
     variants:
       - {label: PLR-PVL, part1: [offline, FMGAN], part2: [offline, FMGAN-IQL], part3: [[hopper_offline, FMGAN-IQL]], backbone: IQL}
 
@@ -379,14 +379,12 @@ algorithms:
       PPO is the backbone of ATLA, ATLA-SA and RARL-PPO.
     ref: {key: schulman2017proximal, extra: [raffin2021stable]}
     code:
-      dir: robustrllib.algos (Stable-Baselines3 adapter)
-      config: robustrllib/configs/algorithm/ppo_hopper.yaml
+      dir: baselines/sb3
+      config: robustrllib/configs/algorithm/ppo.yaml
       experiment: robustrllib/configs/experiment/ppo_hopper.yaml
       run:
-        - "# the paper's checkpoints: Stable-Baselines3 defaults, 2M steps"
-        - "python experiments/sb3_default_runs/train.py --algorithm ppo --task hopper --seed 0 --total-steps 2000000"
-        - "# the same learner through the library runner"
-        - "python examples/run_experiment.py -c robustrllib/configs/experiment/ppo_hopper.yaml"
+        - "python baselines/train.py -c robustrllib/configs/experiment/ppo_hopper.yaml --seed 0"
+        - "python baselines/evaluate.py --run runs/ppo_hopper/seed0"
     variants:
       - {label: PPO, part1: [online, PPO], part3: [[hopper_online, PPO], [pusher, PPO]]}
 
@@ -408,14 +406,12 @@ algorithms:
       SAC is the backbone of DR-SAC and RSC-SAC.
     ref: {key: haarnoja2018soft, extra: [raffin2021stable]}
     code:
-      dir: robustrllib.algos (Stable-Baselines3 adapter)
+      dir: baselines/sb3
       config: robustrllib/configs/algorithm/sac.yaml
       experiment: robustrllib/configs/experiment/sac_hopper.yaml
       run:
-        - "# the paper's checkpoints: Stable-Baselines3 defaults, 1M steps"
-        - "python experiments/sb3_default_runs/train.py --algorithm sac --task hopper --seed 0 --total-steps 1000000"
-        - "# the same learner through the library runner"
-        - "python examples/run_experiment.py -c robustrllib/configs/experiment/sac_hopper.yaml"
+        - "python baselines/train.py -c robustrllib/configs/experiment/sac_hopper.yaml --seed 0"
+        - "python baselines/evaluate.py --run runs/sac_hopper/seed0"
     variants:
       - {label: SAC, part1: [online, SAC], part3: [[hopper_online, SAC], [pusher, SAC]]}
 
@@ -438,10 +434,11 @@ algorithms:
     ref: {key: zhang2021robust, extra: [zhang2020robust]}
     code:
       dir: baselines/atla
-      config: robustrllib/configs/algorithm/atla_ppo_mlp.yaml
-      experiment: robustrllib/configs/experiment/atla_online_hopper.yaml
+      config: robustrllib/configs/algorithm/atla.yaml
+      experiment: robustrllib/configs/experiment/atla_hopper.yaml
       run:
-        - "python baselines/atla/train_atla.py -c robustrllib/configs/experiment/atla_online_hopper.yaml --seed 0"
+        - "python baselines/train.py -c robustrllib/configs/experiment/atla_hopper.yaml --seed 0"
+        - "python baselines/evaluate.py --run runs/atla_hopper/seed0"
     variants:
       - {label: ATLA, part1: [online, ATLA], part2: [online, ATLA-PPO], part3: [[hopper_online, ATLA-PPO]], backbone: PPO}
 
@@ -466,10 +463,11 @@ algorithms:
     ref: {key: zhang2021robust, extra: [zhang2020robust]}
     code:
       dir: baselines/atla
-      config: robustrllib/configs/algorithm/atla_ppo_lstm_sa.yaml
-      experiment: robustrllib/configs/experiment/atla_lstm_sa_hopper.yaml
+      config: robustrllib/configs/algorithm/atla_sa.yaml
+      experiment: robustrllib/configs/experiment/atla_sa_hopper.yaml
       run:
-        - "python baselines/atla/train_atla.py -c robustrllib/configs/experiment/atla_lstm_sa_hopper.yaml --seed 0"
+        - "python baselines/train.py -c robustrllib/configs/experiment/atla_sa_hopper.yaml --seed 0"
+        - "python baselines/evaluate.py --run runs/atla_sa_hopper/seed0"
     variants:
       - {label: ATLA-SA, part1: [online, ATLA-SA], part2: [online, ATLA-SA-PPO], part3: [[hopper_online, ATLA-SA-PPO], [pusher, ATLA-SA-PPO]], backbone: PPO}
 
@@ -490,11 +488,12 @@ algorithms:
       correlations a policy would otherwise exploit.
     ref: {key: ding2023seeing}
     code:
-      dir: baselines/causaldro_online
-      config: robustrllib/configs/algorithm/causaldro_online.yaml
-      experiment: robustrllib/configs/experiment/causaldro_online_hopper.yaml
+      dir: baselines/rsc
+      config: robustrllib/configs/algorithm/rsc.yaml
+      experiment: robustrllib/configs/experiment/rsc_hopper.yaml
       run:
-        - "python baselines/causaldro_online/train_causaldro.py --config robustrllib/configs/experiment/causaldro_online_hopper.yaml --seed 0"
+        - "python baselines/train.py -c robustrllib/configs/experiment/rsc_hopper.yaml --seed 0"
+        - "python baselines/evaluate.py --run runs/rsc_hopper/seed0"
     variants:
       - {label: RSC-SAC, part1: [online, RSC-SAC], part2: [online, RSC-SAC], part3: [[hopper_online, RSC-SAC]], backbone: SAC}
 
@@ -518,13 +517,13 @@ algorithms:
       the library only as the base of RARL-TRPO.
     ref: {key: pinto2017robust}
     code:
-      dir: baselines/rarl_hopper
-      config: null
-      experiment: null
+      dir: baselines/rarl
+      config: robustrllib/configs/algorithm/rarl_ppo.yaml
+      experiment: robustrllib/configs/experiment/rarl_ppo_hopper.yaml
       run:
-        - "python experiments/rarl_hopper_v5/train.py --algo ppo  --env Hopper-v5 --seed 0 --total-steps 2000000"
-        - "python experiments/rarl_hopper_v5/train.py --algo trpo --env Hopper-v5 --seed 0 --total-steps 2000000"
-        - "# the same recipe on Pusher-v5s: baselines/rarl_pusher/train.py"
+        - "python baselines/train.py -c robustrllib/configs/experiment/rarl_ppo_hopper.yaml --seed 0"
+        - "python baselines/train.py -c robustrllib/configs/experiment/rarl_trpo_hopper.yaml --seed 0"
+        - "python baselines/evaluate.py --run runs/rarl_ppo_hopper/seed0"
     variants:
       - {label: RARL-PPO,  part1: [online, RARL-PPO],  part2: [online, RARL-PPO],  part3: [[hopper_online, RARL-PPO], [pusher, RARL]], backbone: PPO}
       - {label: RARL-TRPO, part1: [online, RARL-TRPO], part2: [online, RARL-TRPO], part3: [[hopper_online, RARL-TRPO]], base: TRPO}
@@ -550,14 +549,12 @@ algorithms:
       training range. DR-PPO is used on the Isaac Lab tasks.
     ref: {key: tobin2017domain, extra: [peng2018sim]}
     code:
-      dir: baselines/dr
-      config: robustrllib/configs/algorithm/sac_dr.yaml
-      experiment: robustrllib/configs/experiment/dr_hopper_axis_narrow.yaml
-      randomization: robustrllib/configs/dr/mujoco_axis_narrow.yaml
+      dir: baselines/dr_sac
+      config: robustrllib/configs/algorithm/dr_sac.yaml
+      experiment: robustrllib/configs/experiment/dr_sac_hopper.yaml
       run:
-        - "python baselines/dr/train_dr.py -c robustrllib/configs/experiment/dr_hopper_axis_narrow.yaml --seed 0"
-        - "# the isolated-shift rows of the paper: the SB3 trainer of the online methods"
-        - "python experiments/dr_sac_mujoco_v5/train.py --env Hopper-v5 --seed 0 --total-steps 1000000"
+        - "python baselines/train.py -c robustrllib/configs/experiment/dr_sac_hopper.yaml --seed 0"
+        - "python baselines/evaluate.py --run runs/dr_sac_hopper/seed0"
     variants:
       - {label: DR-SAC, part1: [online, DR-SAC], part2: [online, DR-SAC], part3: [[hopper_online, DR-SAC], [pusher, DR-SAC]], backbone: SAC}
 
@@ -577,7 +574,13 @@ algorithms:
       cost targets. The original method is defined for TD learners; the library's row is a PPO
       adaptation that applies the same transform to PPO's value targets.
     ref: {key: queeney2023risk}
-    code: {dir: null, config: null, experiment: null, run: []}
+    code:
+      dir: isaac/methods/ramu.py
+      config: null
+      experiment: null
+      run:
+        - "./isaaclab.sh -p isaac/train.py --task g1 --method ramu --seed 0 --headless"
+        - "./isaaclab.sh -p isaac/evaluate.py --task g1 --checkpoint runs/isaac/g1_ramu/seed0/model_1499.pt --training_seed 0 --condition all --headless"
     variants: []
 
   - slug: spidr
@@ -595,5 +598,11 @@ algorithms:
       penalty proportional to the disagreement of next-state predictions across sampled dynamics.
       It runs with the original solver and a joint-limit cost budget.
     ref: {key: as2026spidr}
-    code: {dir: null, config: null, experiment: null, run: []}
+    code:
+      dir: isaac/methods/spidr.py
+      config: null
+      experiment: null
+      run:
+        - "./isaaclab.sh -p isaac/train.py --task g1 --method spidr --seed 0 --headless"
+        - "./isaaclab.sh -p isaac/evaluate.py --task g1 --checkpoint runs/isaac/g1_spidr/seed0/model_899.pt --training_seed 0 --condition all --headless"
     variants: []

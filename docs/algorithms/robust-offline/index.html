@@ -310,8 +310,9 @@
 <p><em>Claimed robustness</em> is the shift the original paper targets.</p>
 <h2 id="run-a-method">Run a method<a class="headerlink" href="#run-a-method" title="Permanent link">&para;</a></h2>
 <p>Every method is launched from an experiment file. RORL on Hopper:</p>
-<div class="highlight"><pre><span></span><code>python<span class="w"> </span>baselines/rorl/train_rorl.py<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>-c<span class="w"> </span>robustrllib/configs/experiment/rorl_hopper_bcreg_full.yaml<span class="w"> </span>--seed<span class="w"> </span><span class="m">0</span>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>baselines/train.py<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-c<span class="w"> </span>robustrllib/configs/experiment/rorl_hopper.yaml<span class="w"> </span>--seed<span class="w"> </span><span class="m">0</span>
+python<span class="w"> </span>baselines/evaluate.py<span class="w"> </span>--run<span class="w"> </span>runs/rorl_hopper/seed0
 </code></pre></div>
 <p>Every method page gives the command for that method. <a href="../run-a-method/">Run a Method</a> explains the experiment file, the overrides and the run directory.</p>
 <h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
@@ -334,19 +335,19 @@
 <tr>
 <td><a href="rorl/">RORL</a></td>
 <td><code>baselines/rorl</code></td>
-<td><code>rorl_hopper_bcreg_full.yaml</code></td>
+<td><code>rorl_hopper.yaml</code></td>
 <td>3M updates on MuJoCo and Door, 1M elsewhere</td>
 </tr>
 <tr>
 <td><a href="atla-iql/">ATLA-IQL</a></td>
-<td><code>baselines/offline_atla_iql</code></td>
-<td><code>offline_atla_iql_hopper.yaml</code></td>
+<td><code>baselines/atla_iql</code></td>
+<td><code>atla_iql_hopper.yaml</code></td>
 <td>1M updates, batch 256</td>
 </tr>
 <tr>
 <td><a href="rsc-iql/">RSC-IQL</a></td>
-<td><code>baselines/causaldro_iql</code></td>
-<td><code>causaldro_iql_hopper.yaml</code></td>
+<td><code>baselines/rsc_iql</code></td>
+<td><code>rsc_iql_hopper.yaml</code></td>
 <td>1M updates, batch 256</td>
 </tr>
 <tr>
@@ -357,20 +358,20 @@
 </tr>
 <tr>
 <td><a href="romb/">ROMB</a></td>
-<td><code>baselines/romb_iql</code></td>
-<td><code>romb_iql_hopper.yaml</code></td>
+<td><code>baselines/romb</code></td>
+<td><code>romb_hopper.yaml</code></td>
 <td>1M updates, batch 256</td>
 </tr>
 <tr>
 <td><a href="fwm/">FWM</a></td>
-<td><code>baselines/fwm_iql</code></td>
-<td><code>fwm_iql_hopper.yaml</code></td>
+<td><code>baselines/fwm</code></td>
+<td><code>fwm_hopper.yaml</code></td>
 <td>1M updates, batch 256</td>
 </tr>
 <tr>
 <td><a href="plr-pvl/">PLR-PVL</a></td>
-<td><code>baselines/fmgan_iql</code></td>
-<td><code>fmgan_iql_hopper.yaml</code></td>
+<td><code>baselines/plr_pvl</code></td>
+<td><code>plr_pvl_hopper.yaml</code></td>
 <td>1M updates, batch 256</td>
 </tr>
 </tbody>

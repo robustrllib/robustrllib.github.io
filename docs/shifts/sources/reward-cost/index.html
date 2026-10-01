@@ -363,21 +363,17 @@ field in <code>info</code> and leaves the reward alone.</p>
 (0.499, None)
 (0.999, 0.1)
 </code></pre></div>
-<p>The shift is carried into training through the training environment. An online method receives
-it in the shift list of that environment, for example through the <code>extra_shifts</code> key of a
-domain-randomization card.</p>
-<div class="highlight"><span class="filename">robustrllib/configs/dr/rgauss05.yaml (comments omitted)</span><pre><span></span><code><span class="nt">randomization</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
-<span class="nt">extra_shifts</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="nv">reward</span><span class="p p-Indicator">,</span><span class="nt"> mode</span><span class="p">:</span><span class="w"> </span><span class="nv">gauss</span><span class="p p-Indicator">,</span><span class="nt"> params</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">sigma</span><span class="p">:</span><span class="w"> </span><span class="nv">0.5</span><span class="p p-Indicator">}}</span>
-<span class="nt">curriculum</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="nv">constant</span><span class="p p-Indicator">,</span><span class="nt"> end</span><span class="p">:</span><span class="w"> </span><span class="nv">1.0</span><span class="p p-Indicator">}</span>
-</code></pre></div>
-<p>An offline method learns from a dataset, so the same corruption is applied to the rewards of
-the dataset, through the <code>reward_channel</code> key of the experiment file.</p>
-<div class="highlight"><pre><span></span><code><span class="nt">reward_channel</span><span class="p">:</span>
+<p>The shift is carried into training by the launcher: <code>robustrllib/configs/train_shifts.yaml</code>
+defines the arms the benchmark uses, and <code>baselines/train.py --train-shift reward_gauss</code> selects
+one.</p>
+<div class="highlight"><span class="filename">robustrllib/configs/train_shifts.yaml (excerpt)</span><pre><span></span><code><span class="nt">reward_gauss</span><span class="p">:</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reward</span>
 <span class="w">  </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gauss</span>
-<span class="w">  </span><span class="nt">params</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">sigma</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span>
+<span class="w">  </span><span class="nt">params</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">sigma</span><span class="p">:</span><span class="w"> </span><span class="nv">0.5</span><span class="p p-Indicator">}</span>
 </code></pre></div>
+<p>An online method receives the shift in the shift list of its training environment. An offline
+method learns from a dataset, so the same corruption is applied to the rewards of the dataset,
+seeded from the run's seed.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>A frozen policy does not read the reward. Applied at evaluation time, a Reward/cost shift

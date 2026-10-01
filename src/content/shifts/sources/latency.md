@@ -8,9 +8,13 @@ closes around the plant, which noise on an observation or an action cannot imita
 
 *The Latency shift acts on timing: the delay of the observation, the delay of the action and the control period.*
 
-![Two curves over time: the time stamp the policy issued a command for and the time stamp at which it is executed](../../assets/figures/latency.png){ width="720" }
-
-*Execution latency separates the time a command is issued from the time it takes effect.*
+<figure class="rl-shift-comparison rl-shift-comparison-tall">
+  <div class="rl-shift-clips">
+    <div><span>Nominal</span><video src="../../../../assets/shifts/halfcheetah_sac_nominal_8s.mp4" poster="../../../../assets/shifts/halfcheetah_sac_nominal_8s.jpg" autoplay muted loop playsinline controls preload="metadata" aria-label="HalfCheetah with nominal control timing"></video></div>
+    <div><span>Shifted</span><video src="../../../../assets/shifts/halfcheetah_sac_latency_8s.mp4" poster="../../../../assets/shifts/halfcheetah_sac_latency_8s.jpg" autoplay muted loop playsinline controls preload="metadata" aria-label="HalfCheetah with action latency"></video></div>
+  </div>
+  <figcaption>HalfCheetah under nominal control and action latency.</figcaption>
+</figure>
 
 ## Properties
 
@@ -187,22 +191,21 @@ print(rewards([ShiftSpec("latency", "delay", {"steps": 4, "release": "shift"})])
 ```
 
 Both release rules pay out everything that is still withheld when the episode terminates or is
-truncated, so **the undiscounted return of a complete episode is preserved**. A trainer that
-takes only an environment id receives the delay through the registered ids
-`HopperRewardDelay4-v5`, `HopperRewardDelay16-v5`, `HopperRewardDelay32-v5` and
-`HopperRewardDelay64-v5`; a trainer that learns from a dataset receives it through the
-`reward_channel` key of the experiment file.
+truncated, so **the undiscounted return of a complete episode is preserved**. The delay acts
+while a method trains: `robustrllib/configs/train_shifts.yaml` defines the arms the benchmark
+uses, and `baselines/train.py --train-shift reward_delay_16` selects one. An online method trains
+on its environment with the shift stacked on it; an offline method receives it on the rewards of
+its dataset, along each recorded episode.
 
-```yaml title="robustrllib/configs/dr/rdelay16.yaml (comments omitted)"
-randomization: []
-extra_shifts:
-  - {target: latency, mode: delay, params: {steps: 16, release: interval}}
-curriculum: {type: constant, end: 1.0}
+```yaml title="robustrllib/configs/train_shifts.yaml (excerpt)"
+reward_delay_16:
+- target: latency
+  mode: delay
+  params: {steps: 16, release: interval}
 ```
 
 !!! note
-    `ShiftSpec("reward", "delay", ...)` is the earlier spelling of the mode name `delay` and
-    builds the same wrapper.
+    `ShiftSpec("reward", "delay", ...)` builds the same wrapper as the target `latency`.
 
 ## Rules
 

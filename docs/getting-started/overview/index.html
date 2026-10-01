@@ -297,7 +297,7 @@ expansion</em> is an interface for carrying the benchmark to further task backen
 <tr>
 <td>Public interface</td>
 <td><code>robustrllib</code></td>
-<td><code>make_robust</code>, <code>build_pipeline</code>, <code>ShiftSpec</code>, <code>load_config</code>, <code>bind_actor</code></td>
+<td><code>make_robust</code>, <code>build_pipeline</code>, <code>ShiftSpec</code>, <code>make_env</code>, <code>load_config</code>, <code>bind_actor</code></td>
 <td>Everything a user script imports</td>
 </tr>
 <tr>
@@ -337,16 +337,16 @@ expansion</em> is an interface for carrying the benchmark to further task backen
 <td>The contract a method implements to enter the library</td>
 </tr>
 <tr>
-<td>Training runtime</td>
-<td><code>robustrllib.training</code></td>
-<td><code>TrainerAdapter</code>, <code>run_trainer</code></td>
-<td>Launches a run, writes checkpoints, resumes</td>
+<td>Task environments</td>
+<td><code>robustrllib.tasks</code></td>
+<td><code>make_env(task_card, shifts, seed)</code></td>
+<td>Builds the environment of a task card, for training and evaluation alike</td>
 </tr>
 <tr>
 <td>Method implementations</td>
 <td><code>baselines/&lt;method&gt;/</code></td>
-<td><code>train_&lt;method&gt;.py -c &lt;experiment.yaml&gt;</code></td>
-<td>The native training recipe of each method</td>
+<td><code>baselines/train.py -c &lt;experiment.yaml&gt; --seed N</code></td>
+<td>The training recipe of each method, behind one launcher</td>
 </tr>
 <tr>
 <td>Configuration</td>
@@ -356,8 +356,8 @@ expansion</em> is an interface for carrying the benchmark to further task backen
 </tr>
 <tr>
 <td>Evaluation</td>
-<td><code>baselines/eval_final.py</code></td>
-<td><code>-c &lt;experiment.yaml&gt; --run-dir &lt;dir&gt;</code></td>
+<td><code>baselines/evaluate.py</code></td>
+<td><code>--run &lt;dir&gt; [--eval &lt;grid&gt;]</code></td>
 <td>Runs the frozen checkpoint on every condition of a grid</td>
 </tr>
 <tr>

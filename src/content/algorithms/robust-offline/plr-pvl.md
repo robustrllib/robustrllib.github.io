@@ -45,20 +45,16 @@ measured by the generalised-advantage residual of the current critic along that 
 ## Run the method
 
 ```bash
-# 1. pretrain the flow-matching ensemble (seed 0 is shared with FWM)
-python baselines/fwm_iql/pretrain_fm.py \
-    --dataset mujoco/hopper/medium-v0 --fm-seeds 0 42 3047
-# 2. train the policy
-python baselines/run_baseline.py \
-    -c robustrllib/configs/experiment/fmgan_iql_hopper.yaml \
-    -- --seed 0
+python baselines/train.py \
+    -c robustrllib/configs/experiment/plr_pvl_hopper.yaml --seed 0
+python baselines/evaluate.py --run runs/plr_pvl_hopper/seed0
 ```
 
 | File | Path |
 |---|---|
-| Implementation | `baselines/fmgan_iql` |
-| Algorithm card | `robustrllib/configs/algorithm/fmgan_iql.yaml` |
-| Experiment file | `robustrllib/configs/experiment/fmgan_iql_hopper.yaml` |
+| Implementation | `baselines/plr_pvl` |
+| Algorithm card | `robustrllib/configs/algorithm/plr_pvl.yaml` |
+| Experiment file | `robustrllib/configs/experiment/plr_pvl_hopper.yaml` |
 
 Training is on the nominal task. The configuration files are explained in [Run a Method](../run-a-method.md), and the evaluation of the frozen checkpoint in [Evaluation Protocol](../../evaluation/protocol.md).
 

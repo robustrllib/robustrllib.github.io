@@ -90,13 +90,13 @@ offset = ShiftSpec("dynamics", "translate", {"param": "body_pos_xyz", "index": "
 
 A severity axis is a ladder of parametric shifts that differ in one number.
 
-```yaml title="robustrllib/configs/eval/t0_mujoco.yaml (excerpt)"
+```yaml title="robustrllib/configs/eval/part1_mujoco.yaml (excerpt, one line per condition)"
 grid:
-  - {name: nominal, shifts: [], severity: 1.0}
-  - {name: gravity_0.8, severity: 0.8, shifts: [{target: dynamics, mode: scale, params: {param: gravity, factor: 0.8}}]}
-  - {name: gravity_0.9, severity: 0.9, shifts: [{target: dynamics, mode: scale, params: {param: gravity, factor: 0.9}}]}
-  - {name: gravity_1.1, severity: 1.1, shifts: [{target: dynamics, mode: scale, params: {param: gravity, factor: 1.1}}]}
-  - {name: gravity_1.2, severity: 1.2, shifts: [{target: dynamics, mode: scale, params: {param: gravity, factor: 1.2}}]}
+- {name: nominal, shifts: []}
+- {name: gravity_0.9, axis: gravity, quartile: 1, severity: 0.9, shifts: [{target: dynamics, mode: scale, params: {param: gravity, factor: 0.9}}]}
+- {name: gravity_1.1, axis: gravity, quartile: 1, severity: 1.1, shifts: [{target: dynamics, mode: scale, params: {param: gravity, factor: 1.1}}]}
+- {name: gravity_0.8, axis: gravity, quartile: 2, severity: 0.8, shifts: [{target: dynamics, mode: scale, params: {param: gravity, factor: 0.8}}]}
+- {name: gravity_1.2, axis: gravity, quartile: 2, severity: 1.2, shifts: [{target: dynamics, mode: scale, params: {param: gravity, factor: 1.2}}]}
 ```
 
 The same ladder in Python:

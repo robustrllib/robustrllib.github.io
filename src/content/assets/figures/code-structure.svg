@@ -36,16 +36,16 @@
   <text class="h1" x="40" y="202">Algorithms</text>
   <rect class="card" x="40" y="218" width="340" height="72"/>
   <text class="h2"   x="54" y="240">Method implementations</text>
-  <text class="mono" x="54" y="260">baselines/&lt;method&gt;/train_*.py</text>
-  <text class="note" x="54" y="279">the native training recipe of each method</text>
+  <text class="mono" x="54" y="260">baselines/&lt;method&gt;/train.py</text>
+  <text class="note" x="54" y="279">the training recipe of each method</text>
   <rect class="card" x="40" y="300" width="340" height="72"/>
   <text class="h2"   x="54" y="322">Algorithm interface</text>
   <text class="mono" x="54" y="342">robustrllib.algos.Algo</text>
   <text class="note" x="54" y="361">train · predict · save · load</text>
   <rect class="card" x="40" y="382" width="340" height="72"/>
-  <text class="h2"   x="54" y="404">Training runtime</text>
-  <text class="mono" x="54" y="424">robustrllib.training</text>
-  <text class="note" x="54" y="443">launch, checkpoint and resume a run</text>
+  <text class="h2"   x="54" y="404">Launcher</text>
+  <text class="mono" x="54" y="424">baselines/train.py</text>
+  <text class="note" x="54" y="443">resolve a card, run the method's training</text>
 
   <!-- shifted environment -->
   <rect class="band" x="560" y="172" width="380" height="300" fill="#fdf0e2" stroke="#e0a060"/>
@@ -86,7 +86,7 @@
   <text class="lab" x="760" y="497">shifted episodes</text>
   <rect class="band" x="20" y="512" width="920" height="108" fill="#e9f5e6" stroke="#7fb86f"/>
   <text class="h1" x="40" y="542">Evaluation</text>
-  <text class="mono" x="920" y="542" text-anchor="end">baselines/eval_final.py · robustrllib.evaluate · robustrllib.metrics</text>
+  <text class="mono" x="920" y="542" text-anchor="end">baselines/evaluate.py · robustrllib.metrics</text>
   <text class="note" x="40" y="568">The frozen last checkpoint of a method is run on every condition of the evaluation grid.</text>
   <text class="note" x="40" y="590">The grid is the same for every method.</text>
   <text class="note" x="800" y="590" text-anchor="end">Result:</text>

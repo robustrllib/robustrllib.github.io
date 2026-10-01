@@ -34,8 +34,9 @@ PLR-PVL). Each of them changes one component and keeps the rest of this recipe.
 ## Run the method
 
 ```bash
-python baselines/iql/train_iql.py \
+python baselines/train.py \
     -c robustrllib/configs/experiment/iql_hopper.yaml --seed 0
+python baselines/evaluate.py --run runs/iql_hopper/seed0
 ```
 
 | File | Path |

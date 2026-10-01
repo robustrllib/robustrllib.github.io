@@ -32,8 +32,9 @@ Standard algorithms carry no robustness mechanism. They are the base learners th
 Every method is launched from an experiment file. IQL on Hopper:
 
 ```bash
-python baselines/iql/train_iql.py \
+python baselines/train.py \
     -c robustrllib/configs/experiment/iql_hopper.yaml --seed 0
+python baselines/evaluate.py --run runs/iql_hopper/seed0
 ```
 
 Every method page gives the command for that method. [Run a Method](../run-a-method.md) explains the experiment file, the overrides and the run directory.
@@ -45,9 +46,9 @@ Every method page gives the command for that method. [Run a Method](../run-a-met
 | [IQL](iql.md) | `baselines/iql` | `iql_hopper.yaml` | 1M updates, batch 256 |
 | [TD3+BC](td3bc.md) | `baselines/td3bc` | `td3bc_hopper.yaml` | 1M updates, batch 256 |
 | [MOPO](mopo.md) | `baselines/mopo` | `mopo_hopper.yaml` | 1M updates, batch 256 |
-| [SynthER](synther.md) | `baselines/synther` | `iql_hopper_synther.yaml` | 1M updates, batch 256 |
-| [PPO](ppo.md) | `robustrllib.algos` | `ppo_hopper.yaml` | 2M environment steps |
-| [SAC](sac.md) | `robustrllib.algos` | `sac_hopper.yaml` | 1M environment steps |
+| [SynthER](synther.md) | `baselines/synther` | `synther_hopper.yaml` | 1M updates, batch 256 |
+| [PPO](ppo.md) | `baselines/sb3` | `ppo_hopper.yaml` | 2M environment steps |
+| [SAC](sac.md) | `baselines/sb3` | `sac_hopper.yaml` | 1M environment steps |
 
 Experiment files are in `robustrllib/configs/experiment/`. Each names the algorithm card, the task card and the evaluation grid of the run. **Every method keeps its native training recipe and budget**; what is shared is the evaluation.
 

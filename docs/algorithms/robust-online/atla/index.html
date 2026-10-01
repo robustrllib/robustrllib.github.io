@@ -245,8 +245,9 @@ The adversary is itself an RL agent that outputs a bounded perturbation of the o
 is rewarded by the protagonist's negative return, and is updated in alternation with the
 protagonist.</p>
 <h2 id="run-the-method">Run the method<a class="headerlink" href="#run-the-method" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code>python<span class="w"> </span>baselines/atla/train_atla.py<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>-c<span class="w"> </span>robustrllib/configs/experiment/atla_online_hopper.yaml<span class="w"> </span>--seed<span class="w"> </span><span class="m">0</span>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>baselines/train.py<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-c<span class="w"> </span>robustrllib/configs/experiment/atla_hopper.yaml<span class="w"> </span>--seed<span class="w"> </span><span class="m">0</span>
+python<span class="w"> </span>baselines/evaluate.py<span class="w"> </span>--run<span class="w"> </span>runs/atla_hopper/seed0
 </code></pre></div>
 <table>
 <thead>
@@ -262,11 +263,11 @@ protagonist.</p>
 </tr>
 <tr>
 <td>Algorithm card</td>
-<td><code>robustrllib/configs/algorithm/atla_ppo_mlp.yaml</code></td>
+<td><code>robustrllib/configs/algorithm/atla.yaml</code></td>
 </tr>
 <tr>
 <td>Experiment file</td>
-<td><code>robustrllib/configs/experiment/atla_online_hopper.yaml</code></td>
+<td><code>robustrllib/configs/experiment/atla_hopper.yaml</code></td>
 </tr>
 </tbody>
 </table>

@@ -125,25 +125,21 @@ switch = ShiftSpec("action", "oppose", {"eps": 0.2, "clip_first": True},
 
 In YAML the schedule is one more key of the shift.
 
-```yaml title="robustrllib/configs/eval/spec_timevar_hopper.yaml (excerpt)"
-grid:
-  - {name: gear_static_0.8, severity: 1, shifts: [{target: dynamics, mode: scale, params: {param: actuator_gear, index: all, factor: 0.8}}]}
-  - {name: gear_step_0.8, severity: 1.1, shifts: [{target: dynamics, mode: scale, params: {param: actuator_gear, index: all, factor: 1.0}, schedule: {type: step, start: 1.0, end: 0.8, t1: 500}}]}
-  - {name: gear_ramp_0.8, severity: 1.2, shifts: [{target: dynamics, mode: scale, params: {param: actuator_gear, index: all, factor: 1.0}, schedule: {type: linear, start: 1.0, end: 0.8, t0: 0, t1: 1000}}]}
-  - {name: gear_sine_p200, severity: 2, shifts: [{target: dynamics, mode: scale, params: {param: actuator_gear, index: all, factor: 1.0}, schedule: {type: sine, start: 0.8, end: 1.2, period: 200}}]}
+```yaml title="robustrllib/configs/eval/part2_hopper.yaml (excerpt, one line per condition)"
+- {name: gear_static_0.8, channel: theta_p, shifts: [{target: dynamics, mode: scale, params: {param: actuator_gear, index: all, factor: 0.8}}]}
+- {name: gear_ramp_0.8, channel: theta_p, shifts: [{target: dynamics, mode: scale, params: {param: actuator_gear, index: all, factor: 1.0}, schedule: {type: linear, start: 1.0, end: 0.8, t0: 0, t1: 1000}}]}
+- {name: gear_sine_p500, channel: theta_p, shifts: [{target: dynamics, mode: scale, params: {param: actuator_gear, index: all, factor: 1.0}, schedule: {type: sine, start: 0.8, end: 1.2, period: 500}}]}
 ```
 
 | Condition | Gear factor during the episode |
 |---|---|
 | `gear_static_0.8` | 0.8 throughout; a Parametric shift for comparison |
-| `gear_step_0.8` | 1.0 for the first 500 steps, then 0.8 |
 | `gear_ramp_0.8` | Falls in a straight line from 1.0 to 0.8 over 1000 steps |
-| `gear_sine_p200` | Oscillates between 0.8 and 1.2 with a period of 200 steps |
+| `gear_sine_p500` | Oscillates between 0.8 and 1.2 with a period of 500 steps |
 
 !!! note
     A curriculum over training is not a schedule, because the clock restarts with every
-    episode. Domain-randomization cards have a `curriculum` key, which widens the randomization
-    ranges as training proceeds.
+    episode.
 
 ## Rules
 

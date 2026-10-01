@@ -35,15 +35,16 @@ protagonist.
 ## Run the method
 
 ```bash
-python baselines/atla/train_atla.py \
-    -c robustrllib/configs/experiment/atla_online_hopper.yaml --seed 0
+python baselines/train.py \
+    -c robustrllib/configs/experiment/atla_hopper.yaml --seed 0
+python baselines/evaluate.py --run runs/atla_hopper/seed0
 ```
 
 | File | Path |
 |---|---|
 | Implementation | `baselines/atla` |
-| Algorithm card | `robustrllib/configs/algorithm/atla_ppo_mlp.yaml` |
-| Experiment file | `robustrllib/configs/experiment/atla_online_hopper.yaml` |
+| Algorithm card | `robustrllib/configs/algorithm/atla.yaml` |
+| Experiment file | `robustrllib/configs/experiment/atla_hopper.yaml` |
 
 Training is on the nominal task. The configuration files are explained in [Run a Method](../run-a-method.md), and the evaluation of the frozen checkpoint in [Evaluation Protocol](../../evaluation/protocol.md).
 

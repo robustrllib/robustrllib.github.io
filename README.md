@@ -15,7 +15,7 @@ The site has two parts that share one colour system:
 ```
 ├── index.html                # landing page; the blocks between the `algo-book`, `algo-table` and `shift-toolbox` markers are GENERATED
 ├── 404.html                  # BUILT: copy of the documentation's not-found page
-├── assets/                   # landing page style, script, two figures, and shifts/ (one drawing per shift source)
+├── assets/                   # landing page style, script, figures, and shift comparison media
 ├── docs/                     # BUILT documentation. Never edit by hand.
 └── src/
     ├── mkdocs.yml            # navigation, Markdown extensions
@@ -148,10 +148,12 @@ a legend, and the table twin; text never wears a data colour.
 The toolbox on the landing page is generated from `src/data/shifts.yaml`: six sources, five
 modes, and for each pair the mode names the code accepts, a sentence, and an example
 `ShiftSpec`. A click on a source shows which modes it offers; a click on a mode shows the
-example. Without scripts the page shows the first pair. Each source has a picture
-(`example.image`) with a caption; the pictures under `assets/shifts/` are drawings that stand
-in for rendered scenes. To replace one, put the rendering next to them (any size; it is shown
-at about 400 px wide) and change `image` and `caption` in `shifts.yaml`, then run `build.sh`.
+example. Without scripts the page shows the first pair. A source can have a still
+(`example.image`) or a paired comparison (`example.videos.nominal` and `.shifted`, with
+matching `example.posters`). The Dynamic, Action and Latency sources use muted, looping
+side-by-side clips; the other sources use drawings. Update the paths and caption in
+`shifts.yaml`, then run `build.sh`. The source pages under `src/content/shifts/sources/`
+also embed the three video comparisons.
 
 Everything on the page, from the title to the footer, has one width (1040 px with its
 padding), on a warm, light ground with hairlines between the parts; every colour and size is

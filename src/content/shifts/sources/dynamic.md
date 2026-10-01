@@ -7,9 +7,13 @@ applies an external force to a body, or perturbs the simulator state between ste
 
 *The Dynamic shift acts inside the environment: the next state is drawn from a shifted transition.*
 
-![A legged robot on a checkerboard floor; an arrow marks the leg that is made shorter](../../assets/figures/example-dynamic.png){ width="440" }
-
-*A Dynamic shift that shortens one leg of the robot.*
+<figure class="rl-shift-comparison">
+  <div class="rl-shift-clips">
+    <div><span>Nominal</span><video src="../../../../assets/shifts/dynamic-carrace_nominal_web.mp4" poster="../../../../assets/shifts/dynamic-carrace_nominal_web.jpg" autoplay muted loop playsinline controls preload="metadata" aria-label="CarRacing with nominal dynamics"></video></div>
+    <div><span>Shifted</span><video src="../../../../assets/shifts/dynamic-carrace_shift_web.mp4" poster="../../../../assets/shifts/dynamic-carrace_shift_web.jpg" autoplay muted loop playsinline controls preload="metadata" aria-label="CarRacing with shifted dynamics"></video></div>
+  </div>
+  <figcaption>CarRacing under nominal and shifted dynamics.</figcaption>
+</figure>
 
 ## Properties
 

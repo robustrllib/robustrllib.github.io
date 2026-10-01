@@ -233,12 +233,9 @@ the current policy, with generalised advantage estimation. The library uses the
 Stable-Baselines3 implementation.</p>
 <p>PPO is the backbone of ATLA, ATLA-SA and RARL-PPO.</p>
 <h2 id="run-the-method">Run the method<a class="headerlink" href="#run-the-method" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="c1"># the paper's checkpoints: Stable-Baselines3 defaults, 2M steps</span>
-python<span class="w"> </span>experiments/sb3_default_runs/train.py<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--algorithm<span class="w"> </span>ppo<span class="w"> </span>--task<span class="w"> </span>hopper<span class="w"> </span>--seed<span class="w"> </span><span class="m">0</span><span class="w"> </span>--total-steps<span class="w"> </span><span class="m">2000000</span>
-<span class="c1"># the same learner through the library runner</span>
-python<span class="w"> </span>examples/run_experiment.py<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>-c<span class="w"> </span>robustrllib/configs/experiment/ppo_hopper.yaml
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>baselines/train.py<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-c<span class="w"> </span>robustrllib/configs/experiment/ppo_hopper.yaml<span class="w"> </span>--seed<span class="w"> </span><span class="m">0</span>
+python<span class="w"> </span>baselines/evaluate.py<span class="w"> </span>--run<span class="w"> </span>runs/ppo_hopper/seed0
 </code></pre></div>
 <table>
 <thead>
@@ -250,11 +247,11 @@ python<span class="w"> </span>examples/run_experiment.py<span class="w"> </span>
 <tbody>
 <tr>
 <td>Implementation</td>
-<td><code>robustrllib.algos (Stable-Baselines3 adapter)</code></td>
+<td><code>baselines/sb3</code></td>
 </tr>
 <tr>
 <td>Algorithm card</td>
-<td><code>robustrllib/configs/algorithm/ppo_hopper.yaml</code></td>
+<td><code>robustrllib/configs/algorithm/ppo.yaml</code></td>
 </tr>
 <tr>
 <td>Experiment file</td>

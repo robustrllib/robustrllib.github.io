@@ -37,16 +37,18 @@ the library only as the base of RARL-TRPO.
 ## Run the method
 
 ```bash
-python experiments/rarl_hopper_v5/train.py \
-    --algo ppo  --env Hopper-v5 --seed 0 --total-steps 2000000
-python experiments/rarl_hopper_v5/train.py \
-    --algo trpo --env Hopper-v5 --seed 0 --total-steps 2000000
-# the same recipe on Pusher-v5s: baselines/rarl_pusher/train.py
+python baselines/train.py \
+    -c robustrllib/configs/experiment/rarl_ppo_hopper.yaml --seed 0
+python baselines/train.py \
+    -c robustrllib/configs/experiment/rarl_trpo_hopper.yaml --seed 0
+python baselines/evaluate.py --run runs/rarl_ppo_hopper/seed0
 ```
 
 | File | Path |
 |---|---|
-| Implementation | `baselines/rarl_hopper` |
+| Implementation | `baselines/rarl` |
+| Algorithm card | `robustrllib/configs/algorithm/rarl_ppo.yaml` |
+| Experiment file | `robustrllib/configs/experiment/rarl_ppo_hopper.yaml` |
 
 Training rollouts come from the method's own perturbed environment. The configuration files are explained in [Run a Method](../run-a-method.md), and the evaluation of the frozen checkpoint in [Evaluation Protocol](../../evaluation/protocol.md).
 

@@ -35,16 +35,16 @@ policy's action under the perturbed state.
 ## Run the method
 
 ```bash
-python baselines/run_baseline.py \
-    -c robustrllib/configs/experiment/offline_atla_iql_hopper.yaml \
-    -- --seed 0
+python baselines/train.py \
+    -c robustrllib/configs/experiment/atla_iql_hopper.yaml --seed 0
+python baselines/evaluate.py --run runs/atla_iql_hopper/seed0
 ```
 
 | File | Path |
 |---|---|
-| Implementation | `baselines/offline_atla_iql` |
-| Algorithm card | `robustrllib/configs/algorithm/offline_atla_iql.yaml` |
-| Experiment file | `robustrllib/configs/experiment/offline_atla_iql_hopper.yaml` |
+| Implementation | `baselines/atla_iql` |
+| Algorithm card | `robustrllib/configs/algorithm/atla_iql.yaml` |
+| Experiment file | `robustrllib/configs/experiment/atla_iql_hopper.yaml` |
 
 Training is on the nominal task. The configuration files are explained in [Run a Method](../run-a-method.md), and the evaluation of the frozen checkpoint in [Evaluation Protocol](../../evaluation/protocol.md).
 

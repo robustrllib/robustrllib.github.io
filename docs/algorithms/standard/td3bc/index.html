@@ -231,8 +231,9 @@
 <p>TD3+BC adds a behaviour-cloning term to the TD3 actor loss and normalises states. The term is
 balanced against the critic by dividing by the mean absolute Q-value over the batch.</p>
 <h2 id="run-the-method">Run the method<a class="headerlink" href="#run-the-method" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code>python<span class="w"> </span>baselines/td3bc/train_td3bc.py<span class="w"> </span><span class="se">\</span>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>baselines/train.py<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>-c<span class="w"> </span>robustrllib/configs/experiment/td3bc_hopper.yaml<span class="w"> </span>--seed<span class="w"> </span><span class="m">0</span>
+python<span class="w"> </span>baselines/evaluate.py<span class="w"> </span>--run<span class="w"> </span>runs/td3bc_hopper/seed0
 </code></pre></div>
 <table>
 <thead>

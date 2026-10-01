@@ -184,7 +184,7 @@
       <main class="bk-article" id="bk-content">
         <h1 id="evaluation-protocol">Evaluation Protocol<a class="headerlink" href="#evaluation-protocol" title="Permanent link">&para;</a></h1>
 <p>Every score of the benchmark is produced by one evaluator under one protocol. A policy is
-trained on the nominal task, its last checkpoint is frozen, and the checkpoint is scored on a
+trained on the nominal task, its final checkpoint is frozen, and the checkpoint is scored on a
 grid of shift conditions.</p>
 <h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
 <table>
@@ -197,19 +197,19 @@ grid of shift conditions.</p>
 <tbody>
 <tr>
 <td>Interface</td>
-<td><code>baselines/eval_final.py -c &lt;experiment.yaml&gt; --run-dir &lt;dir&gt;</code></td>
+<td><code>baselines/evaluate.py --run &lt;run directory&gt; [--eval &lt;grid&gt;]</code></td>
 </tr>
 <tr>
 <td>Checkpoint</td>
-<td>The exact last checkpoint of the run; never selected on evaluation results</td>
+<td>The final checkpoint of the run; never selected on evaluation results (RFQI keeps its own best-checkpoint rule)</td>
 </tr>
 <tr>
 <td>Conditions</td>
-<td>The <code>grid</code> of an eval file; each condition is a list of shifts</td>
+<td>The <code>grid</code> of an eval card; each condition is a list of shifts</td>
 </tr>
 <tr>
 <td>Episodes</td>
-<td>20 per condition, deterministic actions, at most 1000 steps</td>
+<td>20 per condition, deterministic actions, the task's time limit</td>
 </tr>
 <tr>
 <td>Seeds</td>
@@ -221,40 +221,10 @@ grid of shift conditions.</p>
 </tr>
 </tbody>
 </table>
-<h2 id="which-evaluator">Which evaluator<a class="headerlink" href="#which-evaluator" title="Permanent link">&para;</a></h2>
-<p><code>baselines/eval_final.py</code> reads a checkpoint of the form <code>ckpt/ep*.pt</code> and covers the
-offline methods and DR. The online methods keep the evaluators of their own training
-stacks, on the same grids:</p>
-<table>
-<thead>
-<tr>
-<th>Methods</th>
-<th>Evaluator</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>IQL, TD3+BC, MOPO, SynthER, RFQI, RORL, ATLA-IQL, RSC-IQL, RAMBO, ROMB, FWM, PLR-PVL, DR</td>
-<td><code>baselines/eval_final.py -c &lt;experiment.yaml&gt; --run-dir &lt;dir&gt;</code></td>
-</tr>
-<tr>
-<td>ATLA, ATLA-SA</td>
-<td><code>baselines/atla/eval_atla_ood.py -c &lt;experiment.yaml&gt; --run-dir &lt;dir&gt;</code></td>
-</tr>
-<tr>
-<td>RSC (online)</td>
-<td><code>baselines/causaldro_online/scripts/eval_ood.py</code></td>
-</tr>
-<tr>
-<td>PPO, SAC, RARL, DR-SAC (the Stable-Baselines3 runs)</td>
-<td><code>experiments/sb3_default_runs/evaluate_grid.py</code>, <code>experiments/&lt;method&gt;/test_grid.py</code></td>
-</tr>
-<tr>
-<td>Observation attack (adversarial mode)</td>
-<td><code>scripts/spec_obs_attack_eval.py</code></td>
-</tr>
-</tbody>
-</table>
+<p>The same evaluator scores every method of <code>baselines/</code>, offline and online: it loads the
+checkpoint with the class the method's algorithm card names, so it never depends on how the
+method was trained. The Isaac Lab and VLA studies have evaluators of their own, described in
+<code>isaac/README.md</code> and <code>vla/README.md</code> of the repository.</p>
 <h2 id="evaluation-grids">Evaluation grids<a class="headerlink" href="#evaluation-grids" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -283,7 +253,7 @@ stacks, on the same grids:</p>
 <tr>
 <td><code>grid[].name</code></td>
 <td>str</td>
-<td>Name of the condition; the part before the first digit is its axis</td>
+<td>Name of the condition</td>
 </tr>
 <tr>
 <td><code>grid[].shifts</code></td>
@@ -291,58 +261,114 @@ stacks, on the same grids:</p>
 <td>Shifts in dictionary form, as in <a href="../../shifts/">Shift Sources and Modes</a>; an empty list is the nominal condition</td>
 </tr>
 <tr>
-<td><code>grid[].severity</code></td>
-<td>float</td>
-<td>Optional; orders the conditions of one axis</td>
+<td><code>grid[].env_kwargs</code></td>
+<td>dict</td>
+<td>Optional; constructor arguments of the condition, for a parameter an environment reads only when it is built</td>
+</tr>
+<tr>
+<td><code>grid[].env_id</code></td>
+<td>str</td>
+<td>Optional; another registered variant of the task, as for the semantic channel</td>
+</tr>
+<tr>
+<td><code>grid[].axis</code>, <code>quartile</code>, <code>severity</code>, <code>channel</code></td>
+<td></td>
+<td>Optional labels, copied into the result</td>
 </tr>
 </tbody>
 </table>
-<p>The excerpts leave out the <code>seed</code> line and most conditions.</p>
-<div class="highlight"><span class="filename">robustrllib/configs/eval/t0_mujoco.yaml (excerpt)</span><pre><span></span><code><span class="nt">episodes</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span>
+<table>
+<thead>
+<tr>
+<th>Card</th>
+<th>Conditions</th>
+<th>Used for</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>part1_&lt;task&gt;.yaml</code></td>
+<td>The rungs of the library-wide grid, by axis and severity quartile</td>
+<td>Part 1</td>
+</tr>
+<tr>
+<td><code>part2_hopper.yaml</code></td>
+<td>Five cells of each frozen-policy channel</td>
+<td>Part 2</td>
+</tr>
+<tr>
+<td><code>part2_doorcausal.yaml</code></td>
+<td>The trained and the inverted semantic binding</td>
+<td>Part 2, semantic channel</td>
+</tr>
+<tr>
+<td><code>part3_hopper.yaml</code>, <code>part3_pusher.yaml</code></td>
+<td>Each channel of a reference profile, then all of them jointly</td>
+<td>Part 3</td>
+</tr>
+<tr>
+<td><code>nominal.yaml</code></td>
+<td>The nominal condition</td>
+<td>Training-time channels</td>
+</tr>
+</tbody>
+</table>
+<p>The excerpts leave out most conditions.</p>
+<div class="highlight"><span class="filename">robustrllib/configs/eval/part1_mujoco.yaml (excerpt)</span><pre><span></span><code><span class="nt">episodes</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span>
+<span class="nt">seed</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10000</span>
 <span class="nt">grid</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="nv">nominal</span><span class="p p-Indicator">,</span><span class="nt"> shifts</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[],</span><span class="nt"> severity</span><span class="p">:</span><span class="w"> </span><span class="nv">1.0</span><span class="p p-Indicator">}</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="nv">gravity_0.8</span><span class="p p-Indicator">,</span><span class="nt"> severity</span><span class="p">:</span><span class="w"> </span><span class="nv">0.8</span><span class="p p-Indicator">,</span><span class="nt"> shifts</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[{</span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="nv">dynamics</span><span class="p p-Indicator">,</span><span class="nt"> mode</span><span class="p">:</span><span class="w"> </span><span class="nv">scale</span><span class="p p-Indicator">,</span><span class="nt"> params</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">param</span><span class="p">:</span><span class="w"> </span><span class="nv">gravity</span><span class="p p-Indicator">,</span><span class="nt"> factor</span><span class="p">:</span><span class="w"> </span><span class="nv">0.8</span><span class="p p-Indicator">}}]}</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="nv">morph_0.8</span><span class="p p-Indicator">,</span><span class="nt"> severity</span><span class="p">:</span><span class="w"> </span><span class="nv">0.8</span><span class="p p-Indicator">,</span><span class="nt"> shifts</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[{</span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="nv">dynamics</span><span class="p p-Indicator">,</span><span class="nt"> mode</span><span class="p">:</span><span class="w"> </span><span class="nv">scale</span><span class="p p-Indicator">,</span><span class="nt"> params</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">param</span><span class="p">:</span><span class="w"> </span><span class="nv">body_pos_xyz</span><span class="p p-Indicator">,</span><span class="nt"> index</span><span class="p">:</span><span class="w"> </span><span class="nv">all</span><span class="p p-Indicator">,</span><span class="nt"> factor</span><span class="p">:</span><span class="w"> </span><span class="nv">0.8</span><span class="p p-Indicator">}}]}</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="nv">gear_0.8</span><span class="p p-Indicator">,</span><span class="nt"> severity</span><span class="p">:</span><span class="w"> </span><span class="nv">0.8</span><span class="p p-Indicator">,</span><span class="nt"> shifts</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[{</span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="nv">dynamics</span><span class="p p-Indicator">,</span><span class="nt"> mode</span><span class="p">:</span><span class="w"> </span><span class="nv">scale</span><span class="p p-Indicator">,</span><span class="nt"> params</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">param</span><span class="p">:</span><span class="w"> </span><span class="nv">actuator_gear</span><span class="p p-Indicator">,</span><span class="nt"> index</span><span class="p">:</span><span class="w"> </span><span class="nv">all</span><span class="p p-Indicator">,</span><span class="nt"> factor</span><span class="p">:</span><span class="w"> </span><span class="nv">0.8</span><span class="p p-Indicator">}}]}</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nominal</span>
+<span class="w">  </span><span class="nt">shifts</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gravity_0.9</span>
+<span class="w">  </span><span class="nt">axis</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gravity</span>
+<span class="w">  </span><span class="nt">quartile</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">  </span><span class="nt">severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.9</span>
+<span class="w">  </span><span class="nt">shifts</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dynamics</span>
+<span class="w">    </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">scale</span>
+<span class="w">    </span><span class="nt">params</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">param</span><span class="p">:</span><span class="w"> </span><span class="nv">gravity</span><span class="p p-Indicator">,</span><span class="nt"> factor</span><span class="p">:</span><span class="w"> </span><span class="nv">0.9</span><span class="p p-Indicator">}</span>
 </code></pre></div>
-<div class="highlight"><span class="filename">robustrllib/configs/eval/spec_timing_hopper.yaml (excerpt)</span><pre><span></span><code><span class="nt">episodes</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span>
-<span class="nt">grid</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="nv">nominal</span><span class="p p-Indicator">,</span><span class="nt"> severity</span><span class="p">:</span><span class="w"> </span><span class="nv">0</span><span class="p p-Indicator">,</span><span class="nt"> shifts</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]}</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="nv">act_delay_8ms</span><span class="p p-Indicator">,</span><span class="nt"> severity</span><span class="p">:</span><span class="w"> </span><span class="nv">2</span><span class="p p-Indicator">,</span><span class="nt"> shifts</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[{</span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="nv">latency</span><span class="p p-Indicator">,</span><span class="nt"> mode</span><span class="p">:</span><span class="w"> </span><span class="nv">fixed</span><span class="p p-Indicator">,</span><span class="nt"> params</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">steps</span><span class="p">:</span><span class="w"> </span><span class="nv">1</span><span class="p p-Indicator">}}]}</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="nv">obs_delay_8ms</span><span class="p p-Indicator">,</span><span class="nt"> severity</span><span class="p">:</span><span class="w"> </span><span class="nv">1.8</span><span class="p p-Indicator">,</span><span class="nt"> shifts</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[{</span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="nv">latency</span><span class="p p-Indicator">,</span><span class="nt"> mode</span><span class="p">:</span><span class="w"> </span><span class="nv">interp</span><span class="p p-Indicator">,</span><span class="nt"> params</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">low</span><span class="p">:</span><span class="w"> </span><span class="nv">0.004</span><span class="p p-Indicator">,</span><span class="nt"> high</span><span class="p">:</span><span class="w"> </span><span class="nv">0.008</span><span class="p p-Indicator">}}]}</span>
+<div class="highlight"><span class="filename">robustrllib/configs/eval/part2_hopper.yaml (excerpt)</span><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">act_delay_8ms</span>
+<span class="w">  </span><span class="nt">channel</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">theta_tau</span>
+<span class="w">  </span><span class="nt">shifts</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">latency</span>
+<span class="w">    </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fixed</span>
+<span class="w">    </span><span class="nt">params</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">steps</span><span class="p">:</span><span class="w"> </span><span class="nv">1</span><span class="p p-Indicator">}</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gear_ramp_0.8</span>
+<span class="w">  </span><span class="nt">channel</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">theta_p</span>
+<span class="w">  </span><span class="nt">shifts</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dynamics</span>
+<span class="w">    </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">scale</span>
+<span class="w">    </span><span class="nt">params</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">param</span><span class="p">:</span><span class="w"> </span><span class="nv">actuator_gear</span><span class="p p-Indicator">,</span><span class="nt"> index</span><span class="p">:</span><span class="w"> </span><span class="nv">all</span><span class="p p-Indicator">,</span><span class="nt"> factor</span><span class="p">:</span><span class="w"> </span><span class="nv">1.0</span><span class="p p-Indicator">}</span>
+<span class="w">    </span><span class="nt">schedule</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="nv">linear</span><span class="p p-Indicator">,</span><span class="nt"> start</span><span class="p">:</span><span class="w"> </span><span class="nv">1.0</span><span class="p p-Indicator">,</span><span class="nt"> end</span><span class="p">:</span><span class="w"> </span><span class="nv">0.8</span><span class="p p-Indicator">,</span><span class="nt"> t0</span><span class="p">:</span><span class="w"> </span><span class="nv">0</span><span class="p p-Indicator">,</span><span class="nt"> t1</span><span class="p">:</span><span class="w"> </span><span class="nv">1000</span><span class="p p-Indicator">}</span>
 </code></pre></div>
-<div class="highlight"><span class="filename">robustrllib/configs/eval/spec_timevar_hopper.yaml (excerpt)</span><pre><span></span><code><span class="nt">episodes</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span>
-<span class="nt">grid</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="nv">gear_static_0.8</span><span class="p p-Indicator">,</span><span class="nt"> severity</span><span class="p">:</span><span class="w"> </span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="nt"> shifts</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[{</span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="nv">dynamics</span><span class="p p-Indicator">,</span><span class="nt"> mode</span><span class="p">:</span><span class="w"> </span><span class="nv">scale</span><span class="p p-Indicator">,</span><span class="nt"> params</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">param</span><span class="p">:</span><span class="w"> </span><span class="nv">actuator_gear</span><span class="p p-Indicator">,</span><span class="nt"> index</span><span class="p">:</span><span class="w"> </span><span class="nv">all</span><span class="p p-Indicator">,</span><span class="nt"> factor</span><span class="p">:</span><span class="w"> </span><span class="nv">0.8</span><span class="p p-Indicator">}}]}</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="nv">gear_step_0.8</span><span class="p p-Indicator">,</span><span class="nt"> severity</span><span class="p">:</span><span class="w"> </span><span class="nv">1.1</span><span class="p p-Indicator">,</span><span class="nt"> shifts</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[{</span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="nv">dynamics</span><span class="p p-Indicator">,</span><span class="nt"> mode</span><span class="p">:</span><span class="w"> </span><span class="nv">scale</span><span class="p p-Indicator">,</span><span class="nt"> params</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">param</span><span class="p">:</span><span class="w"> </span><span class="nv">actuator_gear</span><span class="p p-Indicator">,</span><span class="nt"> index</span><span class="p">:</span><span class="w"> </span><span class="nv">all</span><span class="p p-Indicator">,</span><span class="nt"> factor</span><span class="p">:</span><span class="w"> </span><span class="nv">1.0</span><span class="p p-Indicator">},</span><span class="nt"> schedule</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="nv">step</span><span class="p p-Indicator">,</span><span class="nt"> start</span><span class="p">:</span><span class="w"> </span><span class="nv">1.0</span><span class="p p-Indicator">,</span><span class="nt"> end</span><span class="p">:</span><span class="w"> </span><span class="nv">0.8</span><span class="p p-Indicator">,</span><span class="nt"> t1</span><span class="p">:</span><span class="w"> </span><span class="nv">500</span><span class="p p-Indicator">}}]}</span>
+<div class="highlight"><span class="filename">robustrllib/configs/eval/part1_carracing.yaml (excerpt)</span><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">friction_0.6</span>
+<span class="w">  </span><span class="nt">axis</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">friction</span>
+<span class="w">  </span><span class="nt">quartile</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4</span>
+<span class="w">  </span><span class="nt">severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.6</span>
+<span class="w">  </span><span class="nt">env_kwargs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">friction_scale</span><span class="p">:</span><span class="w"> </span><span class="nv">0.6</span><span class="p p-Indicator">}</span>
+<span class="w">  </span><span class="nt">shifts</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
 </code></pre></div>
-<p>The three excerpts are a Dynamic shift in the Parametric mode, a Latency shift, and a Dynamic
-shift in the Non-stationary mode. <code>t0_mujoco.yaml</code> holds the nominal condition and three axes,
-gravity, limb length and actuator gear, each at the factors 0.8, 0.9, 1.1 and 1.2: 13
-conditions.</p>
-<div class="admonition tip">
-<p class="admonition-title">Tip</p>
-<p>Conditions of one axis share a name prefix followed by a number, as in <code>gravity_0.8</code>. The
-report groups conditions by that prefix.</p>
-</div>
-<p>A condition is checked before a long evaluation by building it once.</p>
+<p>The three excerpts are a Dynamic shift in the Parametric mode, a Latency shift and a Dynamic shift
+in the Non-stationary mode, and a condition CarRacing reads when it builds the track.
+<code>part1_mujoco.yaml</code> holds the nominal condition and three axes, gravity, limb length and actuator
+gear, each at eight factors from 0.6 to 1.4: 25 conditions.</p>
+<p>A grid is checked before a long evaluation by building each condition once.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">robustrllib</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_robust</span><span class="p">,</span> <span class="n">ShiftSpec</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">robustrllib</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_env</span>
 
-<span class="n">grid</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">"robustrllib/configs/eval/t0_mujoco.yaml"</span><span class="p">))[</span><span class="s2">"grid"</span><span class="p">]</span>
+<span class="n">task</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">"robustrllib/configs/task/hopper.yaml"</span><span class="p">))</span>
+<span class="n">grid</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">"robustrllib/configs/eval/part1_mujoco.yaml"</span><span class="p">))[</span><span class="s2">"grid"</span><span class="p">]</span>
 <span class="k">for</span> <span class="n">condition</span> <span class="ow">in</span> <span class="n">grid</span><span class="p">:</span>
-    <span class="n">shifts</span> <span class="o">=</span> <span class="p">[</span><span class="n">ShiftSpec</span><span class="p">(</span><span class="o">**</span><span class="n">shift</span><span class="p">)</span> <span class="k">for</span> <span class="n">shift</span> <span class="ow">in</span> <span class="n">condition</span><span class="p">[</span><span class="s2">"shifts"</span><span class="p">]]</span>
-    <span class="n">env</span> <span class="o">=</span> <span class="n">make_robust</span><span class="p">(</span><span class="s2">"Hopper-v5"</span><span class="p">,</span> <span class="n">shifts</span><span class="o">=</span><span class="n">shifts</span><span class="p">)</span>
+    <span class="n">env</span> <span class="o">=</span> <span class="n">make_env</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">shifts</span><span class="o">=</span><span class="n">condition</span><span class="p">[</span><span class="s2">"shifts"</span><span class="p">],</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">env</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">grid</span><span class="p">))</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>13
+<div class="highlight"><pre><span></span><code>25
 </code></pre></div>
-<h2 id="run-a-final-evaluation">Run a final evaluation<a class="headerlink" href="#run-a-final-evaluation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code>python<span class="w"> </span>baselines/eval_final.py<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>-c<span class="w"> </span>robustrllib/configs/experiment/rorl_hopper.yaml<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--run-dir<span class="w"> </span>runs/rorl/hopper_medium_seed0
+<h2 id="run-an-evaluation">Run an evaluation<a class="headerlink" href="#run-an-evaluation" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>baselines/evaluate.py<span class="w"> </span>--run<span class="w"> </span>runs/rorl_hopper/seed0
 </code></pre></div>
 <table>
 <thead>
@@ -354,15 +380,15 @@ report groups conditions by that prefix.</p>
 <tbody>
 <tr>
 <td>1</td>
-<td>Lists <code>ckpt/ep*.pt</code> in the run directory and takes the last one</td>
+<td>Reads <code>config.yaml</code> of the run and takes the highest-numbered file in <code>ckpt/</code></td>
 </tr>
 <tr>
 <td>2</td>
-<td>Builds <code>make_robust(env_id, shifts=...)</code> for each condition</td>
+<td>Loads the policy with the class named in the algorithm card</td>
 </tr>
 <tr>
 <td>3</td>
-<td>Loads the policy with the class named in the algorithm card</td>
+<td>Builds the task card's environment with the condition's shifts, one fresh environment per condition</td>
 </tr>
 <tr>
 <td>4</td>
@@ -370,7 +396,7 @@ report groups conditions by that prefix.</p>
 </tr>
 <tr>
 <td>5</td>
-<td>Prints a report and writes <code>final_eval.json</code> into the run directory</td>
+<td>Prints a report and writes <code>eval/&lt;grid&gt;.json</code> into the run directory</td>
 </tr>
 </tbody>
 </table>
@@ -383,92 +409,66 @@ report groups conditions by that prefix.</p>
 </thead>
 <tbody>
 <tr>
-<td><code>-c</code>, <code>--config</code></td>
-<td>The experiment file; its cards are paths relative to the root of the checkout</td>
+<td><code>--run</code></td>
+<td>The training run directory, with <code>config.yaml</code> and <code>ckpt/</code></td>
 </tr>
 <tr>
-<td><code>--run-dir</code></td>
-<td>The training run directory, which contains <code>ckpt/</code></td>
+<td><code>--eval</code></td>
+<td>Another grid to evaluate on; the result is named after it</td>
 </tr>
 <tr>
-<td><code>--eval-config</code></td>
-<td>Another grid to evaluate on</td>
-</tr>
-<tr>
-<td><code>--output</code></td>
-<td>File name of the result inside the run directory</td>
-</tr>
-<tr>
-<td><code>--episodes</code>, <code>--seed</code></td>
-<td>Override the values of the grid</td>
-</tr>
-<tr>
-<td><code>--device</code>, <code>--torch-threads</code></td>
-<td>Device of the policy; limit on CPU threads</td>
+<td><code>--episodes</code></td>
+<td>Override the number of episodes of the grid</td>
 </tr>
 <tr>
 <td><code>--ckpt</code></td>
-<td>An explicit checkpoint; the result goes to <code>eval_&lt;checkpoint name&gt;.json</code></td>
+<td>An explicit checkpoint, for diagnostics</td>
 </tr>
 <tr>
-<td><code>--ckpt-select</code></td>
-<td><code>last</code> is the protocol; <code>best</code>, <code>last10</code> and <code>curve</code> are diagnostics</td>
+<td><code>--device</code></td>
+<td>Device of the policy</td>
 </tr>
 </tbody>
 </table>
-<p>A second grid is scored with a named output.</p>
-<div class="highlight"><pre><span></span><code>python<span class="w"> </span>baselines/eval_final.py<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>-c<span class="w"> </span>robustrllib/configs/experiment/rorl_hopper.yaml<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--run-dir<span class="w"> </span>runs/rorl/hopper_medium_seed0<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--eval-config<span class="w"> </span>robustrllib/configs/eval/spec_timing_hopper.yaml<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--output<span class="w"> </span>spec_timing_eval.json
+<p>The Part 2 and Part 3 grids score the Part 1 Hopper runs a second and a third time.</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>baselines/evaluate.py<span class="w"> </span>--run<span class="w"> </span>runs/rorl_hopper/seed0<span class="w"> </span>--eval<span class="w"> </span>robustrllib/configs/eval/part2_hopper.yaml
+python<span class="w"> </span>baselines/evaluate.py<span class="w"> </span>--run<span class="w"> </span>runs/rorl_hopper/seed0<span class="w"> </span>--eval<span class="w"> </span>robustrllib/configs/eval/part3_hopper.yaml
 </code></pre></div>
-<p><strong>Without <code>--output</code> the result goes to <code>final_eval.json</code></strong> whatever the grid is, and replaces
-the file that is already there.</p>
-<p>Two kinds of shift are not scored by this evaluator.</p>
+<p>Two kinds of shift need more than a frozen policy and a condition.</p>
 <table>
 <thead>
 <tr>
 <th>Shift</th>
-<th>Reason</th>
-<th>Where it is studied</th>
+<th>How it is scored</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>Observation shift in the Adversarial mode</td>
-<td>It needs the actor of the policy, which this evaluator does not attach</td>
-<td><code>scripts/spec_obs_attack_eval.py</code>, which applies the same attack to every method</td>
+<td>The evaluator binds the policy's own actor, which the loader exposes as <code>actor</code>; a recurrent policy has none, and the condition is reported as skipped</td>
 </tr>
 <tr>
 <td>Reward/cost shift, and Latency shift with the mode name <code>delay</code></td>
-<td>A frozen policy does not read the reward</td>
-<td>Training under the shift, evaluation on the nominal task</td>
+<td>A frozen policy does not read the reward: the method trains under the shift (<code>baselines/train.py --train-shift</code>) and is evaluated on <code>nominal.yaml</code></td>
 </tr>
 </tbody>
 </table>
 <h2 id="result-file">Result file<a class="headerlink" href="#result-file" title="Permanent link">&para;</a></h2>
-<p><code>final_eval.json</code> records the protocol next to the numbers. Values are replaced by their types.</p>
+<p><code>eval/&lt;grid&gt;.json</code> records the protocol next to the numbers. Values are replaced by their types.</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">"env_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Hopper-v5"</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"ckpt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"runs/rorl/hopper_medium_seed0/ckpt/ep3000.pt"</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"ckpt_select"</span><span class="p">:</span><span class="w"> </span><span class="s2">"last"</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"seed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;int&gt;"</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"episode_seed_rule"</span><span class="p">:</span><span class="w"> </span><span class="s2">"base_seed + episode_index"</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"episode_seeds"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"&lt;int&gt;"</span><span class="p">,</span><span class="w"> </span><span class="s2">"..."</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">"run"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rorl_hopper"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"checkpoint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"runs/rorl_hopper/seed0/ckpt/update_3000000.pt"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"seed"</span><span class="p">:</span><span class="w"> </span><span class="mi">10000</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">"episodes"</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"evaluation_protocol"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">"metric_family"</span><span class="p">:</span><span class="w"> </span><span class="s2">"episodic_return"</span><span class="p">,</span><span class="w"> </span><span class="nt">"primary_metric"</span><span class="p">:</span><span class="w"> </span><span class="s2">"return"</span><span class="p">},</span>
-<span class="w">  </span><span class="nt">"per_condition"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nt">"conditions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nt">"nominal"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">"return_mean"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;float&gt;"</span><span class="p">,</span><span class="w"> </span><span class="nt">"return_std"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;float&gt;"</span><span class="p">,</span><span class="w"> </span><span class="nt">"return_min"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;float&gt;"</span><span class="p">,</span>
-<span class="w">                </span><span class="nt">"cvar"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;float&gt;"</span><span class="p">,</span><span class="w"> </span><span class="nt">"episode_length_mean"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;float&gt;"</span><span class="p">,</span>
-<span class="w">                </span><span class="nt">"episode_length_std"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;float&gt;"</span><span class="p">,</span><span class="w"> </span><span class="nt">"n_episodes"</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="p">},</span>
-<span class="w">    </span><span class="nt">"gravity_0.8"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">"..."</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span><span class="p">}</span>
-<span class="w">  </span><span class="p">},</span>
-<span class="w">  </span><span class="nt">"summary"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">"nominal_mean"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;float&gt;"</span><span class="p">,</span><span class="w"> </span><span class="nt">"gravity_mean"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;float&gt;"</span><span class="p">,</span><span class="w"> </span><span class="nt">"morph_mean"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;float&gt;"</span><span class="p">,</span>
-<span class="w">              </span><span class="nt">"gear_mean"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;float&gt;"</span><span class="p">,</span><span class="w"> </span><span class="nt">"all_mean"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;float&gt;"</span><span class="p">,</span><span class="w"> </span><span class="nt">"ood_mean"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;float&gt;"</span><span class="p">}</span>
+<span class="w">                </span><span class="nt">"cvar"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;float&gt;"</span><span class="p">,</span><span class="w"> </span><span class="nt">"n_episodes"</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span><span class="w"> </span><span class="nt">"score"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;float&gt;"</span><span class="p">,</span>
+<span class="w">                </span><span class="nt">"episode_length_mean"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;float&gt;"</span><span class="p">,</span><span class="w"> </span><span class="nt">"returns"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"&lt;float&gt;"</span><span class="p">,</span><span class="w"> </span><span class="s2">"..."</span><span class="p">]},</span>
+<span class="w">    </span><span class="nt">"gravity_0.9"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">"..."</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span><span class="p">,</span><span class="w"> </span><span class="nt">"axis"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gravity"</span><span class="p">,</span><span class="w"> </span><span class="nt">"quartile"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nt">"severity"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.9</span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-<h2 id="metrics-and-summary-schema">Metrics and summary schema<a class="headerlink" href="#metrics-and-summary-schema" title="Permanent link">&para;</a></h2>
+<h2 id="metrics">Metrics<a class="headerlink" href="#metrics" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -489,32 +489,32 @@ the file that is already there.</p>
 <td>Mean of the worst tenth of the episodes</td>
 </tr>
 <tr>
-<td><code>episode_length_mean</code>, <code>episode_length_std</code></td>
+<td><code>score</code></td>
+<td>Condition</td>
+<td>The normalized score of <code>return_mean</code></td>
+</tr>
+<tr>
+<td><code>success_rate</code></td>
+<td>Condition</td>
+<td>Share of episodes that report success, on goal-conditioned tasks</td>
+</tr>
+<tr>
+<td><code>episode_length_mean</code></td>
 <td>Condition</td>
 <td>Steps until termination or truncation</td>
 </tr>
 <tr>
-<td><code>&lt;axis&gt;_mean</code></td>
-<td>Summary</td>
-<td>Mean of <code>return_mean</code> over the conditions of the axis</td>
-</tr>
-<tr>
-<td><code>all_mean</code></td>
-<td>Summary</td>
-<td>Mean over all conditions</td>
-</tr>
-<tr>
-<td><code>ood_mean</code></td>
-<td>Summary</td>
-<td>Mean over all conditions except <code>nominal</code></td>
+<td><code>returns</code></td>
+<td>Condition</td>
+<td>The return of every episode</td>
 </tr>
 </tbody>
 </table>
-<p>The file holds raw returns. The normalized score uses one fixed pair of reference returns per
-environment, shared by every method and condition: the return of a random policy and the return
-of a reference policy. The score is the return minus the random reference, divided by the
-distance between the two references, times 100.</p>
-<div class="highlight"><pre><span></span><code><span class="n">R_MIN</span><span class="p">,</span> <span class="n">R_MAX</span> <span class="o">=</span> <span class="o">-</span><span class="mf">20.272305</span><span class="p">,</span> <span class="mf">3234.3</span>          <span class="c1"># Hopper-v5</span>
+<p>The normalized score uses one fixed pair of reference returns per environment, shared by every
+method and condition: the return of a random policy and the return of a reference policy. The
+score is the return minus the random reference, divided by the distance between the two
+references, times 100.</p>
+<div class="highlight"><pre><span></span><code><span class="n">R_MIN</span><span class="p">,</span> <span class="n">R_MAX</span> <span class="o">=</span> <span class="o">-</span><span class="mf">20.27</span><span class="p">,</span> <span class="mf">3234.3</span>          <span class="c1"># Hopper-v5</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">normalized</span><span class="p">(</span><span class="n">ret</span><span class="p">):</span>
@@ -524,22 +524,16 @@ distance between the two references, times 100.</p>
 <span class="k">for</span> <span class="n">ret</span> <span class="ow">in</span> <span class="p">(</span><span class="n">R_MIN</span><span class="p">,</span> <span class="n">R_MAX</span><span class="p">,</span> <span class="mf">3600.0</span><span class="p">):</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">ret</span><span class="si">:</span><span class="s2">12.3f</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">normalized</span><span class="p">(</span><span class="n">ret</span><span class="p">)</span><span class="si">:</span><span class="s2">6.1f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>     -20.272 -&gt;    0.0
+<div class="highlight"><pre><span></span><code>     -20.270 -&gt;    0.0
     3234.300 -&gt;  100.0
     3600.000 -&gt;  111.2
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
-
-<span class="n">result</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">"runs/rorl/hopper_medium_seed0/final_eval.json"</span><span class="p">))</span>
-<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">metrics</span> <span class="ow">in</span> <span class="n">result</span><span class="p">[</span><span class="s2">"per_condition"</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">:</span><span class="s2">14s</span><span class="si">}{</span><span class="n">metrics</span><span class="p">[</span><span class="s1">'return_mean'</span><span class="p">]</span><span class="si">:</span><span class="s2">10.1f</span><span class="si">}{</span><span class="n">normalized</span><span class="p">(</span><span class="n">metrics</span><span class="p">[</span><span class="s1">'return_mean'</span><span class="p">])</span><span class="si">:</span><span class="s2">8.1f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </code></pre></div>
 <p><strong>The score is not clipped.</strong> A return above the reference gives a score above 100, and a
 return below the random reference gives a negative score.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The pair for <code>Hopper-v5</code> is the D4RL reference return of a random and of an expert policy.
-The pairs of all tasks are defined in <code>scripts/summary_norm_table.py</code>.</p>
+<p>The pair of each task is the <code>score</code> entry of its task card. For <code>Hopper-v5</code> it is the D4RL
+reference return of a random and of an expert policy.</p>
 </div>
 <h2 id="protocol-defaults">Protocol defaults<a class="headerlink" href="#protocol-defaults" title="Permanent link">&para;</a></h2>
 <table>
@@ -553,8 +547,8 @@ The pairs of all tasks are defined in <code>scripts/summary_norm_table.py</code>
 <tbody>
 <tr>
 <td>Checkpoint</td>
-<td><code>--ckpt-select last</code></td>
-<td>The exact last checkpoint; no selection on results</td>
+<td>The highest-numbered file in <code>ckpt/</code></td>
+<td>The final checkpoint; no selection on results</td>
 </tr>
 <tr>
 <td>Episodes</td>
@@ -563,7 +557,7 @@ The pairs of all tasks are defined in <code>scripts/summary_norm_table.py</code>
 </tr>
 <tr>
 <td>Evaluation seed</td>
-<td>The <code>seed</code> key of the grid, one fixed value for all grids</td>
+<td>The <code>seed</code> key of the grid, 10000 for every grid</td>
 <td>The same initial states for every method</td>
 </tr>
 <tr>
@@ -578,7 +572,7 @@ The pairs of all tasks are defined in <code>scripts/summary_norm_table.py</code>
 </tr>
 <tr>
 <td>Horizon</td>
-<td>At most 1000 steps per episode</td>
+<td>The time limit of the task card's environment</td>
 <td>The horizon of the tasks</td>
 </tr>
 <tr>
@@ -588,8 +582,8 @@ The pairs of all tasks are defined in <code>scripts/summary_norm_table.py</code>
 </tr>
 <tr>
 <td>Output</td>
-<td><code>final_eval.json</code></td>
-<td>One protocol result per run directory</td>
+<td><code>eval/&lt;grid&gt;.json</code></td>
+<td>One result per run and grid</td>
 </tr>
 <tr>
 <td>Training seeds</td>
@@ -599,36 +593,31 @@ The pairs of all tasks are defined in <code>scripts/summary_norm_table.py</code>
 </tbody>
 </table>
 <h2 id="combine-training-runs">Combine training runs<a class="headerlink" href="#combine-training-runs" title="Permanent link">&para;</a></h2>
-<p>A reported number is the mean over the training seeds. Each seed is normalized first.</p>
+<p>A reported number is the mean over the training seeds of the normalized score.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">glob</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-<span class="n">paths</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">"runs/rorl/hopper_medium_seed*/final_eval.json"</span><span class="p">))</span>
+<span class="n">paths</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">"runs/rorl_hopper/seed*/eval/part1_mujoco.json"</span><span class="p">))</span>
 <span class="n">runs</span> <span class="o">=</span> <span class="p">[</span><span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">))</span> <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">]</span>
 
-<span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">runs</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">"per_condition"</span><span class="p">]:</span>
-    <span class="n">scores</span> <span class="o">=</span> <span class="p">[</span><span class="n">normalized</span><span class="p">(</span><span class="n">run</span><span class="p">[</span><span class="s2">"per_condition"</span><span class="p">][</span><span class="n">name</span><span class="p">][</span><span class="s2">"return_mean"</span><span class="p">])</span> <span class="k">for</span> <span class="n">run</span> <span class="ow">in</span> <span class="n">runs</span><span class="p">]</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">:</span><span class="s2">14s</span><span class="si">}{</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span><span class="si">:</span><span class="s2">7.1f</span><span class="si">}</span><span class="s2"> +/- </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span><span class="w"> </span><span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="si">:</span><span class="s2">4.1f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">runs</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">"conditions"</span><span class="p">]:</span>
+    <span class="n">scores</span> <span class="o">=</span> <span class="p">[</span><span class="n">run</span><span class="p">[</span><span class="s2">"conditions"</span><span class="p">][</span><span class="n">name</span><span class="p">][</span><span class="s2">"score"</span><span class="p">]</span> <span class="k">for</span> <span class="n">run</span> <span class="ow">in</span> <span class="n">runs</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">:</span><span class="s2">16s</span><span class="si">}{</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span><span class="si">:</span><span class="s2">7.1f</span><span class="si">}</span><span class="s2"> +/- </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span><span class="w"> </span><span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="si">:</span><span class="s2">4.1f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </code></pre></div>
-<p><code>ddof=1</code> gives the sample standard deviation, which the table script
-<code>scripts/summary_norm_table.py</code> uses.</p>
-<p>Experiments that name their cards relative to the experiment file, or inline, are evaluated by
-the launcher that trained them; see <a href="../../algorithms/add-an-algorithm/">Add an Algorithm</a>.</p>
+<p><code>ddof=1</code> gives the sample standard deviation across training seeds.</p>
 <h2 id="reproducible-reporting">Reproducible reporting<a class="headerlink" href="#reproducible-reporting" title="Permanent link">&para;</a></h2>
 <ul>
 <li>The replication unit is an independently trained policy; the spread of a score is taken
   across training seeds.</li>
 <li>Episodes of one checkpoint are not independent samples, and their spread is not reported as
   the uncertainty of a method.</li>
-<li>The evaluated checkpoint is the exact last one; evaluation results are never used to select a
+<li>The evaluated checkpoint is the final one; evaluation results are never used to select a
   checkpoint.</li>
 <li>Every method is scored on the same grid, with the same evaluation seed and the same number of
   episodes.</li>
 <li>Scores are normalized with the fixed reference pair of the environment and are not clipped.</li>
-<li>A result on a second grid is written to a named output file.</li>
-<li>A result from an explicit or a selected checkpoint is reported as a diagnostic, not as the
-  protocol score.</li>
+<li>A result from an explicit checkpoint is reported as a diagnostic, not as the protocol score.</li>
 </ul>
       </main>
 
@@ -650,15 +639,13 @@ the launcher that trained them; see <a href="../../algorithms/add-an-algorithm/"
           <ul class="bk-toc-list bk-toc-depth-1">
   <li><a class="bk-toc-link" href="#summary">Summary</a>
   </li>
-  <li><a class="bk-toc-link" href="#which-evaluator">Which evaluator</a>
-  </li>
   <li><a class="bk-toc-link" href="#evaluation-grids">Evaluation grids</a>
   </li>
-  <li><a class="bk-toc-link" href="#run-a-final-evaluation">Run a final evaluation</a>
+  <li><a class="bk-toc-link" href="#run-an-evaluation">Run an evaluation</a>
   </li>
   <li><a class="bk-toc-link" href="#result-file">Result file</a>
   </li>
-  <li><a class="bk-toc-link" href="#metrics-and-summary-schema">Metrics and summary schema</a>
+  <li><a class="bk-toc-link" href="#metrics">Metrics</a>
   </li>
   <li><a class="bk-toc-link" href="#protocol-defaults">Protocol defaults</a>
   </li>

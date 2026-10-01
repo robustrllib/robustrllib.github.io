@@ -153,9 +153,9 @@ The return value is the number of wrappers that received the actor. A stack with
 adversarial Observation shift returns 0.
 
 !!! note
-    The observation-attack grid of the benchmark is run by `scripts/spec_obs_attack_eval.py`,
-    which applies the same attack to every method. `baselines/eval_final.py` does not attach an
-    actor.
+    `baselines/evaluate.py` binds the actor of the evaluated policy, which the method's loader
+    exposes as `actor`, so the attack cells of `robustrllib/configs/eval/part2_hopper.yaml` run
+    on every feed-forward policy with the same search.
 
 ## Rules
 

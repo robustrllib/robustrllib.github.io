@@ -37,8 +37,9 @@ RFQI is a standalone recipe rather than a mechanism added to a shared base algor
 ## Run the method
 
 ```bash
-python baselines/rfqi/train_rfqi.py \
+python baselines/train.py \
     -c robustrllib/configs/experiment/rfqi_hopper.yaml --seed 0
+python baselines/evaluate.py --run runs/rfqi_hopper/seed0
 ```
 
 | File | Path |

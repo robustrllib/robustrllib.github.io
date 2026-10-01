@@ -37,8 +37,9 @@ RAMBO is a standalone recipe rather than a mechanism added to a shared base algo
 ## Run the method
 
 ```bash
-python baselines/rambo/train_rambo.py \
+python baselines/train.py \
     -c robustrllib/configs/experiment/rambo_hopper.yaml --seed 0
+python baselines/evaluate.py --run runs/rambo_hopper/seed0
 ```
 
 | File | Path |

@@ -86,8 +86,10 @@ IQL avoids querying out-of-distribution actions altogether. A value function is 
 
 ```bash
 CFG=robustrllib/configs/experiment
-python baselines/iql/train_iql.py \
+python baselines/train.py \
     -c $CFG/iql_hopper.yaml --seed 0
+python baselines/evaluate.py \
+    --run runs/iql_hopper/seed0
 ```
 
 <p class="rl-book-more" markdown>[Open the full page](standard/iql.md)</p>
@@ -125,8 +127,10 @@ TD3+BC adds a behaviour-cloning term to the TD3 actor loss and normalises states
 
 ```bash
 CFG=robustrllib/configs/experiment
-python baselines/td3bc/train_td3bc.py \
+python baselines/train.py \
     -c $CFG/td3bc_hopper.yaml --seed 0
+python baselines/evaluate.py \
+    --run runs/td3bc_hopper/seed0
 ```
 
 <p class="rl-book-more" markdown>[Open the full page](standard/td3bc.md)</p>
@@ -164,8 +168,10 @@ MOPO learns an ensemble dynamics model, branches short rollouts from dataset sta
 
 ```bash
 CFG=robustrllib/configs/experiment
-python baselines/mopo/train_mopo.py \
+python baselines/train.py \
     -c $CFG/mopo_hopper.yaml --seed 0
+python baselines/evaluate.py \
+    --run runs/mopo_hopper/seed0
 ```
 
 <p class="rl-book-more" markdown>[Open the full page](standard/mopo.md)</p>
@@ -203,17 +209,10 @@ SynthER fits a diffusion model to logged transitions and trains an unmodified of
 
 ```bash
 CFG=robustrllib/configs/experiment
-# 1. fit the diffusion model on the logged
-#    data and sample the synthetic dataset the
-#    task card reads
-python baselines/synther/train_diffuser.py \
-    --task hopper --quality medium \
-    --results_folder runs/synther/hopper_medium \
-    --save_samples
-# 2. train the unmodified IQL learner on the
-#    synthetic dataset
-python baselines/iql/train_iql.py \
-    -c $CFG/iql_hopper_synther.yaml --seed 0
+python baselines/train.py \
+    -c $CFG/synther_hopper.yaml --seed 0
+python baselines/evaluate.py \
+    --run runs/synther_hopper/seed0
 ```
 
 <p class="rl-book-more" markdown>[Open the full page](standard/synther.md)</p>
@@ -251,14 +250,10 @@ PPO is the on-policy reference: a clipped probability-ratio surrogate on traject
 
 ```bash
 CFG=robustrllib/configs/experiment
-# the paper's checkpoints: Stable-Baselines3
-# defaults, 2M steps
-python experiments/sb3_default_runs/train.py \
-    --algorithm ppo --task hopper --seed 0 \
-    --total-steps 2000000
-# the same learner through the library runner
-python examples/run_experiment.py \
-    -c $CFG/ppo_hopper.yaml
+python baselines/train.py \
+    -c $CFG/ppo_hopper.yaml --seed 0
+python baselines/evaluate.py \
+    --run runs/ppo_hopper/seed0
 ```
 
 <p class="rl-book-more" markdown>[Open the full page](standard/ppo.md)</p>
@@ -296,14 +291,10 @@ SAC is the off-policy reference: twin critics with a clipped double-Q target and
 
 ```bash
 CFG=robustrllib/configs/experiment
-# the paper's checkpoints: Stable-Baselines3
-# defaults, 1M steps
-python experiments/sb3_default_runs/train.py \
-    --algorithm sac --task hopper --seed 0 \
-    --total-steps 1000000
-# the same learner through the library runner
-python examples/run_experiment.py \
-    -c $CFG/sac_hopper.yaml
+python baselines/train.py \
+    -c $CFG/sac_hopper.yaml --seed 0
+python baselines/evaluate.py \
+    --run runs/sac_hopper/seed0
 ```
 
 <p class="rl-book-more" markdown>[Open the full page](standard/sac.md)</p>
@@ -344,8 +335,10 @@ ATLA trains a policy against an *optimal* observation adversary in the state-adv
 
 ```bash
 CFG=robustrllib/configs/experiment
-python baselines/atla/train_atla.py \
-    -c $CFG/atla_online_hopper.yaml --seed 0
+python baselines/train.py \
+    -c $CFG/atla_hopper.yaml --seed 0
+python baselines/evaluate.py \
+    --run runs/atla_hopper/seed0
 ```
 
 <p class="rl-book-more" markdown>[Open the full page](robust-online/atla.md)</p>
@@ -386,9 +379,10 @@ ATLA-SA adds the SA-PPO regulariser to ATLA: a KL penalty between the policy at 
 
 ```bash
 CFG=robustrllib/configs/experiment
-python baselines/atla/train_atla.py \
-    -c $CFG/atla_lstm_sa_hopper.yaml \
-    --seed 0
+python baselines/train.py \
+    -c $CFG/atla_sa_hopper.yaml --seed 0
+python baselines/evaluate.py \
+    --run runs/atla_sa_hopper/seed0
 ```
 
 <p class="rl-book-more" markdown>[Open the full page](robust-online/atla-sa.md)</p>
@@ -429,10 +423,10 @@ RSC learns a causal graph and a dynamics model over the state variables from rep
 
 ```bash
 CFG=robustrllib/configs/experiment
-python \
-    baselines/causaldro_online/train_causaldro.py \
-    --config $CFG/causaldro_online_hopper.yaml \
-    --seed 0
+python baselines/train.py \
+    -c $CFG/rsc_hopper.yaml --seed 0
+python baselines/evaluate.py \
+    --run runs/rsc_hopper/seed0
 ```
 
 <p class="rl-book-more" markdown>[Open the full page](robust-online/rsc.md)</p>
@@ -472,14 +466,13 @@ RARL casts robustness as a two-player zero-sum game. An adversary applies bounde
 <p class="rl-book-h">Run the method</p>
 
 ```bash
-python experiments/rarl_hopper_v5/train.py \
-    --algo ppo --env Hopper-v5 --seed 0 \
-    --total-steps 2000000
-python experiments/rarl_hopper_v5/train.py \
-    --algo trpo --env Hopper-v5 --seed 0 \
-    --total-steps 2000000
-# the same recipe on Pusher-v5s:
-# baselines/rarl_pusher/train.py
+CFG=robustrllib/configs/experiment
+python baselines/train.py \
+    -c $CFG/rarl_ppo_hopper.yaml --seed 0
+python baselines/train.py \
+    -c $CFG/rarl_trpo_hopper.yaml --seed 0
+python baselines/evaluate.py \
+    --run runs/rarl_ppo_hopper/seed0
 ```
 
 <p class="rl-book-more" markdown>[Open the full page](robust-online/rarl.md)</p>
@@ -520,14 +513,10 @@ Domain randomisation samples simulator parameters from fixed ranges at every epi
 
 ```bash
 CFG=robustrllib/configs/experiment
-python baselines/dr/train_dr.py \
-    -c $CFG/dr_hopper_axis_narrow.yaml \
-    --seed 0
-# the isolated-shift rows of the paper: the
-# SB3 trainer of the online methods
-python experiments/dr_sac_mujoco_v5/train.py \
-    --env Hopper-v5 --seed 0 \
-    --total-steps 1000000
+python baselines/train.py \
+    -c $CFG/dr_sac_hopper.yaml --seed 0
+python baselines/evaluate.py \
+    --run runs/dr_sac_hopper/seed0
 ```
 
 <p class="rl-book-more" markdown>[Open the full page](robust-online/dr.md)</p>
@@ -568,8 +557,10 @@ RFQI replaces the fitted-Q target by a worst-case Bellman backup over a total-va
 
 ```bash
 CFG=robustrllib/configs/experiment
-python baselines/rfqi/train_rfqi.py \
+python baselines/train.py \
     -c $CFG/rfqi_hopper.yaml --seed 0
+python baselines/evaluate.py \
+    --run runs/rfqi_hopper/seed0
 ```
 
 <p class="rl-book-more" markdown>[Open the full page](robust-offline/rfqi.md)</p>
@@ -610,9 +601,10 @@ RORL makes an SAC learner conservative through smoothing.
 
 ```bash
 CFG=robustrllib/configs/experiment
-python baselines/rorl/train_rorl.py \
-    -c $CFG/rorl_hopper_bcreg_full.yaml \
-    --seed 0
+python baselines/train.py \
+    -c $CFG/rorl_hopper.yaml --seed 0
+python baselines/evaluate.py \
+    --run runs/rorl_hopper/seed0
 ```
 
 <p class="rl-book-more" markdown>[Open the full page](robust-offline/rorl.md)</p>
@@ -653,9 +645,10 @@ The offline adaptation keeps ATLA's principle, a learned observation adversary a
 
 ```bash
 CFG=robustrllib/configs/experiment
-python baselines/run_baseline.py \
-    -c $CFG/offline_atla_iql_hopper.yaml \
-    -- --seed 0
+python baselines/train.py \
+    -c $CFG/atla_iql_hopper.yaml --seed 0
+python baselines/evaluate.py \
+    --run runs/atla_iql_hopper/seed0
 ```
 
 <p class="rl-book-more" markdown>[Open the full page](robust-offline/atla-iql.md)</p>
@@ -696,17 +689,10 @@ RSC-IQL applies RSC's counterfactual rewriting to logged data. A causal mask ove
 
 ```bash
 CFG=robustrllib/configs/experiment
-# 1. fit the causal mask the experiment card
-#    names under mask_path
-python \
-    baselines/causaldro_iql/fit_causal_mask.py \
-    -c $CFG/causaldro_iql_hopper.yaml \
-    --out runs/causaldro_iql/masks/hopper_medium_seed0_sw05.npz \
-    --seed 0
-# 2. train
-python baselines/run_baseline.py \
-    -c $CFG/causaldro_iql_hopper.yaml \
-    -- --seed 0
+python baselines/train.py \
+    -c $CFG/rsc_iql_hopper.yaml --seed 0
+python baselines/evaluate.py \
+    --run runs/rsc_iql_hopper/seed0
 ```
 
 <p class="rl-book-more" markdown>[Open the full page](robust-offline/rsc-iql.md)</p>
@@ -747,8 +733,10 @@ RAMBO augments the dataset with short rollouts from a learned dynamics ensemble 
 
 ```bash
 CFG=robustrllib/configs/experiment
-python baselines/rambo/train_rambo.py \
+python baselines/train.py \
     -c $CFG/rambo_hopper.yaml --seed 0
+python baselines/evaluate.py \
+    --run runs/rambo_hopper/seed0
 ```
 
 <p class="rl-book-more" markdown>[Open the full page](robust-offline/rambo.md)</p>
@@ -789,8 +777,10 @@ ROMB adapts a learned world model against the policy under a constrained maximin
 
 ```bash
 CFG=robustrllib/configs/experiment
-python baselines/run_baseline.py \
-    -c $CFG/romb_iql_hopper.yaml -- --seed 0
+python baselines/train.py \
+    -c $CFG/romb_hopper.yaml --seed 0
+python baselines/evaluate.py \
+    --run runs/romb_hopper/seed0
 ```
 
 <p class="rl-book-more" markdown>[Open the full page](robust-offline/romb.md)</p>
@@ -831,14 +821,10 @@ FWM transfers the multi-step future modelling of the Diffusion World Model to a 
 
 ```bash
 CFG=robustrllib/configs/experiment
-# 1. pretrain the flow-matching world model
-#    (shared with PLR-PVL)
-python baselines/fwm_iql/pretrain_fm.py \
-    --dataset mujoco/hopper/medium-v0 \
-    --fm-seeds 0
-# 2. train the policy
-python baselines/fwm_iql/train_fwm_iql.py \
-    -c $CFG/fwm_iql_hopper.yaml
+python baselines/train.py \
+    -c $CFG/fwm_hopper.yaml --seed 0
+python baselines/evaluate.py \
+    --run runs/fwm_hopper/seed0
 ```
 
 <p class="rl-book-more" markdown>[Open the full page](robust-offline/fwm.md)</p>
@@ -879,15 +865,10 @@ PLR-PVL trains a collection of world models consistent with the offline data, tr
 
 ```bash
 CFG=robustrllib/configs/experiment
-# 1. pretrain the flow-matching ensemble (seed
-#    0 is shared with FWM)
-python baselines/fwm_iql/pretrain_fm.py \
-    --dataset mujoco/hopper/medium-v0 \
-    --fm-seeds 0 42 3047
-# 2. train the policy
-python baselines/run_baseline.py \
-    -c $CFG/fmgan_iql_hopper.yaml \
-    -- --seed 0
+python baselines/train.py \
+    -c $CFG/plr_pvl_hopper.yaml --seed 0
+python baselines/evaluate.py \
+    --run runs/plr_pvl_hopper/seed0
 ```
 
 <p class="rl-book-more" markdown>[Open the full page](robust-offline/plr-pvl.md)</p>
@@ -926,7 +907,16 @@ RAMU applies a risk measure over sampled next-state perturbations to both the re
 
 <p class="rl-book-h">Run the method</p>
 
-Trained and evaluated with the Isaac Lab recipe, on the PPO implementation that the methods of this group share.
+```bash
+./isaaclab.sh \
+    -p isaac/train.py --task g1 \
+    --method ramu --seed 0 --headless
+./isaaclab.sh \
+    -p isaac/evaluate.py --task g1 \
+    --checkpoint runs/isaac/g1_ramu/seed0/model_1499.pt \
+    --training_seed 0 --condition all \
+    --headless
+```
 
 <p class="rl-book-more" markdown>[Open the full page](robust-safe/ramu.md)</p>
 
@@ -964,7 +954,16 @@ SPiDR trains a constrained policy under domain randomisation and adds a pessimis
 
 <p class="rl-book-h">Run the method</p>
 
-Trained and evaluated with the Isaac Lab recipe, on the PPO implementation that the methods of this group share.
+```bash
+./isaaclab.sh \
+    -p isaac/train.py --task g1 \
+    --method spidr --seed 0 --headless
+./isaaclab.sh \
+    -p isaac/evaluate.py --task g1 \
+    --checkpoint runs/isaac/g1_spidr/seed0/model_899.pt \
+    --training_seed 0 --condition all \
+    --headless
+```
 
 <p class="rl-book-more" markdown>[Open the full page](robust-safe/spidr.md)</p>
 

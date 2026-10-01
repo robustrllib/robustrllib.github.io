@@ -268,9 +268,16 @@ pre.code .fn { color: #e8e6dc; }
   transition: opacity .18s ease;
 }
 .tb-panel.is-changing { opacity: .4; }
+.tb-panel.is-comparison { grid-template-columns: minmax(0, 1fr); }
 .tb-figure { margin: 0; }
 .tb-figure img { display: block; width: 100%; height: auto; border-radius: 10px; }
+.tb-comparison { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.tb-clip { min-width: 0; }
+.tb-clip span { display: block; margin-bottom: 6px; font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.tb-clip video { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: contain; background: #151c24; border-radius: 8px; }
+.tb-comparison-tall video { aspect-ratio: 4 / 3; }
 .tb-figure figcaption { margin-top: 10px; font-size: 13.5px; color: var(--muted); text-align: left; }
+@media (max-width: 560px) { .tb-comparison { grid-template-columns: minmax(0, 1fr); } }
 .tb-detail { min-width: 0; }
 .tb-title { margin: 0 0 6px; font-size: 18px; letter-spacing: -.01em; }
 .tb-blurb { margin: 0 0 10px; color: var(--ink-2); font-size: 15px; }

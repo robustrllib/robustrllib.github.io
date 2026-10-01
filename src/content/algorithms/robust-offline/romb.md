@@ -34,16 +34,16 @@ keeps it on the data, and the policy is trained on rollouts from the adapted mod
 ## Run the method
 
 ```bash
-python baselines/run_baseline.py \
-    -c robustrllib/configs/experiment/romb_iql_hopper.yaml \
-    -- --seed 0
+python baselines/train.py \
+    -c robustrllib/configs/experiment/romb_hopper.yaml --seed 0
+python baselines/evaluate.py --run runs/romb_hopper/seed0
 ```
 
 | File | Path |
 |---|---|
-| Implementation | `baselines/romb_iql` |
-| Algorithm card | `robustrllib/configs/algorithm/romb_iql.yaml` |
-| Experiment file | `robustrllib/configs/experiment/romb_iql_hopper.yaml` |
+| Implementation | `baselines/romb` |
+| Algorithm card | `robustrllib/configs/algorithm/romb.yaml` |
+| Experiment file | `robustrllib/configs/experiment/romb_hopper.yaml` |
 
 Training is on the nominal task. The configuration files are explained in [Run a Method](../run-a-method.md), and the evaluation of the frozen checkpoint in [Evaluation Protocol](../../evaluation/protocol.md).
 

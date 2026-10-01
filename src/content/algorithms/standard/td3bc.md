@@ -30,8 +30,9 @@ balanced against the critic by dividing by the mean absolute Q-value over the ba
 ## Run the method
 
 ```bash
-python baselines/td3bc/train_td3bc.py \
+python baselines/train.py \
     -c robustrllib/configs/experiment/td3bc_hopper.yaml --seed 0
+python baselines/evaluate.py --run runs/td3bc_hopper/seed0
 ```
 
 | File | Path |

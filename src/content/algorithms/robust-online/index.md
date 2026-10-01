@@ -34,8 +34,9 @@ Robust online methods learn through continued interaction with the environment. 
 Every method is launched from an experiment file. ATLA-SA on Hopper:
 
 ```bash
-python baselines/atla/train_atla.py \
-    -c robustrllib/configs/experiment/atla_lstm_sa_hopper.yaml --seed 0
+python baselines/train.py \
+    -c robustrllib/configs/experiment/atla_sa_hopper.yaml --seed 0
+python baselines/evaluate.py --run runs/atla_sa_hopper/seed0
 ```
 
 Every method page gives the command for that method. [Run a Method](../run-a-method.md) explains the experiment file, the overrides and the run directory.
@@ -44,11 +45,11 @@ Every method page gives the command for that method. [Run a Method](../run-a-met
 
 | Method | Implementation | Experiment file | Training budget |
 |---|---|---|---|
-| [ATLA](atla.md) | `baselines/atla` | `atla_online_hopper.yaml` | About 5M environment steps (2441 iterations of 2048 steps) |
-| [ATLA-SA](atla-sa.md) | `baselines/atla` | `atla_lstm_sa_hopper.yaml` | About 5M environment steps (2441 iterations of 2048 steps) |
-| [RSC](rsc.md) | `baselines/causaldro_online` | `causaldro_online_hopper.yaml` | 1M environment steps |
-| [RARL](rarl.md) | `baselines/rarl_hopper` | — | 2M environment steps |
-| [DR](dr.md) | `baselines/dr` | `dr_hopper_axis_narrow.yaml` | 1M environment steps (DR-SAC) |
+| [ATLA](atla.md) | `baselines/atla` | `atla_hopper.yaml` | About 5M environment steps (2441 iterations of 2048 steps) |
+| [ATLA-SA](atla-sa.md) | `baselines/atla` | `atla_sa_hopper.yaml` | About 5M environment steps (2441 iterations of 2048 steps) |
+| [RSC](rsc.md) | `baselines/rsc` | `rsc_hopper.yaml` | 1M environment steps |
+| [RARL](rarl.md) | `baselines/rarl` | `rarl_ppo_hopper.yaml` | 2M environment steps |
+| [DR](dr.md) | `baselines/dr_sac` | `dr_sac_hopper.yaml` | 1M environment steps (DR-SAC) |
 
 Experiment files are in `robustrllib/configs/experiment/`. Each names the algorithm card, the task card and the evaluation grid of the run. **Every method keeps its native training recipe and budget**; what is shared is the evaluation.
 

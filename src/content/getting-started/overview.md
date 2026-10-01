@@ -97,17 +97,17 @@ The code has four parts. **Configuration** selects what runs, **Algorithms** and
 
 | Part | Location | Interface | Meaning |
 |---|---|---|---|
-| Public interface | `robustrllib` | `make_robust`, `build_pipeline`, `ShiftSpec`, `load_config`, `bind_actor` | Everything a user script imports |
+| Public interface | `robustrllib` | `make_robust`, `build_pipeline`, `ShiftSpec`, `make_env`, `load_config`, `bind_actor` | Everything a user script imports |
 | Shift declaration | `robustrllib.spec` | `ShiftSpec(target, mode, params, schedule, seed)` | One shift, written as data |
 | Pipeline | `robustrllib.pipeline` | `make_robust(env_id, shifts, seed)` | Creates the task and stacks one wrapper per shift, in list order |
 | Shift wrappers | `robustrllib.shifts` | `ShiftWrapper`, one subclass per target | Applies a shift at `reset` and at `step` |
 | Schedules | `robustrllib.schedule` | `make_schedule(spec)` | The Non-stationary mode: a multiplier that changes within the episode |
 | Backend adapters | `robustrllib.adapters` | `DynamicsAdapter`: `list_params`, `get_nominal`, `set_param`, `reset_all` | Reads and writes the parameters of one simulator |
 | Algorithm interface | `robustrllib.algos` | `Algo`: `train`, `predict`, `save`, `load` | The contract a method implements to enter the library |
-| Training runtime | `robustrllib.training` | `TrainerAdapter`, `run_trainer` | Launches a run, writes checkpoints, resumes |
-| Method implementations | `baselines/<method>/` | `train_<method>.py -c <experiment.yaml>` | The native training recipe of each method |
+| Task environments | `robustrllib.tasks` | `make_env(task_card, shifts, seed)` | Builds the environment of a task card, for training and evaluation alike |
+| Method implementations | `baselines/<method>/` | `baselines/train.py -c <experiment.yaml> --seed N` | The training recipe of each method, behind one launcher |
 | Configuration | `robustrllib/configs/` | Cards: `algorithm`, `task`, `eval`, `experiment` | What to train, on which task, evaluated on which grid |
-| Evaluation | `baselines/eval_final.py` | `-c <experiment.yaml> --run-dir <dir>` | Runs the frozen checkpoint on every condition of a grid |
+| Evaluation | `baselines/evaluate.py` | `--run <dir> [--eval <grid>]` | Runs the frozen checkpoint on every condition of a grid |
 | Metrics | `robustrllib.metrics` | `normalize`, `condition_metrics`, `summary_metrics` | Turns returns into the reported scores |
 
 Where to go next:

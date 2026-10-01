@@ -183,9 +183,9 @@
 
       <main class="bk-article" id="bk-content">
         <h1 id="run-a-method">Run a Method<a class="headerlink" href="#run-a-method" title="Permanent link">&para;</a></h1>
-<p>A method is launched from an experiment file. The file names an algorithm card, a task card and
-an evaluation grid, and carries the training budget. Every bundled method keeps its own training
-recipe behind this one entry.</p>
+<p>Every method of the benchmark is trained and evaluated through the same two commands. An
+experiment card names one cell of the benchmark, a method on a task; the launcher resolves it,
+runs the method's own training script, and the evaluator scores the final checkpoint.</p>
 <h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -196,12 +196,16 @@ recipe behind this one entry.</p>
 </thead>
 <tbody>
 <tr>
-<td>Interface</td>
-<td>A launcher that takes an experiment YAML with <code>-c</code></td>
+<td>Training</td>
+<td><code>python baselines/train.py -c &lt;experiment card&gt; --seed N</code></td>
+</tr>
+<tr>
+<td>Evaluation</td>
+<td><code>python baselines/evaluate.py --run &lt;run directory&gt;</code></td>
 </tr>
 <tr>
 <td>Method selection</td>
-<td>The <code>algorithm</code> card named in the experiment file</td>
+<td>The <code>algorithm</code> card named in the experiment card</td>
 </tr>
 <tr>
 <td>Configuration</td>
@@ -209,15 +213,11 @@ recipe behind this one entry.</p>
 </tr>
 <tr>
 <td>Output</td>
-<td>A run directory with <code>ckpt/epNNNN.pt</code> and <code>learning_curve.json</code></td>
-</tr>
-<tr>
-<td>Evaluation</td>
-<td><code>baselines/eval_final.py</code> on the last checkpoint</td>
+<td><code>&lt;run&gt;/config.yaml</code>, <code>&lt;run&gt;/ckpt/</code>, <code>&lt;run&gt;/progress.csv</code>, <code>&lt;run&gt;/eval/&lt;grid&gt;.json</code></td>
 </tr>
 <tr>
 <td>Limits</td>
-<td><code>baselines/run_baseline.py</code> applies only to algorithm cards with an <code>entry</code> key</td>
+<td>The robust safe methods run on Isaac Lab and have their own commands; see <a href="../robust-safe/ramu/">RAMU</a> and <a href="../robust-safe/spidr/">SPiDR</a></td>
 </tr>
 </tbody>
 </table>
@@ -234,32 +234,31 @@ recipe behind this one entry.</p>
 <tr>
 <td>Algorithm</td>
 <td><code>algorithm/</code></td>
-<td>Method name, implementing class, default hyperparameters</td>
+<td>The training script (<code>entry</code>), the class that loads a checkpoint (<code>class</code>), default hyperparameters</td>
 </tr>
 <tr>
 <td>Task</td>
 <td><code>task/</code></td>
-<td>Environment id and, for offline methods, the dataset</td>
+<td>Environment id, constructor arguments, observation adapter and, for offline methods, the dataset</td>
 </tr>
 <tr>
 <td>Eval</td>
 <td><code>eval/</code></td>
-<td>The perturbation grid a frozen policy is scored on</td>
+<td>The conditions a frozen policy is scored on</td>
 </tr>
 <tr>
 <td>Experiment</td>
 <td><code>experiment/</code></td>
-<td>The three references, the budget and hyperparameter overrides</td>
+<td>The three references, the training budget and the task's hyperparameters</td>
 </tr>
 </tbody>
 </table>
-<p>The experiment file ties the cards together. One method, <a href="../robust-online/dr/">DR</a>, reads a
-file of its own on top of these: the randomization ranges it trains under, kept in <code>dr/</code> and
-described with the method <a href="#online-methods">below</a>.</p>
-<div class="highlight"><span class="filename">robustrllib/configs/experiment/rorl_hopper.yaml</span><pre><span></span><code><span class="c1"># Official Hopper-medium RORL hyperparameters on benchmark Minari data.</span>
+<p>There is one experiment card per cell of the benchmark, named <code>&lt;method&gt;_&lt;task&gt;.yaml</code>.</p>
+<div class="highlight"><span class="filename">robustrllib/configs/experiment/rorl_hopper.yaml</span><pre><span></span><code><span class="c1"># RORL on Hopper-v5 (Minari medium).</span>
+<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rorl_hopper</span>
 <span class="nt">algorithm</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">robustrllib/configs/algorithm/rorl.yaml</span>
-<span class="nt">task</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">robustrllib/configs/task/hopper_minari_medium.yaml</span>
-<span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">robustrllib/configs/eval/t0_mujoco.yaml</span>
+<span class="nt">task</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">robustrllib/configs/task/hopper_medium.yaml</span>
+<span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">robustrllib/configs/eval/part1_mujoco.yaml</span>
 <span class="nt">hparams</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">num_samples</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span>
 <span class="w">  </span><span class="nt">policy_smooth_eps</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.005</span>
@@ -269,119 +268,64 @@ described with the method <a href="#online-methods">below</a>.</p>
 <span class="w">  </span><span class="nt">q_ood_reg</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span>
 <span class="w">  </span><span class="nt">q_ood_uncertainty_reg</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2.0</span>
 <span class="w">  </span><span class="nt">q_ood_uncertainty_reg_min</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.1</span>
-<span class="w">  </span><span class="nt">q_ood_uncertainty_decay</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.000001</span>
-<span class="nt">train</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">seed</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
-<span class="w">  </span><span class="nt">epochs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3000</span>
-<span class="w">  </span><span class="nt">updates_per_epoch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="w">  </span><span class="nt">batch_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">256</span>
-<span class="w">  </span><span class="nt">eval_every</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
-<span class="w">  </span><span class="nt">eval_steps_per_epoch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="w">  </span><span class="nt">eval_seed</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
-<span class="w">  </span><span class="nt">max_path_length</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="w">  </span><span class="nt">save_every</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">500</span>
-<span class="w">  </span><span class="nt">resume_every</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">50</span>
-<span class="w">  </span><span class="nt">torch_threads</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4</span>
-<span class="w">  </span><span class="nt">out_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">runs/rorl/hopper_medium_seed0</span>
+<span class="w">  </span><span class="nt">q_ood_uncertainty_decay</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0e-06</span>
+<span class="nt">train</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">updates</span><span class="p">:</span><span class="w"> </span><span class="nv">3000000</span><span class="p p-Indicator">}</span>
 </code></pre></div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The files spell the config directory by its other name. <code>robustrllib/configs</code> is a link to
-that directory, so both spellings name the same files.</p>
-</div>
 <p>The task card names the environment and the dataset.</p>
-<div class="highlight"><span class="filename">robustrllib/configs/task/hopper_minari_medium.yaml</span><pre><span></span><code><span class="c1"># Minari medium dataset. The dataset was recorded on the -v5 env, so env_id must</span>
-<span class="c1"># match it: training and evaluation have to share the dataset's MDP.</span>
-<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hopper_minari_medium</span>
+<div class="highlight"><span class="filename">robustrllib/configs/task/hopper_medium.yaml</span><pre><span></span><code><span class="c1"># MuJoCo locomotion, offline methods: Hopper-v5 with the Minari medium dataset.</span>
+<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hopper_medium</span>
 <span class="nt">env_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Hopper-v5</span>
-<span class="nt">datasets</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">mujoco/hopper/medium-v0</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span>
-<span class="nt">body_dynamics</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">torso</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">0.8</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0.9</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">1.1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">1.2</span><span class="p p-Indicator">],</span><span class="nt"> foot</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">0.8</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0.9</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">1.1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">1.2</span><span class="p p-Indicator">]}</span>
-<span class="nt">mopo_domain</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hopper</span>
+<span class="nt">dataset</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mujoco/hopper/medium-v0</span>
+<span class="nt">score</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">min</span><span class="p">:</span><span class="w"> </span><span class="nv">-20.27</span><span class="p p-Indicator">,</span><span class="nt"> max</span><span class="p">:</span><span class="w"> </span><span class="nv">3234.3</span><span class="p p-Indicator">}</span><span class="w">   </span><span class="c1"># normalization anchors: D4RL v2 random / expert</span>
 </code></pre></div>
-<p>The merged configuration can be inspected without starting a run.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">robustrllib.training.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">TrainingConfigBundle</span>
+<p>The launcher resolves the card into one self-contained configuration; the same function shows
+it without starting a run.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">baselines.common</span><span class="w"> </span><span class="kn">import</span> <span class="n">resolve</span>
 
-<span class="n">bundle</span> <span class="o">=</span> <span class="n">TrainingConfigBundle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">"robustrllib/configs/experiment/rorl_hopper.yaml"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">bundle</span><span class="o">.</span><span class="n">algorithm</span><span class="p">[</span><span class="s2">"name"</span><span class="p">],</span> <span class="n">bundle</span><span class="o">.</span><span class="n">task</span><span class="p">[</span><span class="s2">"env_id"</span><span class="p">])</span>
-<span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">bundle</span><span class="o">.</span><span class="n">hparams</span><span class="p">),</span> <span class="n">bundle</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="s2">"hidden_size"</span><span class="p">],</span> <span class="n">bundle</span><span class="o">.</span><span class="n">hparams</span><span class="p">[</span><span class="s2">"q_smooth_eps"</span><span class="p">])</span>
+<span class="n">cfg</span> <span class="o">=</span> <span class="n">resolve</span><span class="p">(</span><span class="s2">"robustrllib/configs/experiment/rorl_hopper.yaml"</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">cfg</span><span class="p">[</span><span class="s2">"algorithm"</span><span class="p">][</span><span class="s2">"name"</span><span class="p">],</span> <span class="n">cfg</span><span class="p">[</span><span class="s2">"task"</span><span class="p">][</span><span class="s2">"env_id"</span><span class="p">],</span> <span class="n">cfg</span><span class="p">[</span><span class="s2">"task"</span><span class="p">][</span><span class="s2">"dataset"</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cfg</span><span class="p">[</span><span class="s2">"algorithm"</span><span class="p">][</span><span class="s2">"hparams"</span><span class="p">]),</span> <span class="n">cfg</span><span class="p">[</span><span class="s2">"algorithm"</span><span class="p">][</span><span class="s2">"hparams"</span><span class="p">][</span><span class="s2">"q_ood_uncertainty_reg"</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">cfg</span><span class="p">[</span><span class="s2">"train"</span><span class="p">])</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>rorl Hopper-v5
-31 256 0.005
+<div class="highlight"><pre><span></span><code>rorl Hopper-v5 mujoco/hopper/medium-v0
+30 2.0
+{'updates': 3000000, 'seed': 0, 'out_dir': 'runs/rorl_hopper/seed0', 'shifts': []}
 </code></pre></div>
-<p><code>hparams</code> of the experiment file are merged over <code>hparams</code> of the algorithm card, and <strong>the
-experiment wins</strong>. The 31 entries are the 22 defaults of the card plus the 9 keys above.</p>
+<p><code>hparams</code> of the experiment card are merged over <code>hparams</code> of the algorithm card, and <strong>the
+experiment card wins</strong>: <code>q_ood_uncertainty_reg</code> is 0.0 in the algorithm card and 2.0 for Hopper.</p>
 <h2 id="launch-a-method">Launch a method<a class="headerlink" href="#launch-a-method" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code>python<span class="w"> </span>baselines/rorl/train_rorl.py<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>-c<span class="w"> </span>robustrllib/configs/experiment/rorl_hopper.yaml<span class="w"> </span>--seed<span class="w"> </span><span class="m">0</span>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>baselines/train.py<span class="w"> </span>-c<span class="w"> </span>robustrllib/configs/experiment/rorl_hopper.yaml<span class="w"> </span>--seed<span class="w"> </span><span class="m">0</span>
+python<span class="w"> </span>baselines/evaluate.py<span class="w"> </span>--run<span class="w"> </span>runs/rorl_hopper/seed0
 </code></pre></div>
 <table>
 <thead>
 <tr>
-<th>Launcher</th>
-<th>Applies to</th>
+<th>Step</th>
+<th>What happens</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>The train script of the method, here <code>baselines/rorl/train_rorl.py</code></td>
-<td>The method the script belongs to</td>
+<td>Resolve</td>
+<td>The card, its three references and the seed become <code>runs/rorl_hopper/seed0/config.yaml</code></td>
 </tr>
 <tr>
-<td><code>scripts/robustgym.py train --config &lt;experiment.yaml&gt;</code></td>
-<td>The registered methods listed below</td>
+<td>Train</td>
+<td>The script the algorithm card names under <code>entry</code>, here <code>baselines/rorl/train.py</code>, runs on that file</td>
 </tr>
 <tr>
-<td><code>baselines/run_baseline.py -c &lt;experiment.yaml&gt;</code></td>
-<td>Algorithm cards with an <code>entry</code> key that names a train script</td>
+<td>Evaluate</td>
+<td>The class the algorithm card names under <code>class</code> loads the final checkpoint and acts on every condition of the card's grid</td>
 </tr>
 </tbody>
 </table>
-<p>The unified launcher resolves the method from the algorithm card and rejects overrides that the
-method does not support.</p>
-<div class="highlight"><pre><span></span><code>python<span class="w"> </span>scripts/robustgym.py<span class="w"> </span>list
-python<span class="w"> </span>scripts/robustgym.py<span class="w"> </span>train<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--config<span class="w"> </span>robustrllib/configs/experiment/rorl_hopper.yaml<span class="w"> </span>--seed<span class="w"> </span><span class="m">0</span>
+<p>Commands run from the root of the checkout. Each training seed is one run with its own run
+directory, <code>runs/&lt;card&gt;/seed&lt;k&gt;</code> unless <code>--out</code> names another.</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>baselines/train.py<span class="w"> </span>-c<span class="w"> </span>robustrllib/configs/experiment/rorl_hopper.yaml<span class="w"> </span>--seed<span class="w"> </span><span class="m">1</span>
 </code></pre></div>
-<table>
-<thead>
-<tr>
-<th>Registered name</th>
-<th>Regime</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>iql</code>, <code>rfqi</code>, <code>rorl</code></td>
-<td>Offline, model-free</td>
-</tr>
-<tr>
-<td><code>mopo</code>, <code>rambo</code></td>
-<td>Offline, model-based</td>
-</tr>
-<tr>
-<td><code>synther-iql</code></td>
-<td>Offline, generative</td>
-</tr>
-<tr>
-<td><code>atla</code>, <code>causaldro-online</code>, <code>dr-sac</code></td>
-<td>Online, model-free</td>
-</tr>
-</tbody>
-</table>
-<p>Arguments after <code>--</code> are passed on to the train script.</p>
-<div class="highlight"><pre><span></span><code>python<span class="w"> </span>baselines/run_baseline.py<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>-c<span class="w"> </span>robustrllib/configs/experiment/td3bc_hopper.yaml<span class="w"> </span>--<span class="w"> </span>--seed<span class="w"> </span><span class="m">0</span>
-</code></pre></div>
-<p><strong><code>baselines/run_baseline.py</code> needs an <code>entry</code> key.</strong> The card
-<code>robustrllib/configs/algorithm/rorl.yaml</code> has none, so for RORL the launcher stops with
-<code>ValueError: algorithm config has no 'entry' train script: rorl</code>.</p>
-<p>Method pages such as <a href="../robust-offline/rorl/">RORL</a> give the command of each
-method. The methods are listed under <a href="../">Algorithms</a>, in four groups:
-<a href="../standard/">standard</a>,
-<a href="../robust-online/">robust online</a>,
-<a href="../robust-offline/">robust offline</a> and
-<a href="../robust-safe/">robust safe</a>.</p>
+<p>The method pages, listed under <a href="../">Algorithms</a>, give the card of each method; the
+methods are in four groups: <a href="../standard/">standard</a>, <a href="../robust-online/">robust online</a>,
+<a href="../robust-offline/">robust offline</a> and <a href="../robust-safe/">robust safe</a>.</p>
 <h2 id="override-settings">Override settings<a class="headerlink" href="#override-settings" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -398,69 +342,23 @@ method. The methods are listed under <a href="../">Algorithms</a>, in four group
 <td>Defaults that hold for every task</td>
 </tr>
 <tr>
-<td>Experiment file</td>
-<td>Add keys under <code>hparams</code> or <code>train</code> in a copy of the file</td>
+<td>Experiment card</td>
+<td>Edit <code>hparams</code> or <code>train</code> of the card, or of a copy</td>
 <td>A setting of one task or one study</td>
 </tr>
 <tr>
 <td>Command line</td>
-<td>Flags of the train script</td>
-<td>Seed, device, a short test run</td>
+<td><code>--set key=value</code>, a dotted key of the resolved configuration</td>
+<td>A short test run, a one-off change</td>
 </tr>
 </tbody>
 </table>
-<p>The flags of <code>baselines/rorl/train_rorl.py</code>:</p>
-<table>
-<thead>
-<tr>
-<th>Flag</th>
-<th>Overrides</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>--seed</code></td>
-<td><code>train.seed</code>, and a trailing <code>seed&lt;N&gt;</code> of the output directory</td>
-</tr>
-<tr>
-<td><code>--device</code></td>
-<td>The device. The default is CUDA when available.</td>
-</tr>
-<tr>
-<td><code>--epochs</code>, <code>--updates-per-epoch</code>, <code>--batch-size</code></td>
-<td>The keys of the same name under <code>train</code></td>
-</tr>
-<tr>
-<td><code>--eval-steps</code></td>
-<td><code>train.eval_steps_per_epoch</code></td>
-</tr>
-<tr>
-<td><code>--torch-threads</code>, <code>--out-dir</code></td>
-<td>The keys of the same name under <code>train</code></td>
-</tr>
-<tr>
-<td><code>--resume {auto,never}</code></td>
-<td>Whether the run continues from <code>ckpt/resume.pt</code></td>
-</tr>
-<tr>
-<td><code>--smoke</code></td>
-<td>One epoch of one update, written to <code>&lt;out_dir&gt;_smoke</code></td>
-</tr>
-</tbody>
-</table>
-<p>Each training seed is one run with its own run directory.</p>
-<div class="highlight"><pre><span></span><code>python<span class="w"> </span>baselines/rorl/train_rorl.py<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>-c<span class="w"> </span>robustrllib/configs/experiment/rorl_hopper.yaml<span class="w"> </span>--seed<span class="w"> </span><span class="m">0</span>
-python<span class="w"> </span>baselines/rorl/train_rorl.py<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>-c<span class="w"> </span>robustrllib/configs/experiment/rorl_hopper.yaml<span class="w"> </span>--seed<span class="w"> </span><span class="m">1</span>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>baselines/train.py<span class="w"> </span>-c<span class="w"> </span>robustrllib/configs/experiment/rorl_hopper.yaml<span class="w"> </span>--seed<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--set<span class="w"> </span>train.updates<span class="o">=</span><span class="m">100000</span><span class="w"> </span>algorithm.hparams.q_smooth_eps<span class="o">=</span><span class="m">0</span>.01
 </code></pre></div>
-<div class="admonition tip">
-<p class="admonition-title">Tip</p>
-<p>Hyperparameters of the method, such as <code>q_smooth_eps</code>, have no flag. A change in the
-experiment file is recorded with the run.</p>
-</div>
+<p>The value is read as YAML, so <code>0.01</code>, <code>true</code> and <code>[256, 256]</code> keep their types. The
+resolved configuration, overrides included, is written to <code>&lt;run&gt;/config.yaml</code> with the run.</p>
 <h2 id="run-directory">Run directory<a class="headerlink" href="#run-directory" title="Permanent link">&para;</a></h2>
-<p>A finished RORL run writes to <code>runs/rorl/hopper_medium_seed0/</code>.</p>
 <table>
 <thead>
 <tr>
@@ -470,155 +368,117 @@ experiment file is recorded with the run.</p>
 </thead>
 <tbody>
 <tr>
-<td><code>ckpt/epNNNN.pt</code></td>
-<td>The policy after <code>NNNN</code> epochs, saved every <code>save_every</code> epochs and at the end</td>
+<td><code>config.yaml</code></td>
+<td>The resolved configuration the training script ran on</td>
 </tr>
 <tr>
-<td><code>resolved_config.json</code></td>
-<td>Both cards, the merged hyperparameters, the resolved training settings, a dataset summary</td>
+<td><code>ckpt/</code></td>
+<td>Checkpoints named by their step or update count; the highest-numbered one is the final checkpoint</td>
 </tr>
 <tr>
-<td><code>run_manifest.json</code></td>
-<td>Method, seed, run directory, formal-result flag</td>
+<td><code>progress.csv</code></td>
+<td>One row per log interval: the step or update count, the training return and the losses</td>
 </tr>
 <tr>
-<td><code>learning_curve.json</code></td>
-<td>One row per epoch: nominal return during training and the losses</td>
-</tr>
-<tr>
-<td><code>checkpoint_index.json</code></td>
-<td>The saved checkpoints with epoch and update count</td>
-</tr>
-<tr>
-<td><code>training_complete.json</code></td>
-<td>Written last; marks the run as finished</td>
-</tr>
-<tr>
-<td><code>unified_adapter.json</code></td>
-<td>Written only by <code>scripts/robustgym.py</code></td>
+<td><code>eval/&lt;grid&gt;.json</code></td>
+<td>Written by the evaluator: per condition the returns, their mean, spread and lower tail, the normalized score</td>
 </tr>
 </tbody>
 </table>
-<p>The checkpoint with the highest number is the last checkpoint, and <strong>it is the one the
-benchmark evaluates</strong>. A run directory that contains <code>training_complete.json</code> is not
-overwritten: the trainer refuses to start.</p>
-<table>
-<thead>
-<tr>
-<th>Event</th>
-<th>Behaviour</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Every <code>resume_every</code> epochs</td>
-<td>The full training state is written to <code>ckpt/resume.pt</code></td>
-</tr>
-<tr>
-<td>The same command is run again</td>
-<td>Training continues from <code>ckpt/resume.pt</code></td>
-</tr>
-<tr>
-<td><code>SIGTERM</code> or <code>SIGUSR1</code></td>
-<td>The state is saved at the next epoch boundary; exit code 75</td>
-</tr>
-<tr>
-<td>Completion</td>
-<td><code>ckpt/resume.pt</code> is removed</td>
-</tr>
-</tbody>
-</table>
+<p><strong>The final checkpoint is the one the benchmark evaluates.</strong> One method keeps the selection rule
+of its own paper: <a href="../robust-offline/rfqi/">RFQI</a> also writes <code>ckpt/best.pt</code> and its algorithm
+card sets <code>checkpoint: best</code>.</p>
 <h2 id="online-methods">Online methods<a class="headerlink" href="#online-methods" title="Permanent link">&para;</a></h2>
-<p>An online method has no dataset and measures its budget in environment steps.</p>
-<div class="highlight"><span class="filename">robustrllib/configs/experiment/dr_hopper_axis_narrow.yaml (comments omitted)</span><pre><span></span><code><span class="nt">algorithm</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">robustrllib/configs/algorithm/sac_dr.yaml</span>
-<span class="nt">task</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">robustrllib/configs/task/hopper_online.yaml</span>
-<span class="nt">dr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">robustrllib/configs/dr/mujoco_axis_narrow.yaml</span>
-<span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">robustrllib/configs/eval/t0_mujoco.yaml</span>
-<span class="nt">train</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">seed</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
-<span class="w">  </span><span class="nt">eval_seed</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
-<span class="w">  </span><span class="nt">total_steps</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000000</span>
-<span class="w">  </span><span class="nt">stage_steps</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100000</span>
-<span class="w">  </span><span class="nt">eval_every_stages</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
-<span class="w">  </span><span class="nt">eval_episodes</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
-<span class="w">  </span><span class="nt">out_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">runs/dr/hopper_axis_narrow_seed0</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code>python<span class="w"> </span>scripts/robustgym.py<span class="w"> </span>train<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--config<span class="w"> </span>robustrllib/configs/experiment/dr_hopper_axis_narrow.yaml<span class="w"> </span>--seed<span class="w"> </span><span class="m">0</span>
+<p>An online method has no dataset and measures its budget in environment steps. Its training
+environment is the task card's environment, built by the same function the evaluator uses, so a
+policy always meets the observation it was trained on.</p>
+<div class="highlight"><span class="filename">robustrllib/configs/experiment/dr_sac_hopper.yaml</span><pre><span></span><code><span class="c1"># DR-SAC on Hopper-v5 (Part 1): gravity, morphology and gear each drawn from U(0.9, 1.1) per episode.</span>
+<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dr_sac_hopper</span>
+<span class="nt">algorithm</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">robustrllib/configs/algorithm/dr_sac.yaml</span>
+<span class="nt">task</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">robustrllib/configs/task/hopper.yaml</span>
+<span class="nt">eval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">robustrllib/configs/eval/part1_mujoco.yaml</span>
+<span class="nt">hparams</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">randomize</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="nv">dynamics</span><span class="p p-Indicator">,</span><span class="nt"> mode</span><span class="p">:</span><span class="w"> </span><span class="nv">uniform</span><span class="p p-Indicator">,</span><span class="nt"> params</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">param</span><span class="p">:</span><span class="w"> </span><span class="nv">gravity</span><span class="p p-Indicator">,</span><span class="nt"> low</span><span class="p">:</span><span class="w"> </span><span class="nv">0.9</span><span class="p p-Indicator">,</span><span class="nt"> high</span><span class="p">:</span><span class="w"> </span><span class="nv">1.1</span><span class="p p-Indicator">}}</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="nv">dynamics</span><span class="p p-Indicator">,</span><span class="nt"> mode</span><span class="p">:</span><span class="w"> </span><span class="nv">uniform</span><span class="p p-Indicator">,</span><span class="nt"> params</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">param</span><span class="p">:</span><span class="w"> </span><span class="nv">body_pos_xyz</span><span class="p p-Indicator">,</span><span class="nt"> index</span><span class="p">:</span><span class="w"> </span><span class="nv">all</span><span class="p p-Indicator">,</span><span class="nt"> low</span><span class="p">:</span><span class="w"> </span><span class="nv">0.9</span><span class="p p-Indicator">,</span><span class="nt"> high</span><span class="p">:</span><span class="w"> </span><span class="nv">1.1</span><span class="p p-Indicator">}}</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="nv">dynamics</span><span class="p p-Indicator">,</span><span class="nt"> mode</span><span class="p">:</span><span class="w"> </span><span class="nv">uniform</span><span class="p p-Indicator">,</span><span class="nt"> params</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">param</span><span class="p">:</span><span class="w"> </span><span class="nv">actuator_gear</span><span class="p p-Indicator">,</span><span class="nt"> index</span><span class="p">:</span><span class="w"> </span><span class="nv">all</span><span class="p p-Indicator">,</span><span class="nt"> low</span><span class="p">:</span><span class="w"> </span><span class="nv">0.9</span><span class="p p-Indicator">,</span><span class="nt"> high</span><span class="p">:</span><span class="w"> </span><span class="nv">1.1</span><span class="p p-Indicator">}}</span>
+<span class="nt">train</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">steps</span><span class="p">:</span><span class="w"> </span><span class="nv">1000000</span><span class="p p-Indicator">}</span>
 </code></pre></div>
 <table>
 <thead>
 <tr>
 <th></th>
 <th>Offline (RORL)</th>
-<th>Online (domain randomization with SAC)</th>
+<th>Online (DR-SAC)</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>Task card</td>
-<td><code>hopper_minari_medium.yaml</code>, with <code>datasets</code></td>
-<td><code>hopper_online.yaml</code>, without a dataset</td>
+<td><code>hopper_medium.yaml</code>, with a <code>dataset</code></td>
+<td><code>hopper.yaml</code>, without a dataset</td>
 </tr>
 <tr>
 <td>Budget</td>
-<td><code>epochs</code> times <code>updates_per_epoch</code> updates</td>
-<td><code>total_steps</code> environment steps in stages of <code>stage_steps</code></td>
+<td><code>train.updates</code> gradient updates</td>
+<td><code>train.steps</code> environment steps</td>
 </tr>
 <tr>
 <td>Training environment</td>
 <td>None</td>
-<td>Built with <code>make_robust</code></td>
+<td>The task card's environment</td>
 </tr>
 <tr>
-<td>Extra card</td>
-<td>None</td>
-<td><code>dr</code></td>
-</tr>
-<tr>
-<td>Last checkpoint</td>
-<td><code>ckpt/ep3000.pt</code>, named after the epoch</td>
-<td><code>ckpt/ep1000.pt</code>, named after the steps in thousands</td>
-</tr>
-<tr>
-<td>Extra output</td>
-<td>None</td>
-<td><code>dr_provenance.json</code></td>
+<td>Final checkpoint</td>
+<td><code>ckpt/update_3000000.pt</code></td>
+<td><code>ckpt/step_1000000.zip</code></td>
 </tr>
 </tbody>
 </table>
-<p>The <code>dr</code> card is where shifts enter training.</p>
-<div class="highlight"><span class="filename">robustrllib/configs/dr/mujoco_axis_narrow.yaml (comments omitted)</span><pre><span></span><code><span class="nt">randomization</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">param</span><span class="p">:</span><span class="w"> </span><span class="nv">gravity</span><span class="p p-Indicator">,</span><span class="nt">                    distribution</span><span class="p">:</span><span class="w"> </span><span class="nv">uniform</span><span class="p p-Indicator">,</span><span class="nt"> low</span><span class="p">:</span><span class="w"> </span><span class="nv">0.90</span><span class="p p-Indicator">,</span><span class="nt"> high</span><span class="p">:</span><span class="w"> </span><span class="nv">1.10</span><span class="p p-Indicator">}</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">param</span><span class="p">:</span><span class="w"> </span><span class="nv">body_pos_xyz</span><span class="p p-Indicator">,</span><span class="nt"> index</span><span class="p">:</span><span class="w"> </span><span class="nv">all</span><span class="p p-Indicator">,</span><span class="nt">   distribution</span><span class="p">:</span><span class="w"> </span><span class="nv">uniform</span><span class="p p-Indicator">,</span><span class="nt"> low</span><span class="p">:</span><span class="w"> </span><span class="nv">0.90</span><span class="p p-Indicator">,</span><span class="nt"> high</span><span class="p">:</span><span class="w"> </span><span class="nv">1.10</span><span class="p p-Indicator">}</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">param</span><span class="p">:</span><span class="w"> </span><span class="nv">actuator_gear</span><span class="p p-Indicator">,</span><span class="nt"> index</span><span class="p">:</span><span class="w"> </span><span class="nv">all</span><span class="p p-Indicator">,</span><span class="nt">  distribution</span><span class="p">:</span><span class="w"> </span><span class="nv">uniform</span><span class="p p-Indicator">,</span><span class="nt"> low</span><span class="p">:</span><span class="w"> </span><span class="nv">0.90</span><span class="p p-Indicator">,</span><span class="nt"> high</span><span class="p">:</span><span class="w"> </span><span class="nv">1.10</span><span class="p p-Indicator">}</span>
-<span class="nt">curriculum</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="nv">constant</span><span class="p p-Indicator">,</span><span class="nt"> end</span><span class="p">:</span><span class="w"> </span><span class="nv">1.0</span><span class="p p-Indicator">}</span>
+<p>Each entry of <code>randomize</code> is one <a href="../../shifts/sources/dynamic/">Dynamic shift</a> in the
+<a href="../../shifts/modes/stochastic/">Stochastic</a> mode, drawn anew at every <code>reset</code> of the training
+environment. Without them the same trainer is plain SAC.</p>
+<h2 id="training-time-shifts">Training-time shifts<a class="headerlink" href="#training-time-shifts" title="Permanent link">&para;</a></h2>
+<p>A reward corruption or a delayed reward changes what a method learns from, not what a frozen
+policy does, so these shifts act during training. <code>robustrllib/configs/train_shifts.yaml</code> defines
+the arms the paper uses, and <code>--train-shift</code> selects one.</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>baselines/train.py<span class="w"> </span>-c<span class="w"> </span>robustrllib/configs/experiment/rorl_hopper.yaml<span class="w"> </span>--seed<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--train-shift<span class="w"> </span>reward_delay_16
+python<span class="w"> </span>baselines/evaluate.py<span class="w"> </span>--run<span class="w"> </span>runs/rorl_hopper_reward_delay_16/seed0<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--eval<span class="w"> </span>robustrllib/configs/eval/nominal.yaml
 </code></pre></div>
-<p>Each entry becomes one <a href="../../shifts/sources/dynamic/">Dynamic shift</a> in the
-<a href="../../shifts/modes/stochastic/">Stochastic</a> mode, on the target <code>dynamics</code>, drawn anew at every
-<code>reset</code>.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">robustrllib</span><span class="w"> </span><span class="kn">import</span> <span class="n">ShiftSpec</span>
-
-<span class="n">ShiftSpec</span><span class="p">(</span><span class="s2">"dynamics"</span><span class="p">,</span> <span class="s2">"uniform"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"param"</span><span class="p">:</span> <span class="s2">"gravity"</span><span class="p">,</span> <span class="s2">"low"</span><span class="p">:</span> <span class="mf">0.9</span><span class="p">,</span> <span class="s2">"high"</span><span class="p">:</span> <span class="mf">1.1</span><span class="p">})</span>
-</code></pre></div>
-<p>With <code>robustrllib/configs/dr/nodr.yaml</code>, whose list is empty, the same trainer runs plain SAC on
-the nominal task.</p>
-<p>Experiments written for the <code>Algo</code> interface train, evaluate and save in one process. See
-<a href="../add-an-algorithm/">Add an Algorithm</a>.</p>
-<div class="highlight"><pre><span></span><code>python<span class="w"> </span>examples/run_experiment.py<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>-c<span class="w"> </span>robustrllib/configs/experiment/sac_hopper.yaml
-</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Arm</th>
+<th>Shift</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>reward_gauss</code>, <code>reward_uniform</code>, <code>reward_shift</code></td>
+<td>Reward corruption matched at standard deviation 0.5</td>
+</tr>
+<tr>
+<td><code>reward_delay_4</code>, <code>_16</code>, <code>_32</code>, <code>_64</code></td>
+<td>The reward released every 4, 16, 32 or 64 steps</td>
+</tr>
+</tbody>
+</table>
+<p>An online method trains on its environment with the arm's shifts stacked on it; an offline method
+applies them to the rewards of its dataset, along each recorded episode. The run takes the arm's
+name, <code>runs/&lt;card&gt;_&lt;arm&gt;/seed&lt;k&gt;</code>.</p>
 <h2 id="launch-rules">Launch rules<a class="headerlink" href="#launch-rules" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Commands are run from the root of the checkout, and config references are relative to it.</li>
+<li>Commands are run from the root of the checkout, and card references are relative to it.</li>
 <li>The task card is nominal; no condition of the evaluation grid is applied during training.</li>
-<li>Whatever a method adds to its training environment, such as randomization ranges, is part of
-  the method.</li>
+<li>Whatever a method adds to its training environment, such as randomization ranges or an
+  adversary, is part of the method and lives in its cards.</li>
 <li>Each training seed is a separate run with its own run directory.</li>
-<li>Method hyperparameters are changed in the experiment file, not on the command line.</li>
-<li>The return in <code>learning_curve.json</code> is a training diagnostic; reported scores come from the
+<li>Method hyperparameters are changed in the cards, or with <code>--set</code> for a one-off run; the
+  resolved configuration is saved with the run.</li>
+<li>The return in <code>progress.csv</code> is a training diagnostic; reported scores come from the
   <a href="../../evaluation/protocol/">Evaluation Protocol</a>.</li>
-<li>A finished run directory is never reused; a new seed or <code>--out-dir</code> starts a new one.</li>
 </ul>
       </main>
 
@@ -653,6 +513,8 @@ the nominal task.</p>
   <li><a class="bk-toc-link" href="#run-directory">Run directory</a>
   </li>
   <li><a class="bk-toc-link" href="#online-methods">Online methods</a>
+  </li>
+  <li><a class="bk-toc-link" href="#training-time-shifts">Training-time shifts</a>
   </li>
   <li><a class="bk-toc-link" href="#launch-rules">Launch rules</a>
   </li>
