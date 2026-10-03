@@ -286,18 +286,18 @@
         .filter(function (o) { return o.value === "all" || (function (t) { return (state.regime === "both" || t.regime === state.regime) && (state.family === "all" || t.family === state.family); })(L.tasks[+o.value]); }));
       if (!taskOptions.some(function (o) { return o.value === state.task; })) { state.task = "all"; }
       var axes = {}; L.rows.forEach(function (r) { if (taskAllowed(r[C.task])) { axes[r[C.axis]] = true; } });
-      var axisOptions = [{ value: "all", label: "All shift axes" }].concat(Object.keys(axes).sort().map(function (a) { return { value: a, label: L.axes[a] || a }; }));
+      var axisOptions = [{ value: "all", label: "All shift factors" }].concat(Object.keys(axes).sort().map(function (a) { return { value: a, label: L.axes[a] || a }; }));
       if (!axes[state.axis]) { state.axis = "all"; }
       var controls = [
         select("Regime", [{ value: "both", label: "Online and offline" }, { value: "online", label: "Online" }, { value: "offline", label: "Offline" }], state.regime, function (v) { state.regime = v; render(); }),
         select("Task family", [{ value: "all", label: "All task families" }].concat(FAMILIES.map(function (f) { return { value: f, label: f }; })), state.family, function (v) { state.family = v; render(); }),
         select("Task", taskOptions, state.task, function (v) { state.task = v; render(); }),
-        select("Shift axis", axisOptions, state.axis, function (v) { state.axis = v; render(); }),
+        select("Shift factor", axisOptions, state.axis, function (v) { state.axis = v; render(); }),
         select("Magnitude", [{ value: "all", label: "All magnitudes" }, { value: "1", label: "Q1 · mildest" }, { value: "2", label: "Q2" }, { value: "3", label: "Q3" }, { value: "4", label: "Q4 · harshest" }], state.quartile, function (v) { state.quartile = v; render(); }),
         select("Order", [{ value: "family", label: "Order by family" }, { value: "score", label: "Order by score" }], state.order, function (v) { state.order = v; render(); }),
       ];
       var note = "Normalized score, 0 = a policy that does not solve the task and 100 = competent performance, unclipped. "
-        + "Conditions average within a shift axis, axes within a task, tasks with equal weight; five training seeds and twenty paired episodes per condition. "
+        + "Conditions average within a shift factor, factors within a task, tasks with equal weight; five training seeds and twenty paired episodes per condition. "
         + "The tick is the same method under no shift.";
       mount(host, controls, note, function () {
         var wrap = el("div", { class: "viz-chart" });
@@ -350,7 +350,7 @@
       if (kind === "paper") {
         var ch = P.channels.filter(function (c) { return c.key === id; })[0];
         if (ch.kind === "frozen") { return "The paper's channel score: the five configurations of the " + ch.label.toLowerCase() + " on Hopper-v5, equally weighted per seed, averaged over five training seeds and twenty episodes per configuration. Both ATLA rows rest on three observation configurations: the adversarial arm cannot run on a recurrent policy."; }
-        if (ch.kind === "training") { return "One configuration of the paper's grid: trained under the shift (three reward corruptions, or reward delays of 4 to 64 steps), then evaluated at nominal; the mean over that ladder. Only the methods that were retrained appear."; }
+        if (ch.kind === "training") { return "One configuration of the paper's grid: trained under the shift (three reward corruptions, or reward delays of 4 to 64 steps), then evaluated at nominal; the mean over those configurations. Only the methods that were retrained appear."; }
         return "The door task with the scene rebound (robosuite DoorCausal), evaluated online only: the shifted binding score divided by the SAC nominal, the source paper's own normalization, over seeds 0, 1, 42, 2024 and 3407, collapsed runs left out; the semantic panel of the paper's figure.";
       }
       if (kind === "cell") { var c = P.cells[+id]; return c.gridlabel + ", " + c.label + ": one of the paper's 22 configurations per regime, averaged over five seeds and twenty episodes."; }

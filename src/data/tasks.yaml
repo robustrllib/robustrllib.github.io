@@ -170,4 +170,4 @@ tasks:
     shifts: [dynamic, observation, action, latency, semantic]
     media: assets/tasks/vla.mp4
     poster: assets/tasks/vla.jpg
-    caption: A demonstration of the bimanual insert-mouse-battery task from the RSS 2026 post-training challenge, top camera at four times speed; a fine-tuned π0.5 policy is evaluated on it under eight shift axes.
+    caption: A demonstration of the bimanual insert-mouse-battery task from the RSS 2026 post-training challenge, top camera at four times speed; a fine-tuned π0.5 policy is evaluated on it under eight shift factors.

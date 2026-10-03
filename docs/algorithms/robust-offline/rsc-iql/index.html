@@ -163,6 +163,7 @@
 </ul>
     </details>
   </li>
+  <li><a class="bk-nav-link" href="../../../shifts/add-a-shift-factor/">Add a new shift factor</a></li>
   <li><a class="bk-nav-link" href="../../../shifts/add-a-backend/">Add a physics simulation</a></li>
 </ul>
         <p class="bk-caption">Evaluation</p>
@@ -272,7 +273,7 @@ python<span class="w"> </span>baselines/evaluate.py<span class="w"> </span>--run
 </table>
 <p>Training is on the nominal task. The configuration files are explained in <a href="../../run-a-method/">Train an algorithm</a>, and the evaluation of the frozen checkpoint in <a href="../../../evaluation/protocol/">Evaluation Protocol</a>.</p>
 <h2 id="robust-performance">Robust performance<a class="headerlink" href="#robust-performance" title="Permanent link">&para;</a></h2>
-<p>Normalized score of the frozen checkpoint. Q1 to Q4 are the severity quartiles of each perturbation ladder, ordered by displacement from the nominal setting, and <em>All</em> covers every shifted condition. The last row averages the tasks.</p>
+<p>Normalized score of the frozen checkpoint. Q1 to Q4 are the severity quartiles of each shift factor's scales, ordered by displacement from the nominal setting, and <em>All</em> covers every shifted condition. The last row averages the tasks.</p>
 <table>
 <thead>
 <tr>

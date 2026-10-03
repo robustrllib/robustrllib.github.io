@@ -31,11 +31,11 @@ method was trained. The Isaac Lab and VLA studies have evaluators of their own, 
 | `grid[].shifts` | list | Shifts in dictionary form, as in [Shift Sources and Modes](../shifts/index.md); an empty list is the nominal condition |
 | `grid[].env_kwargs` | dict | Optional; constructor arguments of the condition, for a parameter an environment reads only when it is built |
 | `grid[].env_id` | str | Optional; another registered variant of the task, as for the semantic channel |
-| `grid[].axis`, `quartile`, `severity`, `channel` | | Optional labels, copied into the result |
+| `grid[].axis`, `quartile`, `severity`, `channel` | | Optional labels, copied into the result; `axis` names the shift factor, see [Add a new shift factor](../shifts/add-a-shift-factor.md) |
 
 | Card | Conditions | Used for |
 |---|---|---|
-| `part1_<task>.yaml` | The rungs of the library-wide grid, by axis and severity quartile | Part 1 |
+| `part1_<task>.yaml` | The library-wide grid: three shift factors per task at eight scales, grouped into quartiles | Part 1 |
 | `part2_hopper.yaml` | Five cells of each frozen-policy channel | Part 2 |
 | `part2_doorcausal.yaml` | The trained and the inverted semantic binding | Part 2, semantic channel |
 | `part3_hopper.yaml`, `part3_pusher.yaml` | Each channel of a reference profile, then all of them jointly | Part 3 |

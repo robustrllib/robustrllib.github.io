@@ -163,6 +163,7 @@
 </ul>
     </details>
   </li>
+  <li><a class="bk-nav-link" href="../add-a-shift-factor/">Add a new shift factor</a></li>
   <li><a class="bk-nav-link is-active" href="./" aria-current="page">Add a physics simulation</a></li>
 </ul>
         <p class="bk-caption">Evaluation</p>
@@ -551,16 +552,17 @@ simulator's own data structure.</p>
 <li><code>read</code> is implemented before <code>translate</code> is used, and <code>inject_state_noise</code> before the target
   <code>transition</code>.</li>
 <li>The branch in <code>get_adapter</code> tests an attribute that only the new stack has.</li>
-<li>A new axis is checked on a trained policy before a grid relies on it, because an axis can
-  reach the model and still not matter for the task.</li>
+<li>A new shift factor is checked on a trained policy before a grid relies on it, because a
+  factor can reach the model and still not matter for the task; see
+  <a href="../add-a-shift-factor/">Add a new shift factor</a>.</li>
 </ul>
       </main>
 
       <footer class="bk-footer">
         <nav class="bk-related" aria-label="Previous and next page">
-          <a class="bk-prev" href="../modes/composition/">
+          <a class="bk-prev" href="../add-a-shift-factor/">
             <span class="fa fa-arrow-left" aria-hidden="true"></span>
-            <span class="bk-related-text"><span class="bk-related-label">Previous</span><span class="bk-related-title">Composition</span></span>
+            <span class="bk-related-text"><span class="bk-related-label">Previous</span><span class="bk-related-title">Add a new shift factor</span></span>
           </a>
           <a class="bk-next" href="../../evaluation/protocol/">
             <span class="bk-related-text"><span class="bk-related-label">Next</span><span class="bk-related-title">Evaluation Protocol</span></span>

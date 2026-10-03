@@ -277,5 +277,6 @@ print(values)
 - `read` is implemented before `translate` is used, and `inject_state_noise` before the target
   `transition`.
 - The branch in `get_adapter` tests an attribute that only the new stack has.
-- A new axis is checked on a trained policy before a grid relies on it, because an axis can
-  reach the model and still not matter for the task.
+- A new shift factor is checked on a trained policy before a grid relies on it, because a
+  factor can reach the model and still not matter for the task; see
+  [Add a new shift factor](add-a-shift-factor.md).

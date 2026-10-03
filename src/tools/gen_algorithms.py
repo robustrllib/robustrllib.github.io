@@ -90,7 +90,7 @@ COLS = ("nominal", "q1", "q2", "q3", "q4", "all")
 GRID_HEAD = "| Nominal | Q1 | Q2 | Q3 | Q4 | All |"
 GRID_RULE = "--:|--:|--:|--:|--:|--:|"
 GRID_NOTE = ("Normalized score of the frozen checkpoint. Q1 to Q4 are the severity "
-             "quartiles of each perturbation ladder, ordered by displacement from the nominal "
+             "quartiles of each shift factor's scales, ordered by displacement from the nominal "
              "setting, and *All* covers every shifted condition.")
 
 

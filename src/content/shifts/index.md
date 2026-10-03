@@ -19,6 +19,7 @@ act at several points, which the small tags mark.*
 | Sources | Six shift sources, written with eight targets |
 | Modes | Five modes, written with 22 mode names, the `schedule` field and the list of shifts |
 | Evaluation | A grid condition is a list of shifts; see [Evaluation Protocol](../evaluation/protocol.md) |
+| Factors | One parameter name evaluated at several scales; see [Add a new shift factor](add-a-shift-factor.md) |
 | Simulators | MuJoCo, Box2D and robosuite; see [Add a physics simulation](add-a-backend.md) |
 
 ## Shift sources

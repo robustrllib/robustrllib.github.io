@@ -215,7 +215,7 @@
     });
     frameAxes(gv, V.x0, V.x1, V.y0, V.y1, C.frame);
     [0, 1, 2, 3].forEach(function (q) { gv.appendChild(text(xv(q / 3), V.y1 + 15, "Q" + (q + 1), { "text-anchor": "middle", "font-size": 10.5, fill: C.ink })); });
-    gv.appendChild(text((V.x0 + V.x1) / 2, V.y1 + 33, "Magnitude quartile of the axis' own ladder", { "text-anchor": "middle", "font-size": 12, "font-weight": 700, fill: C.ink }));
+    gv.appendChild(text((V.x0 + V.x1) / 2, V.y1 + 33, "Scale quartile of each shift factor", { "text-anchor": "middle", "font-size": 12, "font-weight": 700, fill: C.ink }));
     gv.appendChild(text(V.x0 - 36, (V.y0 + V.y1) / 2, "Retention (1.0 = nominal)", { "text-anchor": "middle", "font-size": 12, "font-weight": 700, fill: C.ink, transform: "rotate(-90 " + (V.x0 - 36) + " " + (V.y0 + V.y1) / 2 + ")" }));
     gv.appendChild(sv("line", { x1: V.x0, y1: yv(1), x2: V.x1, y2: yv(1), stroke: C.muted, "stroke-width": 0.9, "stroke-dasharray": "3 2" }));
     gv.appendChild(text(V.x0 + 4, yv(1) - 4, "nominal", { "font-size": 10, fill: C.muted }));

@@ -163,6 +163,7 @@
 </ul>
     </details>
   </li>
+  <li><a class="bk-nav-link" href="../../add-a-shift-factor/">Add a new shift factor</a></li>
   <li><a class="bk-nav-link" href="../../add-a-backend/">Add a physics simulation</a></li>
 </ul>
         <p class="bk-caption">Evaluation</p>
@@ -280,7 +281,7 @@ stacked.</p>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="nv">latency</span><span class="p p-Indicator">,</span><span class="nt"> mode</span><span class="p">:</span><span class="w"> </span><span class="nv">fixed</span><span class="p p-Indicator">,</span><span class="nt"> params</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">steps</span><span class="p">:</span><span class="w"> </span><span class="nv">1</span><span class="p p-Indicator">}}</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="nv">observation</span><span class="p p-Indicator">,</span><span class="nt"> mode</span><span class="p">:</span><span class="w"> </span><span class="nv">gauss</span><span class="p p-Indicator">,</span><span class="nt"> params</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">sigma</span><span class="p">:</span><span class="w"> </span><span class="nv">0.05</span><span class="p p-Indicator">}}</span>
 </code></pre></div>
-<p>A composition of a Semantic shift and a displacement crosses two axes in one condition.</p>
+<p>A composition of a Semantic shift and a displacement crosses two shift factors in one condition.</p>
 <div class="highlight"><pre><span></span><code><span class="n">crossed</span> <span class="o">=</span> <span class="p">[</span>
     <span class="n">ShiftSpec</span><span class="p">(</span><span class="s2">"appearance"</span><span class="p">,</span> <span class="s2">"hue"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"geom"</span><span class="p">:</span> <span class="s2">"torso_geom"</span><span class="p">,</span> <span class="s2">"degrees"</span><span class="p">:</span> <span class="mi">120</span><span class="p">}),</span>
     <span class="n">ShiftSpec</span><span class="p">(</span><span class="s2">"dynamics"</span><span class="p">,</span> <span class="s2">"translate"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"param"</span><span class="p">:</span> <span class="s2">"body_pos_xyz"</span><span class="p">,</span> <span class="s2">"index"</span><span class="p">:</span> <span class="s2">"foot"</span><span class="p">,</span>
@@ -423,8 +424,8 @@ processes, so different shifts draw independently from one seed.</p>
             <span class="fa fa-arrow-left" aria-hidden="true"></span>
             <span class="bk-related-text"><span class="bk-related-label">Previous</span><span class="bk-related-title">Non-stationary</span></span>
           </a>
-          <a class="bk-next" href="../../add-a-backend/">
-            <span class="bk-related-text"><span class="bk-related-label">Next</span><span class="bk-related-title">Add a physics simulation</span></span>
+          <a class="bk-next" href="../../add-a-shift-factor/">
+            <span class="bk-related-text"><span class="bk-related-label">Next</span><span class="bk-related-title">Add a new shift factor</span></span>
             <span class="fa fa-arrow-right" aria-hidden="true"></span>
           </a>
         </nav>

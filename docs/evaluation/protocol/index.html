@@ -163,6 +163,7 @@
 </ul>
     </details>
   </li>
+  <li><a class="bk-nav-link" href="../../shifts/add-a-shift-factor/">Add a new shift factor</a></li>
   <li><a class="bk-nav-link" href="../../shifts/add-a-backend/">Add a physics simulation</a></li>
 </ul>
         <p class="bk-caption">Evaluation</p>
@@ -273,7 +274,7 @@ method was trained. The Isaac Lab and VLA studies have evaluators of their own, 
 <tr>
 <td><code>grid[].axis</code>, <code>quartile</code>, <code>severity</code>, <code>channel</code></td>
 <td></td>
-<td>Optional labels, copied into the result</td>
+<td>Optional labels, copied into the result; <code>axis</code> names the shift factor, see <a href="../../shifts/add-a-shift-factor/">Add a new shift factor</a></td>
 </tr>
 </tbody>
 </table>
@@ -288,7 +289,7 @@ method was trained. The Isaac Lab and VLA studies have evaluators of their own, 
 <tbody>
 <tr>
 <td><code>part1_&lt;task&gt;.yaml</code></td>
-<td>The rungs of the library-wide grid, by axis and severity quartile</td>
+<td>The library-wide grid: three shift factors per task at eight scales, grouped into quartiles</td>
 <td>Part 1</td>
 </tr>
 <tr>

@@ -59,7 +59,7 @@ The same composition as a condition of an evaluation grid:
     - {target: observation, mode: gauss, params: {sigma: 0.05}}
 ```
 
-A composition of a Semantic shift and a displacement crosses two axes in one condition.
+A composition of a Semantic shift and a displacement crosses two shift factors in one condition.
 
 ```python
 crossed = [

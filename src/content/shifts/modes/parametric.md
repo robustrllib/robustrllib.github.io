@@ -12,7 +12,7 @@ depends on the policy, so the same declaration gives the same shifted task in ev
 | Mode names | `shift`, `scale`, `set`, `translate`, `fixed`, `delay`, `hue`, `tint`, `swap` |
 | Variance | None of its own; every episode sees the same intervention |
 | Shifts | All six shift sources |
-| Typical use | The severity axis of an evaluation grid |
+| Typical use | The scales of a shift factor in an evaluation grid |
 
 ## Supported shifts
 
@@ -88,7 +88,7 @@ offset = ShiftSpec("dynamics", "translate", {"param": "body_pos_xyz", "index": "
                                              "offset": [0.06, 0.0, 0.0]})
 ```
 
-A severity axis is a ladder of parametric shifts that differ in one number.
+A shift factor is one parameter evaluated at several scales, one parametric shift per scale; see [Add a new shift factor](../add-a-shift-factor.md).
 
 ```yaml title="robustrllib/configs/eval/part1_mujoco.yaml (excerpt, one line per condition)"
 grid:
@@ -99,14 +99,14 @@ grid:
 - {name: gravity_1.2, axis: gravity, quartile: 2, severity: 1.2, shifts: [{target: dynamics, mode: scale, params: {param: gravity, factor: 1.2}}]}
 ```
 
-The same ladder in Python:
+The same scales in Python:
 
 ```python
-ladder = {
+scales = {
     f"gravity_{factor}": [ShiftSpec("dynamics", "scale", {"param": "gravity", "factor": factor})]
     for factor in (0.8, 0.9, 1.1, 1.2)
 }
-for name, shifts in ladder.items():
+for name, shifts in scales.items():
     env = make_robust("Hopper-v5", shifts=shifts, seed=0)
     env.reset(seed=0)
     print(name, round(env.unwrapped.model.opt.gravity[2], 3))

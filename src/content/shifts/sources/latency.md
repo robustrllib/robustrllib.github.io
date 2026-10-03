@@ -210,7 +210,7 @@ reward_delay_16:
 ## Rules
 
 - All five timing mode names are written on the target `latency`.
-- `fixed` is the mode name for a severity axis of an evaluation grid, because it adds no
+- `fixed` is the mode name for a shift factor of an evaluation grid, because it adds no
   variance of its own.
 - `buffer` needs nothing from the simulator and runs on any simulator.
 - **`substep` is written only for MuJoCo tasks**; on other tasks it raises

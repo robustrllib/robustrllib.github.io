@@ -133,5 +133,5 @@ print(round(model.opt.gravity[2] / -9.81, 3), round(model.actuator_gear[0, 0] / 
   every step.
 - **Two shifts with the same target, mode name, parameter and index draw the same numbers**;
   listing a noise shift twice adds the same noise twice.
-- An evaluation grid prefers a Parametric mode name for a severity axis, because a stochastic
-  one adds variance of its own to every condition.
+- An evaluation grid prefers a Parametric mode name for the scales of a shift factor, because
+  a stochastic one adds variance of its own to every condition.
