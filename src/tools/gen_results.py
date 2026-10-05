@@ -44,7 +44,8 @@ FAMILY_ORDER = ["standard", "learner_on", "data_on", "learner_off", "data_off", 
 
 # The tables carry legacy keys for three methods; the site uses the paper's names.
 DISPLAY = {"ATLA_off": "ATLA-IQL", "FMGAN": "PLR-PVL", "RSC": "RSC-IQL",
-           "FMGAN-IQL": "PLR-PVL-IQL"}
+           # Part 2/3 keys carry an -IQL suffix; only ATLA-IQL and RSC-IQL keep it on the site.
+           "FMGAN-IQL": "PLR-PVL", "PLR-PVL-IQL": "PLR-PVL", "FWM-IQL": "FWM", "ROMB-IQL": "ROMB"}
 # Where a method's page lives under docs/algorithms/.
 PAGE = {
     "IQL": "standard/iql", "TD3+BC": "standard/td3bc", "MOPO": "standard/mopo", "SynthER": "standard/synther",
@@ -65,6 +66,7 @@ FAMILY_OF = {
     "ATLA-IQL": "learner_off", "RFQI": "learner_off", "RORL": "learner_off",
     "RSC-IQL": "data_off", "RAMBO": "data_off",
     "ROMB-IQL": "generative", "FWM-IQL": "generative", "PLR-PVL-IQL": "generative",
+    "ROMB": "generative", "FWM": "generative", "PLR-PVL": "generative",
 }
 AXIS = {"gravity": "Gravity", "morph": "Morphology", "gear": "Actuator gear", "fric": "Friction",
         "dryfric": "Dry friction", "latch": "Latch", "engine": "Engine power", "wind": "Wind",
