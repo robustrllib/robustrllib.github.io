@@ -170,7 +170,18 @@
     groups.forEach(function (g, gi) {
       var cx = left + slot * (gi + 0.5), x0 = cx - (bars * barW + gap * (bars - 1)) / 2;
       svg.appendChild(sv("text", { x: cx, y: H - bottom + 18, "text-anchor": "middle", class: "viz-label viz-small", text: g.name }));
-      if (g.sub) { svg.appendChild(sv("text", { x: cx, y: H - bottom + 34, "text-anchor": "middle", class: "viz-sub", text: g.sub })); }
+      if (g.sub) {
+        // A sublabel wider than its column collides with its neighbours; split it at the
+        // separator onto two lines when the column is narrow (about 6 px per character).
+        var parts = g.sub.split(" \u00b7 ");
+        if (parts.length > 1 && g.sub.length * 6 > slot) {
+          parts.forEach(function (t, li) {
+            svg.appendChild(sv("text", { x: cx, y: H - bottom + 32 + li * 12, "text-anchor": "middle", class: "viz-sub", text: t }));
+          });
+        } else {
+          svg.appendChild(sv("text", { x: cx, y: H - bottom + 34, "text-anchor": "middle", class: "viz-sub", text: g.sub }));
+        }
+      }
       series.forEach(function (s, si) {
         var v = g.values[s.key];
         if (!v) { return; }
@@ -421,7 +432,7 @@
             return [{ text: rec.name + " · " + K.cells[c], strong: true },
                     { text: "Score " + fmt(v.score) + (v.sd ? " ± " + fmt(v.sd) : "") + " (n = " + v.n + ")", color: CELL_COLOR[c] }]; } };
         });
-        return { name: rec.name, sub: FAMILY_TAG[rec.family] + " · " + rec.regime, values: vals };
+        return { name: rec.name, sub: FAMILY_TAG[rec.family], values: vals };
       });
       var controls = [
         select("Scenario", K.blocks.map(function (b) { return { value: b.key, label: b.label }; }), state.block, function (v) { state.block = v; render(); }),
