@@ -160,6 +160,14 @@
     spreads.forEach(function (s, i) { s.classList.toggle("is-current", i === current); });
   }
 
+  /* Narrow: one page at a time; the page that comes up swings in from its spine, so a
+     turn still reads as a turn when the book is too narrow to lie open. */
+  function swing(spread, forward) {
+    spread.classList.remove("rl-swing-next", "rl-swing-prev");
+    void spread.offsetWidth;   // restart the animation when the same page comes up again
+    spread.classList.add(forward ? "rl-swing-next" : "rl-swing-prev");
+  }
+
   function go(target, silent) {
     target = Math.max(0, Math.min(last, target));
     if (target === current) { return; }
@@ -168,6 +176,7 @@
     opened = true;     // a page turn opens a closed book on the way
     if (shelf) { turn(from, target); }
     describe();
+    if (book.classList.contains("is-narrow")) { swing(spreads[current], target > from); }
     if (!silent && window.history && window.history.replaceState) {
       window.history.replaceState(null, "", "#" + spreads[current].id);
     }

@@ -83,6 +83,11 @@ sources:
         nominal: assets/shifts/observation-hopper_nominal_web.jpg
         shifted: assets/shifts/observation-hopper_shift_web.jpg
       caption: Hopper under nominal and noisy observations (Gaussian noise, sigma 0.10, on every observation).
+      # the exact shift of this clip (task_renders/scripts/render_shift_demo.py)
+      demo_code: |-
+        env = make_robust("Hopper-v5", shifts=[
+            ShiftSpec("observation", "gauss", {"sigma": 0.10}),
+        ], seed=0)
     modes:
       stochastic:
         names: [gauss, uniform, relative, bias]
@@ -173,6 +178,13 @@ sources:
         nominal: assets/shifts/reward-hopper_nominal_web.jpg
         shifted: assets/shifts/reward-hopper_shift_web.jpg
       caption: Hopper policies trained with the reward on time and with the reward released every 64 steps, both on the nominal task.
+      # the training-time arm of this clip (robustrllib/configs/train_shifts.yaml)
+      demo_code: |-
+        # train_shifts.yaml, arm reward_delay_64
+        ShiftSpec("latency", "delay", {"steps": 64, "release": "interval"})
+
+        python baselines/train.py -c robustrllib/configs/experiment/sac_hopper.yaml \
+            --seed 0 --train-shift reward_delay_64
     modes:
       stochastic:
         names: [gauss, uniform]

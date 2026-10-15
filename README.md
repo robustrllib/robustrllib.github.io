@@ -63,7 +63,8 @@ documentation: a bar across the top, the pages on a grey ground on the left, the
 the middle, the sections of the current page on the right. The window widths at which the
 side columns move behind buttons are in `css/site.css`. The theme loads nothing from outside
 the site: system fonts, the icon font and the book's typeface in `theme/fonts/`, and Inter for the
-formulas of the landing page in `assets/fonts/` (SIL Open Font License).
+formulas of the landing page and Source Serif 4 for its titles in `assets/fonts/` (SIL Open Font
+License).
 The search is MkDocs' own, in a dialog that opens from the field on the left or with Ctrl+K.
 
 ## Page form

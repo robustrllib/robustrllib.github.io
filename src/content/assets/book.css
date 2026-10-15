@@ -12,20 +12,20 @@
 
 :root {
   /* the labels of the groups, in the warm palette of the site */
-  --rl-g-contents: #5e5d59;
-  --rl-g-standard: #87867f;
-  --rl-g-robust-online: #c96442;
-  --rl-g-robust-offline: #8c6a8f;
-  --rl-g-robust-safe: #6f9a63;
-  --rl-paper: #fffdf8;
-  --rl-cover: #30302e;
+  --rl-g-contents: #666e75;
+  --rl-g-standard: #8a9096;
+  --rl-g-robust-online: #2f7fc1;
+  --rl-g-robust-offline: #7b5bb7;
+  --rl-g-robust-safe: #b0891a;
+  --rl-paper: #ffffff;
+  --rl-cover: #202428;
   /* one colour per family, shared with the badges of the method pages */
   --rl-fam-standard: #b7b7b7;
   --rl-fam-learner: #a9cbe5;
   --rl-fam-data: #bfdcac;
-  --rl-fam-generative: #e9a0a0;
+  --rl-fam-generative: #e56565;
   --rl-fam-environment: #9ed9d0;
-  --rl-fam-safe: #f2cf8e;
+  --rl-fam-safe: #f2ce5b;
 }
 
 .rl-book { position: relative; margin: 8px 0 34px; color: #1f2937; text-align: left; }
@@ -105,7 +105,7 @@
 }
 .rl-book .rl-page table th,
 .rl-book .rl-page table td {
-  padding: 4px 6px !important; border: 0 !important; border-bottom: 1px solid #e7e2d6 !important;
+  padding: 4px 6px !important; border: 0 !important; border-bottom: 1px solid #e1e5e8 !important;
   background: transparent !important; white-space: normal; line-height: 1.4;
   text-align: left; vertical-align: top;
 }
@@ -113,7 +113,7 @@
 .rl-book .rl-page table td:first-child { width: 46%; color: #6b7280; }
 .rl-book .rl-page table tbody tr:hover { background: transparent; }
 .rl-book .rl-page div.highlight {
-  margin: 0 -10px 12px; padding: 0; border: 1px solid #e7e2d6; border-radius: 4px; background: #f7f4ea;
+  margin: 0 -10px 12px; padding: 0; border: 1px solid #e1e5e8; border-radius: 4px; background: #f6f7f8;
 }
 .rl-book .rl-page div.highlight pre,
 .rl-book .rl-page div.highlight pre code {
@@ -127,15 +127,15 @@
 .rl-book .rl-page ul li { margin-left: 18px; list-style: disc; }
 .rl-book .rl-page .rl-book-more a {
   display: inline-block; padding: 6px 13px; border-radius: 6px; font-weight: 700; font-size: 12.5px;
-  color: #faf9f5; background: #c96442; text-decoration: none;
+  color: #ffffff; background: #1f5fa8; text-decoration: none;
 }
-.rl-book .rl-page .rl-book-more a:hover { background: #a8502f; color: #faf9f5; text-decoration: none; }
+.rl-book .rl-page .rl-book-more a:hover { background: #143f70; color: #ffffff; text-decoration: none; }
 .rl-book .rl-book-toc { columns: 2; column-gap: 18px; }
 .rl-book .rl-book-toc p { break-inside: avoid; margin: 0 0 8px; }
 .rl-book-toc .rl-book-tocg { display: block; font-weight: 700; margin-bottom: 2px; }
 .rl-book-toc a { white-space: nowrap; text-decoration: none; }
 .rl-book .rl-book-toc a:hover { text-decoration: underline; }
-.rl-book .rl-page .rl-book-paper { margin-top: 10px; padding-top: 8px; border-top: 1px solid #e7e2d6; font-size: 12px; line-height: 1.4; color: #6b7280; }
+.rl-book .rl-page .rl-book-paper { margin-top: 10px; padding-top: 8px; border-top: 1px solid #e1e5e8; font-size: 12px; line-height: 1.4; color: #6b7280; }
 .rl-book .rl-page .rl-book-paper b { display: block; margin-bottom: 2px; color: #374151; font-size: 11px; letter-spacing: .05em; text-transform: uppercase; }
 
 /* ---- controls ---- */
@@ -155,7 +155,7 @@
 .rl-book.is-live .rl-spread { display: none; margin: 0; }
 .rl-book.is-live.is-narrow .rl-spread.is-current { display: grid; grid-template-columns: 1fr; }
 .rl-book.is-live.is-narrow .rl-page { border-radius: 4px; box-shadow: none; }
-.rl-book.is-live.is-narrow .rl-page.rl-left { border-bottom: 1px dashed #d8d2c4; padding-bottom: 26px; }
+.rl-book.is-live.is-narrow .rl-page.rl-left { border-bottom: 1px dashed #c9ced3; padding-bottom: 26px; }
 .rl-book.is-live.is-narrow .rl-left .rl-book-folio { display: none; }
 
 /* wide: the book lies open, its labels stick out on the right */
@@ -192,7 +192,7 @@
   position: absolute; top: 0; bottom: 0; width: 44px; z-index: 2000; border: 0; padding: 0;
   background: transparent; cursor: pointer; color: transparent; font-size: 26px; font-weight: 700;
 }
-.rl-book-edge:hover:not(:disabled), .rl-book-edge:focus-visible { color: #c96442; background: rgba(201, 100, 66, .08); }
+.rl-book-edge:hover:not(:disabled), .rl-book-edge:focus-visible { color: #1f5fa8; background: rgba(31, 95, 168, .08); }
 .rl-book-edge:disabled { cursor: default; }
 .rl-book-edge.rl-prev { left: 0; border-radius: 4px 0 0 4px; }
 .rl-book-edge.rl-next { right: 0; border-radius: 0 4px 4px 0; }
@@ -202,7 +202,7 @@
 .rl-book .rl-cover-front {
   height: 100%; box-sizing: border-box; padding: 24px 28px;
   display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
-  color: #faf9f5; border-left: 6px solid rgba(255, 255, 255, .08);
+  color: #ffffff; border-left: 6px solid rgba(255, 255, 255, .08);
   background: linear-gradient(135deg, rgba(255, 255, 255, .06), rgba(255, 255, 255, 0) 60%);
 }
 .rl-book .rl-cover-front p { margin: 0; }
@@ -212,9 +212,12 @@
 .rl-book .rl-cover-blocks { display: flex; gap: 8px; }
 .rl-book .rl-cover-blocks i { display: block; width: 28px; height: 18px; border-radius: 4px; }
 
-@media (prefers-reduced-motion: reduce) {
-  .rl-book .rl-leaf { transition: none; }
-}
+/* narrow: the page that comes up swings in from its spine (see swing() in book.js) */
+@keyframes rl-swing-next { from { transform: perspective(1600px) rotateY(75deg); opacity: .3; } to { transform: perspective(1600px) rotateY(0); opacity: 1; } }
+@keyframes rl-swing-prev { from { transform: perspective(1600px) rotateY(-75deg); opacity: .3; } to { transform: perspective(1600px) rotateY(0); opacity: 1; } }
+.rl-book.is-live.is-narrow .rl-spread.rl-swing-next { transform-origin: left center; animation: rl-swing-next .6s cubic-bezier(.35, .1, .2, 1); }
+.rl-book.is-live.is-narrow .rl-spread.rl-swing-prev { transform-origin: right center; animation: rl-swing-prev .6s cubic-bezier(.35, .1, .2, 1); }
+/* The page turn plays only when the reader turns a page, so it stays under reduced motion too. */
 @media print {
   .rl-book.is-live .rl-spread { display: grid !important; margin: 0 0 12px; }
   .rl-book .rl-leaves, .rl-book-controls, .rl-book-tabs, .rl-book-hint { display: none !important; }

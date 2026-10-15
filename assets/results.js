@@ -8,26 +8,19 @@
   if (!node) { return; }
   var DATA;
   try { DATA = JSON.parse(node.textContent); } catch (e) { return; }
-  var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var chartObserver = !reduced && window.IntersectionObserver ? new window.IntersectionObserver(function (entries) {
-    entries.forEach(function (entry) {
-      if (entry.isIntersecting) {
-        entry.target.classList.add("is-on");
-        chartObserver.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.15 }) : null;
+  var chartObserver = null;   // charts are drawn in their final state; nothing animates
 
-  // ---- colours: the families in the tints of the paper's figures (its base colours
-  //      blended 22 % towards white); pale, so every bar also carries its family in
-  //      text, its value beside it, and a table twin. Text never wears a data colour.
-  var FAMILY_COLOR = { standard: "#b7b7b7", learner_on: "#bcd6eb", data_on: "#b3e1da",
-                       learner_off: "#d5c8ed", data_off: "#cde4be", generative: "#eb8787" };
+  // ---- colours: the families in the paper's base palette, the same colours the
+  //      algorithm table uses; every bar also carries its family in text, its value
+  //      beside it, and a table twin. Text never wears a data colour.
+  var FAMILY_COLOR = { standard: "#b7b7b7", learner_on: "#a9cbe5", data_on: "#9ed9d0",
+                       learner_off: "#c9b8e8", data_off: "#bfdcac", generative: "#e56565" };
   // the cells of the compound scenarios: the same pale key, one tint per shift
-  var CELL_COLOR = { nominal: "#b7b7b7", theta_p: "#6aa0e2", theta_a: "#f08e67", theta_tau: "#76cfaf",
-                     theta_o: "#f2b840", theta_z: "#ee9cbb", compound: "#897fc6" };
-  var GRAY = "#b7b7b7", INK = "#141413", MUTED = "#5e5d59", FAINT = "#87867f",
-      GRID = "#e8e6dc", AXIS = "#c2c0b6", SURFACE = "#faf9f5";
+  // the cells of the compound scenarios: the shift-source colours of the loop figure
+  var CELL_COLOR = { nominal: "#b7b7b7", theta_p: "#d9822b", theta_a: "#3d9a57", theta_tau: "#14928e",
+                     theta_o: "#2f7fc1", theta_z: "#d6457a", compound: "#4b5563" };
+  var GRAY = "#b7b7b7", INK = "#202428", MUTED = "#666e75", FAINT = "#8a9096",
+      GRID = "#e1e5e8", AXIS = "#c9ced3", SURFACE = "#ffffff";
   var NS = "http://www.w3.org/2000/svg";
 
   // ---- small helpers
@@ -235,14 +228,19 @@
     host.appendChild(row);
     host.appendChild(el("div", { class: "viz-body" }, [showTable ? buildTable() : buildChart()]));
     if (note) { host.appendChild(el("p", { class: "viz-note", text: note })); }
-    Array.prototype.forEach.call(host.querySelectorAll(".viz-svg"), function (svg) {
-      var groups = svg.querySelectorAll(".viz-bar-row, .viz-col");
-      Array.prototype.forEach.call(groups, function (group, index) {
-        group.style.setProperty("--viz-delay", (groups.length > 1 ? index / (groups.length - 1) * 0.8 : 0) + "s");
-      });
-      if (chartObserver) { chartObserver.observe(svg); } else { svg.classList.add("is-on"); }
-    });
   }
+
+  // ---- the experiment selector: one module shown at a time, the others stay built
+  (function moduleSelector() {
+    var sel = document.getElementById("results-module");
+    if (!sel) { return; }
+    var modules = document.querySelectorAll(".module[data-module]");
+    function show(key) {
+      Array.prototype.forEach.call(modules, function (m) { m.hidden = m.getAttribute("data-module") !== key; });
+    }
+    sel.addEventListener("change", function () { show(sel.value); });
+    show(sel.value);
+  }());
 
   // =================================================================== Part 1
   (function libraryChart() {

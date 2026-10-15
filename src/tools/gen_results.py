@@ -142,6 +142,8 @@ ARM = {"m=gauss": "Gaussian noise, σ = 0.5", "m=uniform": "Uniform noise, std 0
 
 # ---- Part 3
 BLOCK = {"hopper_offline": "Hopper · offline", "hopper_online": "Hopper · online", "pusher": "Pusher · online"}
+# The paper's compound figure shows two scenarios: Hopper offline (RORL) and Pusher online (ATLA-SA-PPO).
+COMPOUND_SHOWN = ("hopper_offline", "pusher")
 BLOCK_NOTE = {"hopper_offline": "the coupled physical, actuation and delay factors of OmniH2O",
               "hopper_online": "the coupled physical, actuation and delay factors of OmniH2O",
               "pusher": "the dynamics, observation and control-rate factors of Peng et al., with the goal displaced"}
@@ -296,6 +298,8 @@ def compound():
     out = []
     for r in rows("part3_profile_channels.csv"):
         if r["cell"] not in PCELL or r["method"] == "SAC (in)":   # no independence prediction; no SAC trained under the shifts
+            continue
+        if r["block"] not in COMPOUND_SHOWN:
             continue
         b = blocks.add(r["block"], {"key": r["block"], "label": BLOCK[r["block"]], "note": BLOCK_NOTE[r["block"]],
                                     "task": r["task"], "cells": []})

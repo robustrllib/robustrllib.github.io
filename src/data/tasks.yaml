@@ -8,7 +8,7 @@
 # parts    the parts of the paper that report it: 1 library-wide, 2 isolated shifts,
 #          3 compound shifts, 4 Isaac Lab and VLA
 # media    a short looping render of a trained policy (mp4); provenance of every clip in
-#          RobustRLlib_ICLR27/task_renders/PROVENANCE.md (outside the repository)
+#          a provenance note kept outside the repository
 # poster   for a video: the still shown before it plays
 tasks:
   - key: hopper

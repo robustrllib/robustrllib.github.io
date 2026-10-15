@@ -1,80 +1,56 @@
 #!/usr/bin/env python
-"""Keep the landing page's algorithm book and table in step with data/algorithms.yaml.
+"""Keep the generated blocks of the landing page in step with the data files.
 
     python tools/sync_landing.py
 
-Rewrites two blocks of ../index.html: between the `algo-book` markers, the book of the
-All Methods page (the same generator writes it, and the same Markdown extensions as in
-mkdocs.yml turn it into HTML; only the addresses differ, because the landing page sits
-one directory above the documentation); between the `algo-table` markers, the
-paper's structural comparison of the robust methods, one row per method; and between
-the `shift-toolbox` markers, the shift toolbox from data/shifts.yaml, with the
-first source and mode already shown, so that the page reads without scripts; between
-the `task-support` markers (below the loop of the six sources), one card per task of
-data/tasks.yaml; and between the `results-data` markers, the leaderboard data.
+Rewrites four blocks of ../index.html, each between a pair of HTML comment markers:
+
+    algo-table    the table of robust methods by family, from data/algorithms.yaml
+    shift-table   the six shift sources with their targets and mode names, from data/shifts.yaml
+    task-cards    the task cards with their renders and filters, from data/tasks.yaml
+    results-data  the leaderboard data as JSON, from data/results/*.csv (gen_results.py)
+
+Everything else on the page is written by hand. The page has no script other than
+results.js, which draws the leaderboard from the JSON block.
 """
 from __future__ import annotations
 
+import html as htmlmod
+import json
 import re
 import sys
 from pathlib import Path
 
-import html as htmlmod
-import json
-
-import markdown
 import yaml
 
 SRC = Path(__file__).resolve().parents[1]
 LANDING = SRC.parent / "index.html"
-BOOK = ("<!-- algo-book:start -->", "<!-- algo-book:end -->")
 TABLE = ("<!-- algo-table:start -->", "<!-- algo-table:end -->")
-TOOLBOX = ("<!-- shift-toolbox:start -->", "<!-- shift-toolbox:end -->")
+SHIFTS = ("<!-- shift-table:start -->", "<!-- shift-table:end -->")
+TASKS = ("<!-- task-cards:start -->", "<!-- task-cards:end -->")
 RESULTS = ("<!-- results-data:start -->", "<!-- results-data:end -->")
-TASKS = ("<!-- task-support:start -->", "<!-- task-support:end -->")
-FIGURES = ("<!-- figures-data:start -->", "<!-- figures-data:end -->")
 
-CLAIMED = {"dynamic": "Dynamic shift", "observation": "Observation shift", "semantics": "Semantic shift"}
+# The column head says "Claimed robustness", so the cells name the source alone.
+CLAIMED = {"dynamic": "Dynamic", "observation": "Observation", "semantics": "Semantic"}
 # The table holds robust methods only, so the group follows from the setting.
 GROUP = {"offline": "robust-offline", "online": "robust-online", "safe": "robust-safe"}
+# (regime, group label, blurb, [(family key, family label, colour token)])
 GROUPS = [
-    ("offline", "Robust Offline", "learns from a fixed dataset without environment interaction",
-     [("learner", "Learner-centric"), ("data", "Data-centric"), ("generative", "Data-centric · generative")]),
     ("online", "Robust Online", "learns through continued environment interaction",
-     [("learner", "Learner-centric"), ("environment", "Environment-centric")]),
+     [("learner", "Learner-centric", "learner-on"), ("environment", "Environment-centric", "env")]),
+    ("offline", "Robust Offline", "learns from a fixed dataset without environment interaction",
+     [("learner", "Learner-centric", "learner-off"), ("data", "Data-centric", "data"),
+      ("generative", 'Data-centric<br><span class="sub">(generative model)</span>', "generative")]),
     ("safe", "Robust Safe", "adds a cost constraint that must hold under shift",
-     [("safe", "Robust safe")]),
+     [("safe", "Robust safe", "safe")]),
 ]
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from gen_algorithms import book  # noqa: E402
 import gen_results  # noqa: E402
 
 
-def extensions():
-    """The Markdown extensions of the documentation, as (names, configurations)."""
-    names, configs = [], {}
-    for item in yaml.safe_load(open(SRC / "mkdocs.yml"))["markdown_extensions"]:
-        if isinstance(item, dict):
-            (name, config), = item.items()
-            configs[name] = config or {}
-        else:
-            name = item
-        if name != "toc":           # the book has no headings; permalinks are for pages
-            names.append(name)
-        else:
-            configs.pop(name, None)
-    return names, configs
-
-
-def book_html(spec, refs):
-    text = "\n".join(book(spec, refs, script=None,
-                          page=lambda group, slug: f"docs/algorithms/{group}/{slug}/"))
-    names, configs = extensions()
-    html = markdown.markdown(text, extensions=names, extension_configs=configs)
-    if "markdown=" in html or "```" in html:
-        sys.exit("the book was not fully converted to HTML")
-    return html
+def esc(text):
+    return htmlmod.escape(str(text), quote=True)
 
 
 def tick(flag):
@@ -82,71 +58,81 @@ def tick(flag):
 
 
 def table_html(spec):
-    rows = ['<div class="table-scroll">', '  <table class="data">', "    <thead>", "      <tr>",
-            "        <th>Family</th><th>Method</th><th>Claimed<br>robustness</th><th>Base<br>algorithm</th>",
+    rows = ['<div class="table-scroll">', '  <table class="data algo">',
+            '    <colgroup><col class="c-fam"><col class="c-method"><col class="c-claim"><col class="c-base">'
+            '<col class="c-trait"><col class="c-trait"><col class="c-trait"></colgroup>',
+            "    <thead>", "      <tr>",
+            "        <th>Family</th><th>Method</th><th>Claimed robustness</th><th>Base algorithm</th>",
             '        <th class="c">Shifted-env<br>rollout</th><th class="c">Adversarial<br>network</th>'
             '<th class="c">Learned<br>model</th>',
             "      </tr>", "    </thead>", "    <tbody>"]
     for regime, label, blurb, families in GROUPS:
-        rows.append(f'      <tr class="grp"><td colspan="7">{label} — {blurb}</td></tr>')
-        for fam, fam_label in families:
+        rows.append(f'      <tr class="grp grp-{regime}"><td colspan="7"><b>{label}</b>{blurb}</td></tr>')
+        for fam, fam_label, colour in families:
             members = [a for a in spec["algorithms"]
                        if a["regime"] == regime and a["family"] == fam]
             for i, a in enumerate(members):
                 t = a["traits"]
                 head = (f'<td rowspan="{len(members)}" class="nw">{fam_label}</td>' if i == 0 else "")
                 rows.append(
-                    f'      <tr>{head}<td class="nw"><a href="docs/algorithms/{GROUP[a["regime"]]}/{a["slug"]}/"><b>{a["name"]}</b></a></td>'
+                    f'      <tr class="in-{regime}">{head}<td class="nw"><a href="docs/algorithms/{GROUP[a["regime"]]}/{a["slug"]}/">{a["name"]}</a></td>'
                     f'<td>{CLAIMED[a["claimed"]]}</td><td>{a["base"]}</td>'
                     f'{tick(t["rollout"])}{tick(t["adversary"])}{tick(t["model"])}</tr>')
     rows += ["    </tbody>", "  </table>", "</div>",
-             '<p class="tbl-note">',
+             '<p class="note">',
              "  <em>Shifted-env rollout</em>: rollouts collected from a deliberately perturbed environment.",
              "  <em>Adversarial network</em>: a learned adversary optimised against the policy.",
              "  <em>Learned model</em>: a trained next-state predictor used by the robustness mechanism.",
-             "  The six standard references are on the <a href=\"docs/algorithms/\">algorithm pages</a>.",
+             "  The six standard references (IQL, TD3+BC, MOPO, SynthER, PPO, SAC) are on the "
+             '<a href="docs/algorithms/">algorithm pages</a>.',
              "</p>"]
     return "\n".join("    " + r for r in rows)
 
 
-def esc(text):
-    return htmlmod.escape(str(text), quote=True)
-
-
-def toolbox_panel(source, mode_key, modes):
-    """The example panel for one source and one mode, as the script renders it."""
-    mode = next(m for m in modes if m["key"] == mode_key)
-    entry = source["modes"][mode_key]
-    names = "".join(f"<code>{esc(n)}</code>" for n in entry.get("names", []))
-    example = source["example"]
-    if "videos" in example:
+def shifts_html(data):
+    """One row per shift source, each with an expandable demo: nominal and shifted clips and code."""
+    rows = ['<div class="table-scroll">', '  <table class="data shift-table">', "    <thead>",
+            '      <tr><th>Shift source</th><th>What it perturbs</th><th>Target</th><th>Mode names</th>'
+            '<th class="c">Demo</th></tr>',
+            "    </thead>", "    <tbody>"]
+    targets = {"dynamic": "dynamics, transition", "observation": "observation", "action": "action",
+               "reward-cost": "reward, cost", "latency": "latency", "semantic": "appearance"}
+    for s in data["sources"]:
+        names = []
+        for mode in ("stochastic", "adversarial", "parametric"):
+            names += (s["modes"].get(mode) or {}).get("names", [])
+        uniq = list(dict.fromkeys(names))
+        codes = " ".join(f"<code>{esc(n)}</code>" for n in uniq)
+        key = esc(s["key"])
+        rows.append(f'      <tr class="shift-row"><td class="nw"><i class="chip chip-src-{key}"></i>'
+                    f'<a href="{esc(s["page"])}">{esc(s["name"])}</a></td>'
+                    f'<td>{esc(s["blurb"])}</td><td class="nw"><code>{esc(targets[s["key"]])}</code></td><td>{codes}</td>'
+                    f'<td class="c"><button type="button" class="demo-toggle" aria-expanded="false" '
+                    f'aria-controls="demo-{key}" aria-label="Show the demo of the {esc(s["name"])}"></button></td></tr>')
+        ex = s["example"]
         clips = "".join(
-            f'<div class="tb-clip"><span>{label}</span>'
-            f'<video src="{esc(example["videos"][key])}" poster="{esc(example["posters"][key])}" '
-            f'autoplay muted loop playsinline controls preload="metadata" '
-            f'aria-label="{label}: {esc(example["caption"])}"></video></div>'
-            for key, label in (("nominal", "Nominal"), ("shifted", "Shifted"))
-        )
-        media = f'<div class="tb-comparison{" tb-comparison-tall" if source["key"] == "latency" else ""}">{clips}</div>'
-    else:
-        media = f'<img src="{esc(example["image"])}" alt="{esc(example["caption"])}">'
-    return (
-        f'<div class="tb-detail">'
-        f'<p class="tb-title"><b>{esc(source["name"])}</b> · {esc(mode["name"])}</p>'
-        f'<p class="tb-blurb">{esc(entry.get("note", ""))}</p>'
-        + (f'<p class="tb-names">{names}</p>' if names else "")
-        + f'<pre class="code tb-code">{esc(entry["code"])}</pre>'
-        f'<p class="tb-links"><a href="{esc(source["page"])}">{esc(source["name"])} in the tutorial</a> · '
-        f'<a href="{esc(mode["page"])}">{esc(mode["name"])} mode</a></p></div>\n'
-        f'<figure class="tb-figure">{media}'
-        f'<figcaption>{esc(example["caption"])}</figcaption></figure>')
+            f'<figure><figcaption>{label}</figcaption><video data-src="{esc(ex["videos"][k])}" poster="{esc(ex["posters"][k])}" '
+            f'muted loop playsinline controls preload="none" aria-label="{label}: {esc(ex["caption"])}"></video></figure>'
+            for k, label in (("nominal", "Nominal"), ("shifted", "Shifted")))
+        if ex.get("demo_code"):
+            head, code = "The shift in this clip", ex["demo_code"]
+        else:
+            mode = s["modes"].get("parametric") or next(v for v in s["modes"].values() if v.get("code"))
+            head = "Declare it"
+            code = "from robustrllib import make_robust, ShiftSpec\n\nshift = " + mode["code"]
+        rows.append(f'      <tr class="shift-demo" id="demo-{key}" hidden><td colspan="5"><div class="demo-body">'
+                    f'<div class="demo-clips">{clips}</div>'
+                    f'<p class="demo-caption">{esc(ex["caption"])}</p>'
+                    f'<p class="demo-head">{head}</p><pre class="code">{esc(code)}</pre>'
+                    f'</div></td></tr>')
+    rows += ["    </tbody>", "  </table>", "</div>"]
+    return "\n".join("    " + r for r in rows)
 
 
 FAMILIES = ["Locomotion", "Manipulation", "Navigation", "Vehicle control", "Humanoid", "Vision-language-action"]
 
 
 def task_card(task, sources):
-    """One task of the support block, as the script renders it."""
     media = task["media"]
     if media.endswith((".mp4", ".webm")):
         poster = f' poster="{esc(task["poster"])}"' if task.get("poster") else ""
@@ -154,64 +140,31 @@ def task_card(task, sources):
                f'aria-label="{esc(task["caption"])}"></video>')
     else:
         fig = f'<img src="{esc(media)}" alt="{esc(task["caption"])}" loading="lazy">'
-    dots = "".join(f'<span class="tb-dot tb-{k}" title="{esc(next(s["name"] for s in sources if s["key"] == k))}"></span>'
-                   for k in task["shifts"])
-    return (f'<article class="tb-task" data-family="{esc(task["family"])}" data-regime="{esc(" ".join(task["regime"]))}" '
-            f'data-shifts="{esc(" ".join(task["shifts"]))}">'
-            f'<figure class="tb-task-media">{fig}</figure>'
+    names = {s["key"]: s["name"] for s in sources}
+    dots = "".join(f'<i class="dot dot-{k}" title="{esc(names[k])}"></i>' for k in task["shifts"])
+    return (f'<article class="task" data-family="{esc(task["family"])}" data-regime="{esc(" ".join(task["regime"]))}">'
+            f'<figure class="task-media">{fig}</figure>'
             f'<h4>{esc(task["name"])}</h4>'
-            f'<p class="tb-task-meta">{esc(task["family"])} · {esc(task["backend"])} · {esc(" / ".join(task["regime"]))}</p>'
-            f'<p class="tb-task-axes">{esc(", ".join(task["axes"]))}</p>'
-            f'<p class="tb-task-foot"><span class="tb-task-dots">{dots}</span></p>'
+            f'<p class="task-meta">{esc(task["family"])} · {esc(task["backend"])} · {esc(" / ".join(task["regime"]))}</p>'
+            f'<p class="task-axes">{esc(", ".join(task["axes"]))}</p>'
+            f'<p class="task-dots">{dots}</p>'
             f'</article>')
 
 
 def tasks_html(tasks, sources):
-    """The task-support block, below the loop of the six sources (outside the toolbox card)."""
-    out = ['<div class="tb-tasks" id="tb-tasks">',
-           '  <p class="tb-tasks-note">Every task the paper reports, with the shift sources the toolbox offers on it. A source selected in the toolbox above dims the tasks that do not carry it.</p>',
-           '  <div class="tb-row"><span class="tb-label">Family</span><div class="tb-buttons" role="group" aria-label="Task family">',
-           '    <button type="button" class="tb-btn tb-family is-active" data-family="all">All</button>']
-    for f in FAMILIES:
-        out.append(f'    <button type="button" class="tb-btn tb-family" data-family="{esc(f)}">{esc(f)}</button>')
-    out.append('  </div></div>')
-    out.append('  <div class="tb-row"><span class="tb-label">Regime</span><div class="tb-buttons" role="group" aria-label="Regime">')
-    for key, label in (("all", "All"), ("online", "Online"), ("offline", "Offline")):
-        out.append(f'    <button type="button" class="tb-btn tb-regime{" is-active" if key == "all" else ""}" data-regime="{key}">{label}</button>')
-    out.append('  </div></div>')
-    out.append('  <div class="tb-task-grid">')
+    """The task cards with their looping renders, one tab per task family."""
+    out = ['<div class="tasks" id="tasks">',
+           '  <div class="filter-buttons" role="tablist" aria-label="Task family">']
+    for i, f in enumerate(FAMILIES):
+        n = sum(1 for t in tasks if t["family"] == f)
+        out.append(f'    <button type="button" class="fbtn{" is-active" if i == 0 else ""}" role="tab" '
+                   f'aria-selected="{"true" if i == 0 else "false"}" data-family="{esc(f)}">{esc(f)} <span>{n}</span></button>')
+    out.append('  </div>')
+    out.append('  <div class="task-grid">')
     out.extend("    " + task_card(t, sources) for t in tasks)
     out.append('  </div>')
-    out.append('  <p class="tb-tasks-empty" hidden>No task matches this filter.</p>')
-    out.append('</div>')
-    return "\n".join("    " + line for line in out)
-
-
-def toolbox_html(data):
-    modes, sources = data["modes"], data["sources"]
-    first = sources[0]
-    first_mode = next(m["key"] for m in modes if m["key"] in first["modes"])
-    out = ['<div class="toolbox" id="shift-toolbox">',
-           '  <p class="tb-heading">Shift toolbox</p>',
-           '  <div class="tb-row"><span class="tb-label">Sources</span><div class="tb-buttons" role="tablist" aria-label="Shift sources">']
-    for i, src in enumerate(sources):
-        out.append(f'    <button type="button" class="tb-btn tb-source{" is-active" if i == 0 else ""}" '
-                   f'data-source="{src["key"]}" role="tab" aria-selected="{"true" if i == 0 else "false"}">'
-                   f'<span class="tb-dot tb-{src["key"]}"></span>{esc(src["name"])}</button>')
-    out.append('  </div></div>')
-    out.append('  <div class="tb-row"><span class="tb-label">Modes</span><div class="tb-buttons" role="tablist" aria-label="Shift modes">')
-    for m in modes:
-        on = m["key"] in first["modes"]
-        disabled = "" if on else ' aria-disabled="true"'
-        active = " is-active" if m["key"] == first_mode else ""
-        selected = "true" if m["key"] == first_mode else "false"
-        out.append(f'    <button type="button" class="tb-btn tb-mode{active}" data-mode="{m["key"]}" '
-                   f'role="tab" aria-selected="{selected}"{disabled}>{esc(m["name"])}</button>')
-    out.append('  </div></div>')
-    out.append(f'  <div class="tb-panel{" is-comparison" if "videos" in first["example"] else ""}" id="tb-panel" aria-live="polite">')
-    out.append(toolbox_panel(first, first_mode, modes))
-    out.append('  </div>')
-    out.append('  <script type="application/json" id="shift-data">' + json.dumps(data, ensure_ascii=False).replace("</", "<\\/") + '</script>')
+    legend = "".join(f'<li><i class="dot dot-{esc(s["key"])}"></i>{esc(s["name"])}</li>' for s in sources)
+    out.append(f'  <ul class="legend task-legend">{legend}</ul>')
     out.append('</div>')
     return "\n".join("    " + line for line in out)
 
@@ -226,25 +179,18 @@ def replace(html, markers, body):
 
 def main():
     spec = yaml.safe_load(open(SRC / "data" / "algorithms.yaml"))
-    refs = yaml.safe_load(open(SRC / "data" / "references.yaml"))
     html = LANDING.read_text()
-    # The book is not indented: it holds <pre> blocks, where leading spaces would show.
-    # the landing copy lies closed until it scrolls into view (book.js reads the attribute)
-    html = replace(html, BOOK, book_html(spec, refs).replace('id="algorithm-book"', 'id="algorithm-book" data-open-on-view=""', 1))
     html = replace(html, TABLE, table_html(spec))
     shifts = yaml.safe_load(open(SRC / "data" / "shifts.yaml"))
-    html = replace(html, TOOLBOX, toolbox_html(shifts))
+    html = replace(html, SHIFTS, shifts_html(shifts))
     tasks = yaml.safe_load(open(SRC / "data" / "tasks.yaml"))["tasks"]
     html = replace(html, TASKS, tasks_html(tasks, shifts["sources"]))
-    figures = {name: yaml.safe_load(open(SRC / "data" / "figures" / f"{name}.json")) for name in ("gain_decay", "part4")}
-    payload = json.dumps(figures, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
-    html = replace(html, FIGURES, '<script type="application/json" id="figures-data">' + payload + "</script>")
     results = gen_results.build()
     print(gen_results.check(results))
     payload = json.dumps(results, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
     html = replace(html, RESULTS, '<script type="application/json" id="results-data">' + payload + "</script>")
     LANDING.write_text(html)
-    print(f"synced algorithm book, table, shift toolbox, task support, figures and results in {LANDING.name}")
+    print(f"synced algorithm table, shift table, task table and results in {LANDING.name}")
 
 
 if __name__ == "__main__":
