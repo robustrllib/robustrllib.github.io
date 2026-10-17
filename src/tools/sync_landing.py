@@ -91,7 +91,10 @@ def table_html(spec):
 
 def shifts_html(data):
     """One row per shift source, each with an expandable demo: nominal and shifted clips and code."""
-    rows = ['<div class="table-scroll">', '  <table class="data shift-table">', "    <thead>",
+    rows = ['<div class="table-scroll">', '  <table class="data shift-table">',
+            '    <colgroup>',
+            '      <col class="shift-source"><col class="shift-description"><col class="shift-target"><col><col class="shift-control">',
+            '    </colgroup>', "    <thead>",
             '      <tr><th>Shift source</th><th>What it perturbs</th><th>Target</th><th>Mode names</th>'
             '<th class="c">Demo</th></tr>',
             "    </thead>", "    <tbody>"]

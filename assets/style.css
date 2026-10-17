@@ -1,5 +1,5 @@
 /* The project page: a white ground, one reading column, black text, hairlines between
-   the parts, no motion. Family colours are the paper's figure palette and are the only
+   the parts, subtle disclosure motion. Family colours are the paper's figure palette and are the only
    colours on the page besides links. Fonts are self-hosted; nothing loads from outside. */
 
 @font-face { font-family: "Inter"; font-style: normal; font-weight: 100 900; font-display: swap; src: url("fonts/inter-latin-wght-normal.woff2") format("woff2"); }
@@ -219,12 +219,20 @@ table.data td a:hover { color: var(--link); }
 .legend li { display: inline-flex; align-items: center; }
 
 /* ---- shift table: one expandable demo per source */
+table.shift-table { table-layout: fixed; min-width: 840px; }
+.shift-table col.shift-source { width: 180px; }
+.shift-table col.shift-description { width: 22%; }
+.shift-table col.shift-target { width: 190px; }
+.shift-table col.shift-control { width: 55px; }
 .demo-toggle { width: 28px; height: 28px; border: 1px solid var(--line-strong); border-radius: 50%; background: #fff; cursor: pointer; position: relative; vertical-align: middle; }
-.demo-toggle::after { content: ""; position: absolute; left: 9px; top: 7px; width: 7px; height: 7px; border-right: 1.6px solid var(--ink); border-bottom: 1.6px solid var(--ink); transform: rotate(45deg); transition: none; }
+.demo-toggle { transition: background-color 240ms ease, border-color 240ms ease; }
+.demo-toggle::after { content: ""; position: absolute; left: 9px; top: 7px; width: 7px; height: 7px; border-right: 1.6px solid var(--ink); border-bottom: 1.6px solid var(--ink); transform: rotate(45deg); transition: transform 240ms ease, top 240ms ease, border-color 240ms ease; }
 .demo-toggle[aria-expanded="true"] { background: var(--ink); border-color: var(--ink); }
 .demo-toggle[aria-expanded="true"]::after { border-color: #fff; top: 10px; transform: rotate(-135deg); }
 .demo-toggle:hover { border-color: var(--ink); }
-table.data tr.shift-demo > td { padding: 6px 0 22px; }
+table.data tr.shift-demo > td { padding: 0; }
+.demo-panel { overflow: hidden; }
+.demo-body { padding: 6px 0 22px; }
 .demo-clips { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .demo-clips figure { margin: 0; }
 .demo-clips figcaption { margin: 0 0 6px; font-size: 12.5px; font-weight: 650; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); text-align: left; }
@@ -233,6 +241,9 @@ table.data tr.shift-demo > td { padding: 6px 0 22px; }
 .demo-head { margin: 0 0 6px; font-size: 12.5px; font-weight: 650; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
 .demo-body pre.code { margin: 0; }
 @media (max-width: 560px) { .demo-clips { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) {
+  .demo-toggle, .demo-toggle::after { transition: none; }
+}
 
 /* ---- task cards */
 .tasks > .filter-buttons { margin: 0 0 16px; }
