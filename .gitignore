@@ -5,3 +5,9 @@ __pycache__/
 src/_preview.yml
 
 output
+
+# Local metadata and editor temporary files
+._*
+*.swp
+*.swo
+*~

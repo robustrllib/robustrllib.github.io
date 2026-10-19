@@ -64,7 +64,7 @@
     </script>
 
     <ul class="stats" aria-label="The benchmark in numbers">
-      <li class="lead"><b>22</b><span>Algorithms</span></li>
+      <li class="lead"><b>23</b><span>Algorithms</span></li>
       <li><b>6</b><span>Shift sources</span></li>
       <li><b>5</b><span>Shift modes</span></li>
       <li><b>6</b><span>Task families</span></li>
@@ -168,7 +168,7 @@ python baselines/evaluate.py --run runs/rorl_hopper/seed0</pre>
   <div class="wrap">
     <p class="kicker">Algorithms</p>
     <h2>Robust RL algorithm library construction.</h2>
-    <p>The sixteen robust methods are grouped by data regime and by where robustness enters: the learner,
+    <p>The seventeen robust methods are grouped by data regime and by where robustness enters: the learner,
       the environment it collects from, or the data it learns from. Each row names the shift the method
       claims and the base algorithm it is built on.</p>
     <!-- algo-table:start -->
@@ -346,7 +346,7 @@ shift = ShiftSpec(&quot;appearance&quot;, &quot;hue&quot;,
     </div>
 
     <div class="module" data-module="library">
-      <p class="sub">All 22 algorithms on 220 perturbation configurations: pick a regime, a task, a shift factor or a
+      <p class="sub">All 23 algorithms on 220 perturbation configurations: pick a regime, a task, a shift factor or a
         magnitude, and read the same numbers as a table.</p>
       <div class="viz" id="viz-library" data-view="chart"></div>
     </div>
@@ -399,7 +399,7 @@ shift = ShiftSpec(&quot;appearance&quot;, &quot;hue&quot;,
           <tr><td>Robust-Gymnasium</td><td class="c">4</td><td class="c">4/4</td><td class="c cross">✗</td><td class="c tick">✓</td><td class="c tick">✓</td><td class="c tick">✓</td></tr>
           <tr><td>RWRL Suite</td><td class="c">0</td><td class="c">3/4</td><td class="c tick">✓</td><td class="c cross">✗</td><td class="c tick">✓</td><td class="c part-t">◐</td></tr>
           <tr><td>RoAd-RL</td><td class="c">0</td><td class="c">1/4</td><td class="c cross">✗</td><td class="c cross">✗</td><td class="c cross">✗</td><td class="c tick">✓</td></tr>
-          <tr class="hi"><td>RobustRLlib (ours)</td><td class="c">16</td><td class="c">4/4</td><td class="c tick">✓</td><td class="c tick">✓</td><td class="c tick">✓</td><td class="c tick">✓</td></tr>
+          <tr class="hi"><td>RobustRLlib (ours)</td><td class="c">17</td><td class="c">4/4</td><td class="c tick">✓</td><td class="c tick">✓</td><td class="c tick">✓</td><td class="c tick">✓</td></tr>
         </tbody>
       </table>
     </div>

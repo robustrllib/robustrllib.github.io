@@ -5,7 +5,7 @@ title: Overview
 # Overview
 
 RobustRLlib is a library and benchmark for robust reinforcement learning that takes the
-**algorithm** as its unit of comparison. It holds 16 robust and robust safe methods and 6
+**algorithm** as its unit of comparison. It holds 17 robust and robust safe methods and 6
 standard algorithms behind one interface, a toolbox that declares deployment shifts, and one
 evaluation protocol that is applied to all of them.
 
@@ -44,7 +44,7 @@ The library has four groups. Robust methods are split further by where robustnes
 
 ## Library features
 
-- **One interface for 22 algorithms.** Every method is launched from an experiment file and
+- **One interface for 23 algorithms.** Every method is launched from an experiment file and
   keeps its native training recipe and budget.
 - **Attribution built in.** Every method records the mechanism it adds, the shift it claims to
   address and the base algorithm that realises it.
@@ -64,7 +64,7 @@ robust algorithms with shifts on every component of the interaction loop, under 
 <table class="rl-compare">
 <thead><tr><th>Feature</th><th>RLlib</th><th>RRLS</th><th>ODRL</th><th>Robust-Gymnasium</th><th>RWRL Suite</th><th>RoAd-RL</th><th class="rl-ours">RobustRLlib</th></tr></thead>
 <tbody>
-<tr><th scope="row"><span class="fa fa-cubes rl-ico" aria-hidden="true"></span>Robust algorithms</th><td>0</td><td>4</td><td>0</td><td>4</td><td>0</td><td>0</td><td class="rl-ours">16</td></tr>
+<tr><th scope="row"><span class="fa fa-cubes rl-ico" aria-hidden="true"></span>Robust algorithms</th><td>0</td><td>4</td><td>0</td><td>4</td><td>0</td><td>0</td><td class="rl-ours">17</td></tr>
 <tr><th scope="row"><span class="fa fa-random rl-ico" aria-hidden="true"></span>MDP shifts</th><td>0/4</td><td>2/4</td><td>1/4</td><td>4/4</td><td>3/4</td><td>1/4</td><td class="rl-ours">4/4</td></tr>
 <tr><th scope="row"><span class="fa fa-clock-o rl-ico" aria-hidden="true"></span>Latency shift</th><td><span class="fa fa-times rl-no" role="img" aria-label="Not supported" title="Not supported"></span></td><td><span class="fa fa-times rl-no" role="img" aria-label="Not supported" title="Not supported"></span></td><td><span class="fa fa-times rl-no" role="img" aria-label="Not supported" title="Not supported"></span></td><td><span class="fa fa-times rl-no" role="img" aria-label="Not supported" title="Not supported"></span></td><td><span class="fa fa-check-square rl-yes" role="img" aria-label="Supported" title="Supported"></span></td><td><span class="fa fa-times rl-no" role="img" aria-label="Not supported" title="Not supported"></span></td><td class="rl-ours"><span class="fa fa-check-square rl-yes" role="img" aria-label="Supported" title="Supported"></span></td></tr>
 <tr><th scope="row"><span class="fa fa-eye rl-ico" aria-hidden="true"></span>Semantic shift</th><td><span class="fa fa-times rl-no" role="img" aria-label="Not supported" title="Not supported"></span></td><td><span class="fa fa-times rl-no" role="img" aria-label="Not supported" title="Not supported"></span></td><td><span class="fa fa-times rl-no" role="img" aria-label="Not supported" title="Not supported"></span></td><td><span class="fa fa-check-square rl-yes" role="img" aria-label="Supported" title="Supported"></span></td><td><span class="fa fa-times rl-no" role="img" aria-label="Not supported" title="Not supported"></span></td><td><span class="fa fa-times rl-no" role="img" aria-label="Not supported" title="Not supported"></span></td><td class="rl-ours"><span class="fa fa-check-square rl-yes" role="img" aria-label="Supported" title="Supported"></span></td></tr>
@@ -76,7 +76,7 @@ robust algorithms with shifts on every component of the interaction loop, under 
 
 <p class="rl-legend-marks"><span class="fa fa-check-square rl-yes" role="img" aria-label="Supported" title="Supported"></span> supported and evaluated &nbsp;&nbsp; <span class="fa fa-adjust rl-part" role="img" aria-label="Partial" title="Partial"></span> partial &nbsp;&nbsp; <span class="fa fa-times rl-no" role="img" aria-label="Not supported" title="Not supported"></span> absent or not demonstrated</p>
 
-> **RobustRLlib integrates 16 robust and robust safe methods** next to 6 standard algorithms.
+> **RobustRLlib integrates 17 robust and robust safe methods** next to 6 standard algorithms.
 > It evaluates shift on **all four MDP components**: observations, actions, transitions, and
 > reward or cost. It adds **Latency shift**, **Semantic shift** and **compound shift**, and
 > carries the same interface to **additional simulators**.
