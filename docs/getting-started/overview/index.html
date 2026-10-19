@@ -163,7 +163,7 @@
       <main class="bk-article" id="bk-content">
         <h1 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h1>
 <p>RobustRLlib is a library and benchmark for robust reinforcement learning that takes the
-<strong>algorithm</strong> as its unit of comparison. It holds 17 robust and robust safe methods and 6
+<strong>algorithm</strong> as its unit of comparison. It holds 16 robust and robust safe methods and 6
 standard algorithms behind one interface, a toolbox that declares deployment shifts, and one
 evaluation protocol that is applied to all of them.</p>
 <h2 id="why-an-algorithm-centric-library">Why an algorithm-centric library?<a class="headerlink" href="#why-an-algorithm-centric-library" title="Permanent link">&para;</a></h2>
@@ -218,7 +218,7 @@ own setting. Two barriers follow.</p>
 </table>
 <h2 id="library-features">Library features<a class="headerlink" href="#library-features" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>One interface for 23 algorithms.</strong> Every method is launched from an experiment file and
+<li><strong>One interface for 22 algorithms.</strong> Every method is launched from an experiment file and
   keeps its native training recipe and budget.</li>
 <li><strong>Attribution built in.</strong> Every method records the mechanism it adds, the shift it claims to
   address and the base algorithm that realises it.</li>
@@ -236,7 +236,7 @@ robust algorithms with shifts on every component of the interaction loop, under 
 <table class="rl-compare">
 <thead><tr><th>Feature</th><th>RLlib</th><th>RRLS</th><th>ODRL</th><th>Robust-Gymnasium</th><th>RWRL Suite</th><th>RoAd-RL</th><th class="rl-ours">RobustRLlib</th></tr></thead>
 <tbody>
-<tr><th scope="row"><span class="fa fa-cubes rl-ico" aria-hidden="true"></span>Robust algorithms</th><td>0</td><td>4</td><td>0</td><td>4</td><td>0</td><td>0</td><td class="rl-ours">17</td></tr>
+<tr><th scope="row"><span class="fa fa-cubes rl-ico" aria-hidden="true"></span>Robust algorithms</th><td>0</td><td>4</td><td>0</td><td>4</td><td>0</td><td>0</td><td class="rl-ours">16</td></tr>
 <tr><th scope="row"><span class="fa fa-random rl-ico" aria-hidden="true"></span>MDP shifts</th><td>0/4</td><td>2/4</td><td>1/4</td><td>4/4</td><td>3/4</td><td>1/4</td><td class="rl-ours">4/4</td></tr>
 <tr><th scope="row"><span class="fa fa-clock-o rl-ico" aria-hidden="true"></span>Latency shift</th><td><span class="fa fa-times rl-no" role="img" aria-label="Not supported" title="Not supported"></span></td><td><span class="fa fa-times rl-no" role="img" aria-label="Not supported" title="Not supported"></span></td><td><span class="fa fa-times rl-no" role="img" aria-label="Not supported" title="Not supported"></span></td><td><span class="fa fa-times rl-no" role="img" aria-label="Not supported" title="Not supported"></span></td><td><span class="fa fa-check-square rl-yes" role="img" aria-label="Supported" title="Supported"></span></td><td><span class="fa fa-times rl-no" role="img" aria-label="Not supported" title="Not supported"></span></td><td class="rl-ours"><span class="fa fa-check-square rl-yes" role="img" aria-label="Supported" title="Supported"></span></td></tr>
 <tr><th scope="row"><span class="fa fa-eye rl-ico" aria-hidden="true"></span>Semantic shift</th><td><span class="fa fa-times rl-no" role="img" aria-label="Not supported" title="Not supported"></span></td><td><span class="fa fa-times rl-no" role="img" aria-label="Not supported" title="Not supported"></span></td><td><span class="fa fa-times rl-no" role="img" aria-label="Not supported" title="Not supported"></span></td><td><span class="fa fa-check-square rl-yes" role="img" aria-label="Supported" title="Supported"></span></td><td><span class="fa fa-times rl-no" role="img" aria-label="Not supported" title="Not supported"></span></td><td><span class="fa fa-times rl-no" role="img" aria-label="Not supported" title="Not supported"></span></td><td class="rl-ours"><span class="fa fa-check-square rl-yes" role="img" aria-label="Supported" title="Supported"></span></td></tr>
@@ -249,7 +249,7 @@ robust algorithms with shifts on every component of the interaction loop, under 
 <p class="rl-legend-marks"><span class="fa fa-check-square rl-yes" role="img" aria-label="Supported" title="Supported"></span> supported and evaluated &nbsp;&nbsp; <span class="fa fa-adjust rl-part" role="img" aria-label="Partial" title="Partial"></span> partial &nbsp;&nbsp; <span class="fa fa-times rl-no" role="img" aria-label="Not supported" title="Not supported"></span> absent or not demonstrated</p>
 
 <blockquote>
-<p><strong>RobustRLlib integrates 17 robust and robust safe methods</strong> next to 6 standard algorithms.
+<p><strong>RobustRLlib integrates 16 robust and robust safe methods</strong> next to 6 standard algorithms.
 It evaluates shift on <strong>all four MDP components</strong>: observations, actions, transitions, and
 reward or cost. It adds <strong>Latency shift</strong>, <strong>Semantic shift</strong> and <strong>compound shift</strong>, and
 carries the same interface to <strong>additional simulators</strong>.</p>

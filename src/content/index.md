@@ -6,7 +6,7 @@ title: RobustRLlib Tutorial
 
 Robust reinforcement learning is critical for reliable real-world deployment, where policies
 may fail under diverse shifts and disruptions. **RobustRLlib** is an algorithm-centric library
-and benchmark. It integrates 17 representative robust online, offline and safe RL methods and
+and benchmark. It integrates 16 representative robust online, offline and safe RL methods and
 6 standard algorithms under a unified interface, together with a toolbox that declares
 deployment shifts and one evaluation protocol for all methods.
 
@@ -27,7 +27,7 @@ deployment shifts and one evaluation protocol for all methods.
 ## Algorithms
 
 [All Methods](algorithms/index.md)
-: The 23 algorithms of the library in one table.
+: The 22 algorithms of the library in one table.
 
 [Standard Algorithms](algorithms/standard/index.md)
 : The base learners and references: [IQL](algorithms/standard/iql.md), [TD3+BC](algorithms/standard/td3bc.md), [MOPO](algorithms/standard/mopo.md), [SynthER](algorithms/standard/synther.md), [PPO](algorithms/standard/ppo.md), [SAC](algorithms/standard/sac.md).
