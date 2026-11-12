@@ -73,7 +73,7 @@
     var kicker = document.createElement("p"); kicker.className = "rl-cover-kicker"; kicker.textContent = "RobustRLlib";
     var title = document.createElement("p"); title.className = "rl-cover-title"; title.textContent = "Algorithms";
     var sub = document.createElement("p"); sub.className = "rl-cover-sub";
-    var line = spreads[0].querySelector(".rl-book-title");   // "22 algorithms in four groups"
+    var line = spreads[0].querySelector(".rl-book-title");   // "23 algorithms in four groups"
     sub.textContent = line ? line.textContent : (spreads.length - 1) + " methods  \u00b7  " + Object.keys(groups).length + " groups";
     var blocks = document.createElement("div"); blocks.className = "rl-cover-blocks";
     Object.keys(groups).forEach(function (g) { var b = document.createElement("i"); b.style.background = "var(--rl-g-" + g + ")"; blocks.appendChild(b); });

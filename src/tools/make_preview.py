@@ -53,7 +53,14 @@ def main():
                             + ("/index.html" if (site / "docs" / m.group(1) / m.group(2)).is_dir()
                                else ".html") + '"', html)
     html = html.replace('href="docs/"', 'href="docs/index.html"')
+    html = html.replace('href="rebuttal/"', 'href="rebuttal/index.html"').replace('href="rebuttal/#', 'href="rebuttal/index.html#')
     page.write_text(html)
+
+    # the rebuttal page: a static page next to the landing page
+    if (REPO / "rebuttal").is_dir():
+        shutil.copytree(REPO / "rebuttal", site / "rebuttal")
+        sub = site / "rebuttal" / "index.html"
+        sub.write_text(sub.read_text().replace('href="../"', 'href="../index.html"'))
 
     # documentation -> landing page: the logo link is root-relative on the site
     for f in (site / "docs").rglob("*.html"):

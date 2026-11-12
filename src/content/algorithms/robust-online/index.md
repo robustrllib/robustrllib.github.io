@@ -64,7 +64,7 @@ Normalized score of the frozen checkpoint. Q1 to Q4 are the severity quartiles o
 | [RSC](rsc.md) | 77.9 | 67.7 | 61.8 | 44.1 | 38.2 | 52.7 |
 | [RARL-PPO](rarl.md) | 76.3 | 65.2 | 49.4 | 43.8 | 38.4 | 49.4 |
 | [RARL-TRPO](rarl.md) | 72.8 | 64.4 | 51.9 | 45.3 | 37.7 | 49.8 |
-| [DR](dr.md) | 91.1 | 84.7 | 76.9 | 58.3 | 48.2 | 66.8 |
+| [DR-SAC](dr.md) | 91.1 | 84.7 | 76.9 | 58.3 | 48.2 | 66.8 |
 
 Scores are not clipped: 0 and 100 are reference points, not bounds. The protocol is described in [Evaluation Protocol](../../evaluation/protocol.md).
 

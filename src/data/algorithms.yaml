@@ -554,6 +554,8 @@ algorithms:
         - "python baselines/evaluate.py --run runs/dr_sac_hopper/seed0"
     variants:
       - {label: DR-SAC, part1: [online, DR-SAC], part2: [online, DR-SAC], part3: [[hopper_online, DR-SAC], [pusher, DR-SAC]], backbone: SAC}
+      # counted as a method of its own; it runs on the Isaac Lab tasks only, so it has no row on the library-wide grid
+      - {label: DR-PPO, backbone: PPO}
 
   # ------------------------------------------------------------ robust safe
   - slug: ramu

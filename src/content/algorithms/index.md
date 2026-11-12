@@ -27,9 +27,9 @@ The book below holds one spread per method. Its labels open the four groups: sta
 <div class="rl-page rl-left" markdown>
 <p class="rl-book-group">RobustRLlib</p>
 <p class="rl-book-name">The Algorithm Book</p>
-<p class="rl-book-title">22 algorithms in four groups</p>
+<p class="rl-book-title">23 algorithms in four groups</p>
 
-Every method has one spread: what it is on the left, how it is configured and run on the right. The two variants of RARL share one spread.
+Every method has one spread: what it is on the left, how it is configured and run on the right. The variants of RARL and DR share the spread of their method.
 
 - Turn the page with the buttons, the arrow keys or a swipe.
 - A label on the edge of the book opens a group.

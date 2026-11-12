@@ -27,7 +27,7 @@ deployment shifts and one evaluation protocol for all methods.
 ## Algorithms
 
 [All Methods](algorithms/index.md)
-: The 22 algorithms of the library in one table.
+: The 23 algorithms of the library in one table.
 
 [Standard Algorithms](algorithms/standard/index.md)
 : The base learners and references: [IQL](algorithms/standard/iql.md), [TD3+BC](algorithms/standard/td3bc.md), [MOPO](algorithms/standard/mopo.md), [SynthER](algorithms/standard/synther.md), [PPO](algorithms/standard/ppo.md), [SAC](algorithms/standard/sac.md).

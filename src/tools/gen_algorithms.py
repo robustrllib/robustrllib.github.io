@@ -394,6 +394,8 @@ def group_page(group, spec, p1):
                 "| Method " + GRID_HEAD, "|---|" + GRID_RULE]
         for a in algos:
             for v in a["variants"]:
+                if not v.get("part1"):        # a variant that is not on the library-wide grid
+                    continue
                 name = v["label"] if len(a["variants"]) > 1 else a["name"]
                 out.append(grid_line(f"[{name}]({a['slug']}.md)", p1.row(tuple(v["part1"]))))
         out += ["", "Scores are not clipped: 0 and 100 are reference points, not bounds. The "
@@ -444,11 +446,14 @@ def book(spec, refs, page=None, script="../assets/book.js"):
     count = sum(max(1, len(a.get("variants") or [])) for a in algos)
     several = [a["name"] for a in algos if len(a.get("variants") or []) > 1]
     shared = ""
-    if several:
+    if len(several) == 1:
         words = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"]
         n = len(several) + count - len(algos)
         shared = (f"The {words[n] if n < len(words) else n} variants of "
-                  + " and ".join(several) + " share one spread.")
+                  + several[0] + " share one spread.")
+    elif several:
+        shared = ("The variants of " + ", ".join(several[:-1]) + " and " + several[-1]
+                  + " share the spread of their method.")
     # ---- contents
     out += ['<section class="rl-spread" id="book-contents" data-group="contents" '
             'data-name="Contents" data-label="" markdown>', "",
@@ -577,7 +582,7 @@ def main():
     if bad:
         sys.exit(f"headline numbers do not match the paper (got, expected): {bad}")
     missing = [(a["slug"], v["label"]) for a in spec["algorithms"] for v in a["variants"]
-               if tuple(v["part1"]) not in p1.overall]
+               if v.get("part1") and tuple(v["part1"]) not in p1.overall]
     if missing:
         sys.exit(f"variants without library-grid data: {missing}")
 

@@ -21,6 +21,7 @@
       <li><a href="#algorithms">Algorithms</a></li>
       <li><a href="#shifts">Shifts</a></li>
       <li><a href="#results">Results</a></li>
+      <li><a href="rebuttal/">Rebuttal</a></li>
       <li><a href="docs/">Tutorial</a></li>
       <li class="hide-sm"><a class="ext" href="https://anonymous.4open.science/r/RobustRLlib-8888" target="_blank" rel="noopener">Code</a></li>
     </ul>
@@ -37,13 +38,14 @@
       <a href="#" data-blocked="paper"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h6"/></svg>Paper <span class="soon">coming soon</span></a>
       <a href="https://anonymous.4open.science/r/RobustRLlib-8888" target="_blank" rel="noopener"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 18l6-6-6-6"/><path d="M8 6l-6 6 6 6"/></svg>Code</a>
       <a href="docs/"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-3H2z"/><path d="M22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-3h7z"/></svg>Tutorial</a>
+      <a href="rebuttal/"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18"/><path d="M7 21v-8"/><path d="M12 21V4"/><path d="M17 21v-11"/></svg>Rebuttal results</a>
       <a href="#bibtex"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H6a2 2 0 0 0-2 2v4a2 2 0 0 1-2 2 2 2 0 0 1 2 2v4a2 2 0 0 0 2 2h2"/><path d="M16 3h2a2 2 0 0 1 2 2v4a2 2 0 0 0 2 2 2 2 0 0 0-2 2v4a2 2 0 0 1-2 2h-2"/></svg>BibTeX</a>
     </div>
     </div>
 
     <figure class="hero-video" id="hero-video">
       <video src="assets/hero.mp4" poster="assets/hero.jpg" autoplay muted loop playsinline preload="auto"
-             aria-label="Twenty-two algorithms become one robot; the shift toolbox switches on six shift sources and the robot falls; the algorithms return as a ranked capability map."></video>
+             aria-label="The algorithms of the library become one robot; the shift toolbox switches on six shift sources and the robot falls; the algorithms return as a ranked capability map."></video>
       <button type="button" class="play" aria-label="Play the video"></button>
     </figure>
     <script>
@@ -64,11 +66,11 @@
     </script>
 
     <ul class="stats" aria-label="The benchmark in numbers">
-      <li class="lead"><b>22</b><span>Algorithms</span></li>
+      <li class="lead"><b>23</b><span>Algorithms</span></li>
       <li><b>6</b><span>Shift sources</span></li>
       <li><b>5</b><span>Shift modes</span></li>
       <li><b>6</b><span>Task families</span></li>
-      <li><b>273</b><span>Configurations</span></li>
+      <li><b>279</b><span>Configurations</span></li>
     </ul>
 
     <figure class="bordered overview">
@@ -168,7 +170,7 @@ python baselines/evaluate.py --run runs/rorl_hopper/seed0</pre>
   <div class="wrap">
     <p class="kicker">Algorithms</p>
     <h2>Robust RL algorithm library construction.</h2>
-    <p>The sixteen robust methods are grouped by data regime and by where robustness enters: the learner,
+    <p>The seventeen robust methods are grouped by data regime and by where robustness enters: the learner,
       the environment it collects from, or the data it learns from. Each row names the shift the method
       claims and the base algorithm it is built on.</p>
     <!-- algo-table:start -->
@@ -339,20 +341,21 @@ shift = ShiftSpec(&quot;appearance&quot;, &quot;hue&quot;,
       <label for="results-module">Experiment</label>
       <select id="results-module">
         <option value="library" selected>Robust RL algorithm library evaluation · 220 configurations</option>
-        <option value="channels">Specific robustness · 44 isolated configurations</option>
+        <option value="channels">Specific robustness · 44 isolated configurations of the submission</option>
         <option value="compound">Compound-shift scenarios · 9 configurations</option>
         <option value="advanced">Advanced robotic tasks · Isaac Lab and VLA</option>
       </select>
     </div>
 
     <div class="module" data-module="library">
-      <p class="sub">All 22 algorithms on 220 perturbation configurations: pick a regime, a task, a shift factor or a
+      <p class="sub">The 20 algorithms of the library-wide grid on 220 perturbation configurations: pick a regime, a task, a shift factor or a
         magnitude, and read the same numbers as a table.</p>
       <div class="viz" id="viz-library" data-view="chart"></div>
     </div>
     <div class="module" data-module="channels" hidden>
-      <p class="sub">Method-specific robustness from isolated sweeps: one shift source at a time on 44 configurations,
-        every method that was run, ranked. Choose the paper's channel score or one configuration at one magnitude.</p>
+      <p class="sub">Method-specific robustness from isolated sweeps: one shift source at a time on the 44 configurations
+        of the submission, every method that was run, ranked. Choose the paper's channel score or one configuration at one
+        magnitude. The revised paper evaluates every method on the same 50 isolated configurations.</p>
       <div class="viz" id="viz-channels" data-view="chart"></div>
     </div>
     <div class="module" data-module="compound" hidden>
@@ -399,7 +402,7 @@ shift = ShiftSpec(&quot;appearance&quot;, &quot;hue&quot;,
           <tr><td>Robust-Gymnasium</td><td class="c">4</td><td class="c">4/4</td><td class="c cross">✗</td><td class="c tick">✓</td><td class="c tick">✓</td><td class="c tick">✓</td></tr>
           <tr><td>RWRL Suite</td><td class="c">0</td><td class="c">3/4</td><td class="c tick">✓</td><td class="c cross">✗</td><td class="c tick">✓</td><td class="c part-t">◐</td></tr>
           <tr><td>RoAd-RL</td><td class="c">0</td><td class="c">1/4</td><td class="c cross">✗</td><td class="c cross">✗</td><td class="c cross">✗</td><td class="c tick">✓</td></tr>
-          <tr class="hi"><td>RobustRLlib (ours)</td><td class="c">16</td><td class="c">4/4</td><td class="c tick">✓</td><td class="c tick">✓</td><td class="c tick">✓</td><td class="c tick">✓</td></tr>
+          <tr class="hi"><td>RobustRLlib (ours)</td><td class="c">17</td><td class="c">4/4</td><td class="c tick">✓</td><td class="c tick">✓</td><td class="c tick">✓</td><td class="c tick">✓</td></tr>
         </tbody>
       </table>
     </div>

@@ -9,6 +9,7 @@ The site has two parts that share one colour system:
 |---|---|---|---|
 | Landing page | `/` | `index.html`, `assets/` | hand-written; the algorithm book in it is generated |
 | Documentation | `/docs/` | `src/` | MkDocs, output committed to `docs/` |
+| Rebuttal results | `/rebuttal/` | `rebuttal/index.html`, `rebuttal/figures/` | static page, no script; uses the landing page's stylesheet |
 
 ## Structure
 
@@ -16,6 +17,7 @@ The site has two parts that share one colour system:
 ├── index.html                # landing page; the blocks between the `algo-book`, `algo-table` and `shift-toolbox` markers are GENERATED
 ├── 404.html                  # BUILT: copy of the documentation's not-found page
 ├── assets/                   # landing page style, script, figures, and shift comparison media
+├── rebuttal/                 # the results added in the revised paper: one static page and its figures (PNG, no metadata)
 ├── docs/                     # BUILT documentation. Never edit by hand.
 └── src/
     ├── mkdocs.yml            # navigation, Markdown extensions
@@ -127,7 +129,7 @@ and `sync_landing.py` writes into the page:
 | Chart | Section | Data | What the reader chooses |
 |---|---|---|---|
 | Library-wide results | Findings | `part1_master.csv`, the 220-condition selection | regime, task family, task, shift axis, severity quartile, order |
-| Channel leaderboard | Findings | `part2_cells_long*.csv`, `part2_training_long.csv`, `part2_semantic_long.csv` | shift source; the paper's channel score or one of its configurations (the paper's 22 per regime, plus the semantic shift on the door task); regime; standard references |
+| Channel leaderboard | Findings | `part2_cells_long*.csv`, `part2_training_long.csv`, `part2_semantic_long.csv` | shift source; the submission's channel score or one of its configurations (the submission's 22 per regime, plus the semantic shift on the door task); regime; standard references. The revised paper uses 25 per regime, the same for every method |
 | Isolated and compound shifts | Findings | `part3_profile_channels.csv` | scenario; score or retention |
 
 Every chart has a table twin (the *Table* button), a tooltip on hover and on keyboard
