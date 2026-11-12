@@ -113,14 +113,14 @@ def image_metadata(path, rel, identity):
 
 def landing_links():
     """Links from the hand-written pages: the landing page into the built documentation and
-    the rebuttal page, and every relative link and image of the rebuttal page."""
+    the results page, and every relative link and image of the results page."""
     html = (REPO / "index.html").read_text()
     missing = []
-    for href in sorted(set(re.findall(r'(?:href|src)="((?:docs|rebuttal)/[^"#]*)', html))):
+    for href in sorted(set(re.findall(r'(?:href|src)="((?:docs|results)/[^"#]*)', html))):
         target = REPO / href
         if not ((target / "index.html").is_file() or target.is_file()):
             missing.append(("index.html", "broken link", href))
-    page = REPO / "rebuttal" / "index.html"
+    page = REPO / "results" / "index.html"
     if page.is_file():
         html = page.read_text()
         ids = set(re.findall(r'\sid="([^"]+)"', html))
@@ -128,11 +128,11 @@ def landing_links():
             path, _, anchor = href.partition("#")
             if not path:
                 if anchor and anchor not in ids:
-                    missing.append(("rebuttal/index.html", "broken anchor", href))
+                    missing.append(("results/index.html", "broken anchor", href))
                 continue
             target = (page.parent / path.split("?")[0]).resolve()
             if REPO not in (target, *target.parents) or not ((target / "index.html").is_file() or target.is_file()):
-                missing.append(("rebuttal/index.html", "broken link", href))
+                missing.append(("results/index.html", "broken link", href))
     return missing
 
 
