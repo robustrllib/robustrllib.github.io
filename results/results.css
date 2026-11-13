@@ -1,0 +1,42 @@
+/* The results pages: static sheets of figures, tables and short text, one page per question. No script.
+   Colours and the page frame come from the landing page's stylesheet. */
+header.page { padding: 52px 0 36px; }
+header.page h1 { margin: 0 0 24px; font-family: "Source Serif 4", Georgia, "Times New Roman", serif; font-size: 42px; line-height: 1.14; font-weight: 600; letter-spacing: -.01em; color: #000; }
+header.page.sub h1 { font-size: 34px; line-height: 1.2; max-width: 900px; margin-bottom: 18px; }
+header.page .kicker a { color: var(--muted); }
+header.page .kicker a:hover { color: var(--ink); }
+header.page .lede { max-width: 840px; margin: 0; font-size: 17.5px; line-height: 1.6; color: var(--ink-2); }
+ol.modules { margin: 0 0 18px; padding-left: 24px; max-width: 800px; font-size: 17px; line-height: 1.55; }
+ol.modules > li { margin: 0 0 9px; padding-left: 4px; }
+ol.modules a { color: var(--ink); font-weight: 600; }
+ol.modules a:hover { color: var(--link); }
+ol.modules ul { list-style: none; margin: 4px 0 0; padding: 0; font-size: 15px; }
+ol.modules ul li { display: inline; }
+ol.modules ul li + li::before { content: " · "; color: var(--muted); }
+ol.modules ul a { font-weight: 500; color: var(--ink-2); }
+p.finding b:first-child, ul.changes li b:first-child { color: #000; }
+ul.changes { max-width: 860px; }
+ul.changes li { margin: 0 0 9px; }
+p.more { margin: 30px 0 0; font-size: 15.5px; color: var(--muted); }
+p.more a { font-weight: 600; }
+figure a { display: block; }
+figure a:hover { text-decoration: none; }
+figure .stack a + a { margin-top: 18px; }
+figure .stack .flabel { margin: 0 0 6px; font-size: 12.5px; font-weight: 650; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+figure .stack a + .flabel { margin-top: 22px; }
+figure .pair { display: grid; grid-template-columns: 36fr 56fr; gap: 6%; align-items: center; }
+.tcap { margin: 0 0 10px; font-size: 14px; line-height: 1.55; color: var(--muted); }
+.tcap b { color: var(--ink-2); font-weight: 600; }
+table.data td.num, table.data th.num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+table.data td.num:last-child, table.data th.num:last-child { padding-right: 0; }
+table.data .sd { color: var(--muted); }
+table.data tr.base td { font-weight: 600; }
+.tablewrap { margin: 26px 0; max-width: 560px; }
+.tablewrap.wide { max-width: 820px; }
+@media (max-width: 760px) {
+  header.page h1 { font-size: 32px; }
+  header.page.sub h1 { font-size: 26px; }
+  header.page .lede { font-size: 16.5px; }
+  ol.modules { font-size: 16px; }
+  figure .pair { grid-template-columns: 1fr; gap: 18px; }
+}

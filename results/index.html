@@ -10,32 +10,7 @@
 <link rel="icon" href="../assets/favicon-32.png?v=4" sizes="32x32">
 <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png?v=4">
 <link rel="stylesheet" href="../assets/style.css">
-<style>
-/* This page only: a static sheet of figures and short text. No script. */
-header.page { padding: 56px 0 40px; }
-header.page h1 { margin: 0 0 26px; font-family: "Source Serif 4", Georgia, "Times New Roman", serif; font-size: 42px; line-height: 1.14; font-weight: 600; letter-spacing: -.01em; color: #000; }
-ol.modules { margin: 0 0 18px; padding-left: 24px; max-width: 800px; font-size: 17px; line-height: 1.55; }
-ol.modules li { margin: 0 0 7px; padding-left: 4px; }
-ol.modules a { color: var(--ink); font-weight: 600; }
-ol.modules a:hover { color: var(--link); }
-p.finding b:first-child, ul.changes li b:first-child { color: #000; }
-ul.changes { max-width: 860px; }
-ul.changes li { margin: 0 0 9px; }
-figure a { display: block; }
-figure a:hover { text-decoration: none; }
-figure .stack a + a { margin-top: 18px; }
-figure .pair { display: grid; grid-template-columns: 36fr 56fr; gap: 6%; align-items: center; }
-.tcap { margin: 0 0 10px; font-size: 14px; line-height: 1.55; color: var(--muted); }
-.tcap b { color: var(--ink-2); font-weight: 600; }
-table.data td.num, table.data th.num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
-table.data td.num:last-child, table.data th.num:last-child { padding-right: 0; }
-.tablewrap { margin: 26px 0; max-width: 560px; }
-@media (max-width: 760px) {
-  header.page h1 { font-size: 32px; }
-  ol.modules { font-size: 16px; }
-  figure .pair { grid-template-columns: 1fr; gap: 18px; }
-}
-</style>
+<link rel="stylesheet" href="results.css">
 </head>
 <body>
 
@@ -43,9 +18,6 @@ table.data td.num:last-child, table.data th.num:last-child { padding-right: 0; }
   <div class="wrap">
     <a class="brand" href="../"><img class="logo" src="../assets/favicon.svg" alt="" width="30" height="30"><span><span class="wm">RobustRL</span>lib</span></a>
     <ul>
-      <li><a href="#gains">Method gains</a></li>
-      <li><a href="#retention">Retention</a></li>
-      <li><a href="#unified">Unified comparison</a></li>
       <li><a href="../">Project page</a></li>
     </ul>
   </div>
@@ -56,174 +28,18 @@ table.data td.num:last-child, table.data th.num:last-child { padding-right: 0; }
     <h1>Results</h1>
     <p class="kicker">What is added</p>
     <ol class="modules">
-      <li><a href="#gains">Gain of each robust method over its base algorithm and over the standard RL pool</a></li>
-      <li><a href="#retention">Retention across shift severity</a></li>
-      <li><a href="#unified">Unified comparison under matched training budget and checkpoint rule</a></li>
+      <li><a href="gains/">Gain of each robust method over its base algorithm and over the standard RL pool</a></li>
+      <li><a href="retention/">Retention across shift severity</a></li>
+      <li><a href="unified/">Unified comparison under matched training budget and checkpoint rule</a>
+        <ul>
+          <li><a href="unified-shifts/">Isolated and compound shifts</a></li>
+          <li><a href="unified-full/">Full results</a></li>
+        </ul></li>
     </ol>
     <p class="note">All scores are unclipped normalized scores, with task-level reference returns shared by every method
       and condition.</p>
   </div>
 </header>
-
-<section id="gains">
-  <div class="wrap">
-    <h2>Gain over the base algorithm and over standard RL pool</h2>
-    <p>Ten robust methods share a base algorithm (PPO, SAC or IQL) with a standard RL reference. On the library-wide
-      grid of 220 configurations, each of them is compared with its own base algorithm, which shows what the mechanism
-      adds, and with the standard RL pool of its regime, which also contains the strength of the base learner.</p>
-
-    <figure class="bordered">
-      <a href="figures/gains.png"><img src="figures/gains.png" alt="Pooled standard and robust scores across the severity quartiles, and the gain of ten robust methods over their base algorithm and over the standard RL pool, online and offline." width="2400" height="794" loading="lazy" decoding="async"></a>
-      <figcaption><b>Figure 1.</b> Left: pooled Standard and Robust scores across the severity quartiles Q1–Q4. Right:
-        the gain of each method over its own base algorithm (left group of each block) and over the mean of the standard
-        RL references of the same regime (right group), online and offline.</figcaption>
-    </figure>
-
-    <p class="finding"><b>Online, the gain comes from the mechanism.</b> ATLA-PPO, ATLA-SA-PPO and DR-SAC gain +7.2, +13.4
-      and +10.1 over their base algorithm. Online mechanisms train in the environment, so a policy that fails under a
-      perturbation is penalized by its true return and the generated experience is real.</p>
-    <p class="finding"><b>Offline, the gain comes mostly from the base learner.</b> The five IQL-based methods are +10.1 to
-      +14.0 above the offline standard RL pool but at most +3.8 above IQL. Offline mechanisms must generate such
-      experience from a fixed dataset with a learned model, with no environment feedback to correct it. Additionally,
-      offline algorithms update conservatively to limit value overestimation, which constrains the gain any mechanism
-      can add.</p>
-  </div>
-</section>
-
-<section id="retention">
-  <div class="wrap">
-    <h2>Retention across shift severity</h2>
-
-    <figure class="bordered">
-      <a href="figures/retention.png"><img src="figures/retention.png" alt="Retention across the severity quartiles for standard against robust RL, online against offline, and the five mechanism families." width="2400" height="806" loading="lazy" decoding="async"></a>
-      <figcaption><b>Figure 2.</b> Retention is the score under shift divided by the method's nominal score. Left:
-        Standard RL (6 algorithms) against Robust RL (14 algorithms); the labels give the gap at Q1 and Q4. Middle: online
-        against offline; solid lines are robust methods and dashed lines standard methods. Right: the five mechanism
-        families.</figcaption>
-    </figure>
-
-    <p class="finding"><b>Retention decays at a similar rate overall, serving as a complementary metric against the
-      absolute score.</b> Figure 2 shows standard and robust RL, online and offline, and all five families share similar parallel retention curves.
-      Online robust methods retain more than online standard methods at every level, so their mechanisms preserve nominal
-      performance under shift. Offline robust methods retain about as much as offline standard methods (within 0.05 at
-      every level) despite a positive absolute gap (Figure 1), so offline robustness is realized through higher nominal
-      scores. Online, the data based family (environment-centric) retains less than the learner-centric family at every
-      level, consistent with data based mechanisms that may augment more qualified data to improve nominal performance.
-      Offline, the data-centric and learner-centric families retain about the same.</p>
-  </div>
-</section>
-
-<section id="unified">
-  <div class="wrap">
-    <h2>Unified comparison under matched training budget and checkpoint rule</h2>
-    <p>This comparison matches the training budget of ATLA-PPO, ATLA-SA-PPO, RAMBO and RORL to that of the standard RL
-      references and reports RFQI at its last checkpoint, as every other method. Everything else is unchanged.</p>
-
-    <div class="tablewrap">
-      <p class="tcap">Nominal score and score under shift on the library-wide grid, original → unified.</p>
-      <div class="table-scroll">
-      <table class="data">
-        <thead>
-          <tr><th>Method</th><th class="num">Nominal</th><th class="num">Score under shift</th></tr>
-        </thead>
-        <tbody>
-          <tr><td class="nw">ATLA-PPO</td><td class="num">72.4 → 78.6</td><td class="num">53.4 → 55.5</td></tr>
-          <tr><td class="nw">ATLA-SA-PPO</td><td class="num">77.6 → 72.4</td><td class="num">59.6 → 55.5</td></tr>
-          <tr><td class="nw">RFQI</td><td class="num">79.3 → 62.3</td><td class="num">43.6 → 42.0</td></tr>
-          <tr><td class="nw">RORL</td><td class="num">79.3 → 63.8</td><td class="num">45.3 → 39.4</td></tr>
-          <tr><td class="nw">RAMBO</td><td class="num">95.5 → 85.7</td><td class="num">53.7 → 46.7</td></tr>
-        </tbody>
-      </table>
-      </div>
-    </div>
-
-    <figure class="bordered">
-      <a href="figures/unified_gains.png"><img src="figures/unified_gains.png" alt="Pooled scores across the severity quartiles and the two gains of ten robust methods in the unified comparison." width="2400" height="794" loading="lazy" decoding="async"></a>
-      <figcaption><b>Figure 3.</b> Figure 1 in the unified comparison.</figcaption>
-    </figure>
-
-    <figure class="bordered">
-      <a href="figures/unified_retention.png"><img src="figures/unified_retention.png" alt="Retention across the severity quartiles in the unified comparison." width="2400" height="806" loading="lazy" decoding="async"></a>
-      <figcaption><b>Figure 4.</b> Figure 2 in the unified comparison.</figcaption>
-    </figure>
-
-    <figure class="bordered">
-      <div class="stack">
-      <a href="figures/unified_isolated_online.png"><img src="figures/unified_isolated_online.png" alt="Isolated shift evaluation of the online methods in the unified comparison, with the leading method of each shift source marked." width="2400" height="543" loading="lazy" decoding="async"></a>
-      <a href="figures/unified_isolated_offline.png"><img src="figures/unified_isolated_offline.png" alt="Isolated shift evaluation of the offline methods in the unified comparison, with the leading method of each shift source marked." width="2400" height="652" loading="lazy" decoding="async"></a>
-      </div>
-      <figcaption><b>Figure 5.</b> Isolated shift evaluation in the unified comparison, online (top) and offline
-        (bottom), of 14 robust and 2 standard RL methods across 50 configurations. The star and the printed value mark the
-        leading method of each shift source, and the dashed line is the mean nominal score of the row. Semantic binding is
-        evaluated only online, on the goal-conditioned causal door task.</figcaption>
-    </figure>
-
-    <figure class="bordered">
-      <div class="pair">
-      <a href="figures/unified_paired_gain.png"><img src="figures/unified_paired_gain.png" alt="Score of each robust method minus the score of its base algorithm per shift source, in the unified comparison." width="1300" height="1229" loading="lazy" decoding="async"></a>
-      <a href="figures/unified_compound.png"><img src="figures/unified_compound.png" alt="Compound shifts separated by shift source for offline FWM on Hopper and online ATLA-SA-PPO on Pusher." width="2000" height="1042" loading="lazy" decoding="async"></a>
-      </div>
-      <figcaption><b>Figure 6.</b> Left: score of each robust method minus the score of its base algorithm, per shift
-        source of the isolated evaluation. Right: compound shifts separated by shift source, for offline FWM on Hopper
-        and online ATLA-SA-PPO on Pusher; the bars show each shift source in isolation and all of them in composition,
-        and the dashed line marks the method's nominal score.</figcaption>
-    </figure>
-
-    <h3>What changes</h3>
-    <ul class="plain changes">
-      <li><b>Robust against standard RL.</b> The pooled gap is +6.7 (52.4 against 45.7), where the original setup has
-        +7.9. It stays positive in every severity quartile. Most of the decrease is offline: the offline gap moves from
-        +9.5 to +7.7, the online gap from +3.8 to +3.5.</li>
-      <li><b>Gain over the base algorithm.</b> ATLA-PPO and ATLA-SA-PPO both gain +9.3 over PPO (+7.2 and +13.4
-        originally). The other gains of Figure 1 are unchanged.</li>
-      <li><b>Retention.</b> The pattern is the same. Online robust methods retain more than online standard RL at every
-        level, by 0.02 to 0.07, and offline robust methods retain as much as offline standard RL, within 0.03.</li>
-      <li><b>Leaders of the isolated shifts.</b> Three leaders change. Online, DR-SAC now leads action (82.9) and reward
-        (94.1), where ATLA-SA-PPO scores 61.7 and 73.5 (83.3 and 95.7 originally). Offline, RORL passes PLR-PVL on
-        dynamics (46.6 against 45.8).</li>
-      <li><b>Gain per shift source.</b> The largest gain over a base algorithm, ATLA-SA-PPO on observation, moves from
-        +67 to +52 points. Every offline difference to IQL stays within 7 points.</li>
-      <li><b>Compound shifts.</b> The offline method of the compound test is now FWM, because RORL is no longer the
-        strongest offline method. Dynamics remain the worst single source (27.9 on Hopper, 51.3 on Pusher), and under
-        composition both methods fall below a third of their nominal score (16.9 and 29.2).</li>
-    </ul>
-    <p>The conclusions of the first two sections hold in this comparison.</p>
-
-    <h3>Full results</h3>
-
-    <figure class="bordered">
-      <a href="figures/unified_library.png"><img src="figures/unified_library.png" alt="Normalized score of every robust method on the library-wide grid in the unified comparison, by task family, regime and mechanism family." width="2400" height="1130" loading="lazy" decoding="async"></a>
-      <figcaption><b>Figure 7.</b> The library-wide grid in the unified comparison. Every coloured bar is one of the
-        fourteen robust methods, keyed by mechanism family and regime.</figcaption>
-    </figure>
-    <figure class="bordered">
-      <div class="stack">
-      <a href="figures/unified_online_grid_1.png"><img src="figures/unified_online_grid_1.png" alt="Online results per configuration of the library-wide grid in the unified comparison, first part." width="2400" height="3742" loading="lazy" decoding="async"></a>
-      <a href="figures/unified_online_grid_2.png"><img src="figures/unified_online_grid_2.png" alt="Online results per configuration of the library-wide grid in the unified comparison, second part." width="2400" height="3350" loading="lazy" decoding="async"></a>
-      </div>
-      <figcaption><b>Figure 8.</b> Online results per configuration of the library-wide grid.</figcaption>
-    </figure>
-    <figure class="bordered">
-      <div class="stack">
-      <a href="figures/unified_offline_grid_1.png"><img src="figures/unified_offline_grid_1.png" alt="Offline results per configuration of the library-wide grid in the unified comparison, first part." width="2400" height="3742" loading="lazy" decoding="async"></a>
-      <a href="figures/unified_offline_grid_2.png"><img src="figures/unified_offline_grid_2.png" alt="Offline results per configuration of the library-wide grid in the unified comparison, second part." width="2400" height="3350" loading="lazy" decoding="async"></a>
-      </div>
-      <figcaption><b>Figure 9.</b> Offline results per configuration of the library-wide grid.</figcaption>
-    </figure>
-    <figure class="bordered">
-      <a href="figures/unified_online_cells.png"><img src="figures/unified_online_cells.png" alt="Online results per condition of the isolated shifts in the unified comparison." width="2400" height="2103" loading="lazy" decoding="async"></a>
-      <figcaption><b>Figure 10.</b> Online results per condition of the isolated shifts.</figcaption>
-    </figure>
-    <figure class="bordered">
-      <a href="figures/unified_offline_cells.png"><img src="figures/unified_offline_cells.png" alt="Offline results per condition of the isolated shifts in the unified comparison." width="2400" height="2103" loading="lazy" decoding="async"></a>
-      <figcaption><b>Figure 11.</b> Offline results per condition of the isolated shifts.</figcaption>
-    </figure>
-    <figure class="bordered">
-      <a href="figures/unified_compound_all.png"><img src="figures/unified_compound_all.png" alt="Compound shift results of every method in the unified comparison." width="2400" height="1754" loading="lazy" decoding="async"></a>
-      <figcaption><b>Figure 12.</b> Compound shift results of every method.</figcaption>
-    </figure>
-  </div>
-</section>
 
 <footer>
   <div class="wrap">

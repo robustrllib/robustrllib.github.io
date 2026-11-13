@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Retention across shift severity · RobustRLlib results</title>
+<meta name="description" content="Retention across shift severity.">
+<link rel="icon" href="../../assets/favicon.svg?v=4" type="image/svg+xml">
+<link rel="icon" href="../../assets/favicon-32.png?v=4" sizes="32x32">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=4">
+<link rel="stylesheet" href="../../assets/style.css">
+<link rel="stylesheet" href="../results.css">
+</head>
+<body>
+
+<nav class="top">
+  <div class="wrap">
+    <a class="brand" href="../../"><img class="logo" src="../../assets/favicon.svg" alt="" width="30" height="30"><span><span class="wm">RobustRL</span>lib</span></a>
+    <ul>
+      <li><a href="../">All results</a></li>
+      <li><a href="../../">Project page</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="page sub" id="top">
+  <div class="wrap">
+    <p class="kicker"><a href="../">Results</a></p>
+    <h1>Retention across shift severity</h1>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <figure class="bordered">
+      <a href="../figures/retention.png"><img src="../figures/retention.png" alt="Retention across the severity quartiles for standard against robust RL, online against offline, and the five mechanism families." width="2400" height="806" loading="lazy" decoding="async"></a>
+      <figcaption><b>Figure 1.</b> Retention is the score under shift divided by the method's nominal score. Left:
+        Standard RL (6 algorithms) against Robust RL (14 algorithms); the labels give the gap at Q1 and Q4. Middle: online
+        against offline; solid lines are robust methods and dashed lines standard methods. Right: the five mechanism
+        families.</figcaption>
+    </figure>
+
+    <p class="finding"><b>Retention decays at a similar rate overall, serving as a complementary metric against the
+      absolute score.</b> Figure 1 shows standard and robust RL, online and offline, and all five families share similar
+      parallel retention curves. Online robust methods retain more than online standard methods at every level, so their
+      mechanisms preserve nominal performance under shift. Offline robust methods retain about as much as offline
+      standard methods (within 0.05 at every level) despite a positive absolute gap (see the
+      <a href="../gains/">gains</a>), so offline robustness is realized through higher nominal scores. Online, the data
+      based family (environment-centric) retains less than the learner-centric family at every level, consistent with
+      data based mechanisms that may augment more qualified data to improve nominal performance. Offline, the
+      data-centric and learner-centric families retain about the same.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>RobustRLlib · Anonymous submission under double-blind review.</span>
+    <a href="#top">Back to top ↑</a>
+  </div>
+</footer>
+
+</body>
+</html>

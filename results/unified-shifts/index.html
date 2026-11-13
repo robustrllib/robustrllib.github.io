@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Unified comparison: isolated and compound shifts · RobustRLlib results</title>
+<meta name="description" content="Isolated and compound shifts in the unified comparison.">
+<link rel="icon" href="../../assets/favicon.svg?v=4" type="image/svg+xml">
+<link rel="icon" href="../../assets/favicon-32.png?v=4" sizes="32x32">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=4">
+<link rel="stylesheet" href="../../assets/style.css">
+<link rel="stylesheet" href="../results.css">
+</head>
+<body>
+
+<nav class="top">
+  <div class="wrap">
+    <a class="brand" href="../../"><img class="logo" src="../../assets/favicon.svg" alt="" width="30" height="30"><span><span class="wm">RobustRL</span>lib</span></a>
+    <ul>
+      <li><a href="../">All results</a></li>
+      <li><a href="../../">Project page</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="page sub" id="top">
+  <div class="wrap">
+    <p class="kicker"><a href="../">Results</a> · <a href="../unified/">Unified comparison</a></p>
+    <h1>Unified comparison: isolated and compound shifts</h1>
+    <p class="lede">The isolated shifts of single sources and the compound shifts, with ATLA-PPO, ATLA-SA-PPO, RAMBO and
+      RORL at the matched training budget and RFQI at its last checkpoint.</p>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <figure class="bordered">
+      <div class="stack">
+      <a href="../figures/unified_isolated_online.png"><img src="../figures/unified_isolated_online.png" alt="Isolated shift evaluation of the online methods in the unified comparison, with the leading method of each shift source marked." width="2400" height="543" loading="lazy" decoding="async"></a>
+      <a href="../figures/unified_isolated_offline.png"><img src="../figures/unified_isolated_offline.png" alt="Isolated shift evaluation of the offline methods in the unified comparison, with the leading method of each shift source marked." width="2400" height="652" loading="lazy" decoding="async"></a>
+      </div>
+      <figcaption><b>Figure 1.</b> Isolated shift evaluation, online (top) and offline (bottom), of 14 robust and 2
+        standard RL methods across 50 configurations. The star and the printed value mark the leading method of each shift
+        source, and the dashed line is the mean nominal score of the row. Semantic binding is evaluated only online, on
+        the goal-conditioned causal door task.</figcaption>
+    </figure>
+
+    <figure class="bordered">
+      <div class="pair">
+      <a href="../figures/unified_paired_gain.png"><img src="../figures/unified_paired_gain.png" alt="Score of each robust method minus the score of its base algorithm per shift source, in the unified comparison." width="1300" height="1229" loading="lazy" decoding="async"></a>
+      <a href="../figures/unified_compound.png"><img src="../figures/unified_compound.png" alt="Compound shifts separated by shift source for offline FWM on Hopper and online ATLA-SA-PPO on Pusher." width="2000" height="1042" loading="lazy" decoding="async"></a>
+      </div>
+      <figcaption><b>Figure 2.</b> Left: score of each robust method minus the score of its base algorithm, per shift
+        source of the isolated evaluation. Right: compound shifts separated by shift source, for offline FWM on Hopper
+        and online ATLA-SA-PPO on Pusher; the bars show each shift source in isolation and all of them in composition,
+        and the dashed line marks the method's nominal score.</figcaption>
+    </figure>
+
+    <h3>What changes</h3>
+    <ul class="plain changes">
+      <li><b>Leaders of the isolated shifts.</b> Three leaders change. Online, DR-SAC now leads action (82.9) and reward
+        (94.1), where ATLA-SA-PPO scores 61.7 and 73.5 (83.3 and 95.7 originally). Offline, RORL passes PLR-PVL on
+        dynamics (46.6 against 45.8).</li>
+      <li><b>Gain per shift source.</b> The largest gain over a base algorithm, ATLA-SA-PPO on observation, moves from
+        +67 to +52 points. Every offline difference to IQL stays within 7 points.</li>
+      <li><b>Compound shifts.</b> The offline method of the compound test is now FWM, because RORL is no longer the
+        strongest offline method. Dynamics remain the worst single source (27.9 on Hopper, 51.3 on Pusher), and under
+        composition both methods fall below a third of their nominal score (16.9 and 29.2).</li>
+    </ul>
+
+    <p class="more">More of the unified comparison: <a href="../unified/">overview</a> ·
+      <a href="../unified-full/">full results per configuration</a></p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>RobustRLlib · Anonymous submission under double-blind review.</span>
+    <a href="#top">Back to top ↑</a>
+  </div>
+</footer>
+
+</body>
+</html>

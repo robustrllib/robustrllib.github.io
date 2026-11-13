@@ -9,7 +9,7 @@ The site has two parts that share one colour system:
 |---|---|---|---|
 | Landing page | `/` | `index.html`, `assets/` | hand-written; the algorithm book in it is generated |
 | Documentation | `/docs/` | `src/` | MkDocs, output committed to `docs/` |
-| Results page | `/results/` | `results/index.html`, `results/figures/` | static page, no script; uses the landing page's stylesheet |
+| Results pages | `/results/`, `/results/<page>/` | `results/index.html`, `results/<page>/index.html`, `results/results.css`, `results/figures/` | static pages, no script: an index and one page per question, so that a link opens the figures of that question only |
 
 ## Structure
 
@@ -17,7 +17,7 @@ The site has two parts that share one colour system:
 ├── index.html                # landing page; the blocks between the `algo-book`, `algo-table` and `shift-toolbox` markers are GENERATED
 ├── 404.html                  # BUILT: copy of the documentation's not-found page
 ├── assets/                   # landing page style, script, figures, and shift comparison media
-├── results/                  # the results added in the revised paper: one static page and its figures (PNG, no metadata)
+├── results/                  # the results added in the revised paper: an index, one static page per question, shared figures (PNG, no metadata)
 ├── docs/                     # BUILT documentation. Never edit by hand.
 └── src/
     ├── mkdocs.yml            # navigation, Markdown extensions

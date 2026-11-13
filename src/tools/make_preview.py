@@ -56,11 +56,11 @@ def main():
     html = html.replace('href="results/"', 'href="results/index.html"').replace('href="results/#', 'href="results/index.html#')
     page.write_text(html)
 
-    # the results page: a static page next to the landing page
+    # the results pages: static pages next to the landing page; directory links become files
     if (REPO / "results").is_dir():
         shutil.copytree(REPO / "results", site / "results")
-        sub = site / "results" / "index.html"
-        sub.write_text(sub.read_text().replace('href="../"', 'href="../index.html"'))
+        for sub in (site / "results").rglob("index.html"):
+            sub.write_text(re.sub(r'href="((?:\.\./|[a-z0-9-]+/)+)"', r'href="\1index.html"', sub.read_text()))
 
     # documentation -> landing page: the logo link is root-relative on the site
     for f in (site / "docs").rglob("*.html"):

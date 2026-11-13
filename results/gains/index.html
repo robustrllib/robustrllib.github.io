@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Gain over the base algorithm · RobustRLlib results</title>
+<meta name="description" content="Gain of each robust method over its base algorithm and over the standard RL pool.">
+<link rel="icon" href="../../assets/favicon.svg?v=4" type="image/svg+xml">
+<link rel="icon" href="../../assets/favicon-32.png?v=4" sizes="32x32">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=4">
+<link rel="stylesheet" href="../../assets/style.css">
+<link rel="stylesheet" href="../results.css">
+</head>
+<body>
+
+<nav class="top">
+  <div class="wrap">
+    <a class="brand" href="../../"><img class="logo" src="../../assets/favicon.svg" alt="" width="30" height="30"><span><span class="wm">RobustRL</span>lib</span></a>
+    <ul>
+      <li><a href="../">All results</a></li>
+      <li><a href="../../">Project page</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="page sub" id="top">
+  <div class="wrap">
+    <p class="kicker"><a href="../">Results</a></p>
+    <h1>Gain over the base algorithm and over standard RL pool</h1>
+    <p class="lede">Ten robust methods share a base algorithm (PPO, SAC or IQL) with a standard RL reference. On the
+      library-wide grid of 220 configurations, each of them is compared with its own base algorithm, which shows what
+      the mechanism adds, and with the standard RL pool of its regime, which also contains the strength of the base
+      learner.</p>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <figure class="bordered">
+      <a href="../figures/gains.png"><img src="../figures/gains.png" alt="Pooled standard and robust scores across the severity quartiles, and the gain of ten robust methods over their base algorithm and over the standard RL pool, online and offline." width="2400" height="794" loading="lazy" decoding="async"></a>
+      <figcaption><b>Figure 1.</b> Left: pooled Standard and Robust scores across the severity quartiles Q1–Q4. Right:
+        the gain of each method over its own base algorithm (left group of each block) and over the mean of the standard
+        RL references of the same regime (right group), online and offline.</figcaption>
+    </figure>
+
+    <p class="finding"><b>Online, the gain comes from the mechanism.</b> ATLA-PPO, ATLA-SA-PPO and DR-SAC gain +7.2, +13.4
+      and +10.1 over their base algorithm. Online mechanisms train in the environment, so a policy that fails under a
+      perturbation is penalized by its true return and the generated experience is real.</p>
+    <p class="finding"><b>Offline, the gain comes mostly from the base learner.</b> The five IQL-based methods are +10.1 to
+      +14.0 above the offline standard RL pool but at most +3.8 above IQL. Offline mechanisms must generate such
+      experience from a fixed dataset with a learned model, with no environment feedback to correct it. Additionally,
+      offline algorithms update conservatively to limit value overestimation, which constrains the gain any mechanism
+      can add.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>RobustRLlib · Anonymous submission under double-blind review.</span>
+    <a href="#top">Back to top ↑</a>
+  </div>
+</footer>
+
+</body>
+</html>

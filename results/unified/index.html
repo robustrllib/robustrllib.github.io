@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Unified comparison · RobustRLlib results</title>
+<meta name="description" content="Unified comparison under matched training budget and checkpoint rule.">
+<link rel="icon" href="../../assets/favicon.svg?v=4" type="image/svg+xml">
+<link rel="icon" href="../../assets/favicon-32.png?v=4" sizes="32x32">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=4">
+<link rel="stylesheet" href="../../assets/style.css">
+<link rel="stylesheet" href="../results.css">
+</head>
+<body>
+
+<nav class="top">
+  <div class="wrap">
+    <a class="brand" href="../../"><img class="logo" src="../../assets/favicon.svg" alt="" width="30" height="30"><span><span class="wm">RobustRL</span>lib</span></a>
+    <ul>
+      <li><a href="../">All results</a></li>
+      <li><a href="../../">Project page</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="page sub" id="top">
+  <div class="wrap">
+    <p class="kicker"><a href="../">Results</a></p>
+    <h1>Unified comparison under matched training budget and checkpoint rule</h1>
+    <p class="lede">This comparison matches the training budget of ATLA-PPO, ATLA-SA-PPO, RAMBO and RORL to that of the
+      standard RL references and reports RFQI at its last checkpoint, as every other method. Everything else is
+      unchanged.</p>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <div class="tablewrap">
+      <p class="tcap">Nominal score and score under shift on the library-wide grid, original → unified.</p>
+      <div class="table-scroll">
+      <table class="data">
+        <thead>
+          <tr><th>Method</th><th class="num">Nominal</th><th class="num">Score under shift</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="nw">ATLA-PPO</td><td class="num">72.4 → 78.6</td><td class="num">53.4 → 55.5</td></tr>
+          <tr><td class="nw">ATLA-SA-PPO</td><td class="num">77.6 → 72.4</td><td class="num">59.6 → 55.5</td></tr>
+          <tr><td class="nw">RFQI</td><td class="num">79.3 → 62.3</td><td class="num">43.6 → 42.0</td></tr>
+          <tr><td class="nw">RORL</td><td class="num">79.3 → 63.8</td><td class="num">45.3 → 39.4</td></tr>
+          <tr><td class="nw">RAMBO</td><td class="num">95.5 → 85.7</td><td class="num">53.7 → 46.7</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+
+    <figure class="bordered">
+      <div class="stack">
+      <p class="flabel">Original setup</p>
+      <a href="../figures/gains.png"><img src="../figures/gains.png" alt="Pooled standard and robust scores across the severity quartiles and the gains of ten robust methods, in the original setup." width="2400" height="794" loading="lazy" decoding="async"></a>
+      <p class="flabel">Unified comparison</p>
+      <a href="../figures/unified_gains.png"><img src="../figures/unified_gains.png" alt="Pooled standard and robust scores across the severity quartiles and the gains of ten robust methods, in the unified comparison." width="2400" height="794" loading="lazy" decoding="async"></a>
+      </div>
+      <figcaption><b>Figure 1.</b> Left: pooled Standard and Robust scores across the severity quartiles Q1–Q4, with the
+        gap at Q1 and Q4. Right: the gain of each method over its own base algorithm (left group of each block) and over
+        the mean of the standard RL references of the same regime (right group). Between the two rows, only the pooled
+        Robust curve and the ATLA and ATLA-SA bars differ.</figcaption>
+    </figure>
+
+    <figure class="bordered">
+      <a href="../figures/unified_retention.png"><img src="../figures/unified_retention.png" alt="Retention across the severity quartiles in the unified comparison, for standard against robust RL, online against offline, and the five mechanism families." width="2400" height="806" loading="lazy" decoding="async"></a>
+      <figcaption><b>Figure 2.</b> Retention in the unified comparison: the score under shift divided by the method's
+        nominal score. Left: Standard RL against Robust RL. Middle: online against offline; solid lines are robust
+        methods and dashed lines standard methods. Right: the five mechanism families.</figcaption>
+    </figure>
+
+    <h3>What changes</h3>
+    <ul class="plain changes">
+      <li><b>Robust against standard RL.</b> The pooled gap is +6.7 (52.4 against 45.7), where the original setup has
+        +7.9. It stays positive in every severity quartile. Most of the decrease is offline: the offline gap moves from
+        +9.5 to +7.7, the online gap from +3.8 to +3.5.</li>
+      <li><b>Gain over the base algorithm.</b> ATLA-PPO and ATLA-SA-PPO both gain +9.3 over PPO (+7.2 and +13.4
+        originally). The other gains of Figure 1 are unchanged.</li>
+      <li><b>Retention.</b> The pattern is the same as in the <a href="../retention/">original setup</a>. Online robust
+        methods retain more than online standard RL at every level, by 0.02 to 0.07, and offline robust methods retain
+        as much as offline standard RL, within 0.03.</li>
+    </ul>
+    <p>The conclusions of the original setup hold in this comparison.</p>
+
+    <p class="more">More of the unified comparison: <a href="../unified-shifts/">isolated and compound shifts</a> ·
+      <a href="../unified-full/">full results per configuration</a></p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>RobustRLlib · Anonymous submission under double-blind review.</span>
+    <a href="#top">Back to top ↑</a>
+  </div>
+</footer>
+
+</body>
+</html>
