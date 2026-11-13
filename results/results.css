@@ -10,20 +10,12 @@ ol.modules { margin: 0 0 18px; padding-left: 24px; max-width: 800px; font-size: 
 ol.modules > li { margin: 0 0 9px; padding-left: 4px; }
 ol.modules a { color: var(--ink); font-weight: 600; }
 ol.modules a:hover { color: var(--link); }
-ol.modules ul { list-style: none; margin: 4px 0 0; padding: 0; font-size: 15px; }
-ol.modules ul li { display: inline; }
-ol.modules ul li + li::before { content: " · "; color: var(--muted); }
-ol.modules ul a { font-weight: 500; color: var(--ink-2); }
 p.finding b:first-child, ul.changes li b:first-child { color: #000; }
 ul.changes { max-width: 860px; }
 ul.changes li { margin: 0 0 9px; }
-p.more { margin: 30px 0 0; font-size: 15.5px; color: var(--muted); }
-p.more a { font-weight: 600; }
 figure a { display: block; }
 figure a:hover { text-decoration: none; }
 figure .stack a + a { margin-top: 18px; }
-figure .stack .flabel { margin: 0 0 6px; font-size: 12.5px; font-weight: 650; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
-figure .stack a + .flabel { margin-top: 22px; }
 figure .pair { display: grid; grid-template-columns: 36fr 56fr; gap: 6%; align-items: center; }
 .tcap { margin: 0 0 10px; font-size: 14px; line-height: 1.55; color: var(--muted); }
 .tcap b { color: var(--ink-2); font-weight: 600; }
