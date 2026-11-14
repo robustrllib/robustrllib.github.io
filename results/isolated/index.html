@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Isolated shifts on 50 configurations · RobustRLlib results</title>
+<meta name="description" content="Isolated shift evaluation of every method on the same 50 configurations.">
+<link rel="icon" href="../../assets/favicon.svg?v=4" type="image/svg+xml">
+<link rel="icon" href="../../assets/favicon-32.png?v=4" sizes="32x32">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=4">
+<link rel="stylesheet" href="../../assets/style.css">
+<link rel="stylesheet" href="../results.css">
+</head>
+<body>
+
+<nav class="top">
+  <div class="wrap">
+    <a class="brand" href="../../"><img class="logo" src="../../assets/favicon.svg" alt="" width="30" height="30"><span><span class="wm">RobustRL</span>lib</span></a>
+    <ul>
+      <li><a href="../">All results</a></li>
+      <li><a href="../../">Project page</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="page sub" id="top">
+  <div class="wrap">
+    <p class="kicker"><a href="../">Results</a></p>
+    <h1>Isolated shifts on 50 configurations</h1>
+    <p class="lede">Every method is evaluated on the same 50 isolated configurations: five shift sources (observation,
+      action, dynamics, reward and execution latency) with five conditions each, online and offline. Every shift is
+      applied to a frozen policy. Under the reward shift the policy acts in the nominal environment and the reward
+      recorded for its episode is corrupted, by Gaussian noise, uniform noise or a constant shift.</p>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <figure class="bordered">
+      <div class="stack">
+      <a href="../figures/isolated_online.png"><img src="../figures/isolated_online.png" alt="Isolated shift evaluation of the online methods on six shift sources, with the leading method of each source marked." width="2400" height="543" loading="lazy" decoding="async"></a>
+      <a href="../figures/isolated_offline.png"><img src="../figures/isolated_offline.png" alt="Isolated shift evaluation of the offline methods on five shift sources, with the leading method of each source marked." width="2400" height="652" loading="lazy" decoding="async"></a>
+      </div>
+      <figcaption><b>Figure 1.</b> Isolated shift evaluation, online (top) and offline (bottom), of 14 robust and 2
+        standard RL methods across 50 configurations. The star and the printed value mark the leading method of each shift
+        source, and the dashed line is the mean nominal score of the row. Semantic binding is evaluated only online, on
+        the goal-conditioned causal door task.</figcaption>
+    </figure>
+
+    <p class="finding"><b>Claimed channels do not fully predict empirical strengths.</b> Figure 1 shows DR-SAC leads both
+      dynamics and execution latency, while ATLA-SA-PPO leads observation, action and reward; offline leaders vary across
+      shift channels. A method's intended target therefore does not uniquely determine where it performs best. The
+      measured ranking is also conditional on the task, mode and severity used to instantiate each shift.</p>
+
+    <figure class="bordered narrow">
+      <a href="../figures/isolated_paired_gain.png"><img src="../figures/isolated_paired_gain.png" alt="Score of each robust method minus the score of its base algorithm on five shift sources, online and offline." width="1300" height="1229" loading="lazy" decoding="async"></a>
+      <figcaption><b>Figure 2.</b> Paired gain over the base algorithm: the score of each robust method minus the score
+        of its base algorithm, per shift source.</figcaption>
+    </figure>
+
+    <p class="finding"><b>Online methods gain over their base algorithm; offline methods stay close to it.</b> Every
+      online method improves over its base algorithm on most shift sources. Offline, robust methods stay close to their
+      base algorithm.</p>
+
+    <h3>Results per condition</h3>
+
+    <figure class="bordered">
+      <a href="../figures/isolated_online_cells.png"><img src="../figures/isolated_online_cells.png" alt="Online results per condition of the isolated shifts." width="2400" height="2103" loading="lazy" decoding="async"></a>
+      <figcaption><b>Figure 3.</b> Online results per condition of the isolated shifts.</figcaption>
+    </figure>
+    <figure class="bordered">
+      <a href="../figures/isolated_offline_cells.png"><img src="../figures/isolated_offline_cells.png" alt="Offline results per condition of the isolated shifts." width="2400" height="2103" loading="lazy" decoding="async"></a>
+      <figcaption><b>Figure 4.</b> Offline results per condition of the isolated shifts.</figcaption>
+    </figure>
+
+    <h3 id="conditions">The 25 conditions</h3>
+    <p>Each condition is evaluated online and offline, which gives the 50 configurations. All of them are applied to
+      the frozen policy on Hopper; a control step is 8 ms.</p>
+    <div class="tablewrap setup">
+      <div class="table-scroll">
+      <table class="data">
+        <thead>
+          <tr><th>Shift source</th><th>Condition</th><th>Mode</th><th>Setting</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="nw">Observation</td><td class="nw"><code>obs_rel_0.10</code></td><td>stochastic, per step</td><td>Gaussian at 0.10 σ<sub>i</sub>, σ<sub>i</sub> the dimension's own std</td></tr>
+          <tr><td class="nw">Observation</td><td class="nw"><code>obs_uni_0.10</code></td><td>stochastic, per step</td><td>U[−0.10, 0.10]</td></tr>
+          <tr><td class="nw">Observation</td><td class="nw"><code>obs_gauss_0.10</code></td><td>stochastic, per step</td><td>σ = 0.10</td></tr>
+          <tr><td class="nw">Observation</td><td class="nw"><code>mad_0.02</code></td><td>adversarial, per step</td><td>ten-step PGD in an ℓ<sub>∞</sub> ball of radius 0.02 maximising the change of the action</td></tr>
+          <tr><td class="nw">Observation</td><td class="nw"><code>mad_0.05</code></td><td>adversarial, per step</td><td>as above, radius 0.05</td></tr>
+          <tr><td class="nw">Action</td><td class="nw"><code>act_uni_0.10</code></td><td>stochastic, per step</td><td>U[−0.10, 0.10] on the clipped action</td></tr>
+          <tr><td class="nw">Action</td><td class="nw"><code>act_gauss_0.10</code></td><td>stochastic, per step</td><td>σ = 0.10 on the clipped action</td></tr>
+          <tr><td class="nw">Action</td><td class="nw"><code>act_offset_0.05</code></td><td>static bias</td><td>+0.05 on every actuator</td></tr>
+          <tr><td class="nw">Action</td><td class="nw"><code>act_oppose_0.10</code></td><td>adversarial, per step</td><td>ε = 0.10 against the action just chosen</td></tr>
+          <tr><td class="nw">Action</td><td class="nw"><code>cmd_oppose_0.20</code></td><td>adversarial, per step</td><td>ε = 0.20, applied to the command before clipping</td></tr>
+          <tr><td class="nw">Dynamics</td><td class="nw"><code>gear_static_0.8</code></td><td>static parametric</td><td>actuator gear × 0.8 for the whole episode</td></tr>
+          <tr><td class="nw">Dynamics</td><td class="nw"><code>gear_ramp_0.8</code></td><td>non-stationary</td><td>gear 1.0 → 0.8, linear over 1000 steps</td></tr>
+          <tr><td class="nw">Dynamics</td><td class="nw"><code>gear_sine_p500</code></td><td>non-stationary</td><td>gear cycling in [0.8, 1.2], period 500 steps</td></tr>
+          <tr><td class="nw">Dynamics</td><td class="nw"><code>push_60</code></td><td>event-driven</td><td>60 N on the torso, 12 steps every 250, sign random</td></tr>
+          <tr><td class="nw">Dynamics</td><td class="nw"><code>trans_t1</code></td><td>stochastic kernel</td><td>state noise σ<sub>q</sub> = 10<sup>−3</sup>, σ<sub>v</sub> = 10<sup>−2</sup> per step</td></tr>
+          <tr><td class="nw">Reward</td><td class="nw"><code>rew_gauss_0.5</code></td><td>stochastic, per step</td><td>recorded reward + N(0, 0.5<sup>2</sup>)</td></tr>
+          <tr><td class="nw">Reward</td><td class="nw"><code>rew_gauss_1.0</code></td><td>stochastic, per step</td><td>recorded reward + N(0, 1.0<sup>2</sup>)</td></tr>
+          <tr><td class="nw">Reward</td><td class="nw"><code>rew_uni_0.866</code></td><td>stochastic, per step</td><td>recorded reward + U[−0.866, 0.866] (std 0.5)</td></tr>
+          <tr><td class="nw">Reward</td><td class="nw"><code>rew_shift_-0.5</code></td><td>parametric</td><td>recorded reward −0.5 at every step</td></tr>
+          <tr><td class="nw">Reward</td><td class="nw"><code>rew_shift_-1.0</code></td><td>parametric</td><td>recorded reward −1.0 at every step</td></tr>
+          <tr><td class="nw">Latency</td><td class="nw"><code>obs_delay_4ms</code></td><td>latency, observation</td><td>delay drawn from [2, 4] ms, interpolated</td></tr>
+          <tr><td class="nw">Latency</td><td class="nw"><code>obs_delay_8ms</code></td><td>latency, observation</td><td>delay drawn from [4, 8] ms</td></tr>
+          <tr><td class="nw">Latency</td><td class="nw"><code>obs_delay_16ms</code></td><td>latency, observation</td><td>delay drawn from [8, 16] ms</td></tr>
+          <tr><td class="nw">Latency</td><td class="nw"><code>act_delay_8ms</code></td><td>latency, action</td><td>fixed buffer of 1 control step (8 ms)</td></tr>
+          <tr><td class="nw">Latency</td><td class="nw"><code>act_delay_rand1</code></td><td>latency, non-stationary</td><td>buffer redrawn every step, {0, 1} steps</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+
+    <p class="more">The same figures under the matched training budget and checkpoint rule are in the
+      <a href="../unified/">unified comparison</a>.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>RobustRLlib · Anonymous submission under double-blind review.</span>
+    <a href="#top">Back to top ↑</a>
+  </div>
+</footer>
+
+</body>
+</html>

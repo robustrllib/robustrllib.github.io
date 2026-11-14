@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Compound shifts on four tasks · RobustRLlib results</title>
+<meta name="description" content="Nominal score, score under the compound shift and retention of the methods on four tasks.">
+<link rel="icon" href="../../assets/favicon.svg?v=4" type="image/svg+xml">
+<link rel="icon" href="../../assets/favicon-32.png?v=4" sizes="32x32">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=4">
+<link rel="stylesheet" href="../../assets/style.css">
+<link rel="stylesheet" href="../results.css">
+</head>
+<body>
+
+<nav class="top">
+  <div class="wrap">
+    <a class="brand" href="../../"><img class="logo" src="../../assets/favicon.svg" alt="" width="30" height="30"><span><span class="wm">RobustRL</span>lib</span></a>
+    <ul>
+      <li><a href="../">All results</a></li>
+      <li><a href="../../">Project page</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="page sub" id="top">
+  <div class="wrap">
+    <p class="kicker"><a href="../">Results</a></p>
+    <h1>Compound shifts on four tasks</h1>
+    <p class="lede">Methods of the library under the compound shift of four tasks, in the setting of the
+      <a href="../unified/">unified comparison</a>. On Hopper, Walker2d and HalfCheetah the compound shift combines
+      action, latency and dynamics shifts; on Pusher it combines latency, observation, semantic and dynamics shifts.
+      Retention is the score under the compound shift divided by the nominal score.</p>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <p class="finding"><b>Composition is hard for every method.</b> On Hopper, Walker2d and Pusher no method keeps half
+      of its nominal score. On HalfCheetah, nine of the twelve offline methods keep 32% to 47%.</p>
+    <p class="finding"><b>A high retention can come from a low nominal score.</b> RORL on HalfCheetah (nominal 26.5) and
+      RFQI on Hopper (nominal 43.6) lead their tables on retention, while several methods score higher under the
+      compound shift.</p>
+
+    <p class="key"><span class="sw sw-track"></span>nominal score<span class="sw sw-fill"></span>score under the compound
+      shift<span class="keynote">All bars share one scale; the dark share of a bar is the retention. Rows are ordered by
+      retention.</span></p>
+
+    <div class="panels">
+      <div class="tablewrap">
+        <p class="tcap"><b>Hopper, offline</b></p>
+        <div class="table-scroll">
+        <table class="data meters">
+          <colgroup><col class="c-method"><col class="c-meter"><col class="c-num"><col class="c-num"><col class="c-num"></colgroup>
+          <thead>
+            <tr><th>Method</th><th aria-label="Nominal score and score under the compound shift"></th><th class="num">Nominal</th><th class="num">Compound</th><th class="num">Retention</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="nw">RFQI</td><td class="meter"><span class="track" style="width:31.1%"><span class="fill" style="width:32.0%"></span></span></td><td class="num">43.6</td><td class="num">13.9</td><td class="num">32.0%</td></tr>
+            <tr><td class="nw">MOPO <span class="tag">standard</span></td><td class="meter"><span class="track" style="width:24.1%"><span class="fill" style="width:20.1%"></span></span></td><td class="num">33.8</td><td class="num">6.8</td><td class="num">20.1%</td></tr>
+            <tr><td class="nw">FWM</td><td class="meter"><span class="track" style="width:72.2%"><span class="fill" style="width:16.7%"></span></span></td><td class="num">101.1</td><td class="num">16.9</td><td class="num">16.7%</td></tr>
+            <tr><td class="nw">TD3+BC <span class="tag">standard</span></td><td class="meter"><span class="track" style="width:78.7%"><span class="fill" style="width:16.5%"></span></span></td><td class="num">110.2</td><td class="num">18.1</td><td class="num">16.5%</td></tr>
+            <tr><td class="nw">RORL</td><td class="meter"><span class="track" style="width:79.4%"><span class="fill" style="width:16.2%"></span></span></td><td class="num">111.1</td><td class="num">18.0</td><td class="num">16.2%</td></tr>
+            <tr><td class="nw">ROMB</td><td class="meter"><span class="track" style="width:70.8%"><span class="fill" style="width:16.0%"></span></span></td><td class="num">99.1</td><td class="num">15.9</td><td class="num">16.0%</td></tr>
+            <tr><td class="nw">RAMBO</td><td class="meter"><span class="track" style="width:66.6%"><span class="fill" style="width:15.5%"></span></span></td><td class="num">93.2</td><td class="num">14.5</td><td class="num">15.5%</td></tr>
+            <tr><td class="nw">PLR-PVL</td><td class="meter"><span class="track" style="width:76.2%"><span class="fill" style="width:15.1%"></span></span></td><td class="num">106.7</td><td class="num">16.1</td><td class="num">15.1%</td></tr>
+            <tr><td class="nw">ATLA-IQL</td><td class="meter"><span class="track" style="width:76.6%"><span class="fill" style="width:14.6%"></span></span></td><td class="num">107.2</td><td class="num">15.6</td><td class="num">14.6%</td></tr>
+            <tr><td class="nw">RSC-IQL</td><td class="meter"><span class="track" style="width:72.0%"><span class="fill" style="width:13.7%"></span></span></td><td class="num">100.8</td><td class="num">13.8</td><td class="num">13.7%</td></tr>
+            <tr><td class="nw">SynthER <span class="tag">standard</span></td><td class="meter"><span class="track" style="width:79.0%"><span class="fill" style="width:12.6%"></span></span></td><td class="num">110.5</td><td class="num">13.9</td><td class="num">12.6%</td></tr>
+            <tr><td class="nw">IQL <span class="tag">standard</span></td><td class="meter"><span class="track" style="width:76.3%"><span class="fill" style="width:12.5%"></span></span></td><td class="num">106.8</td><td class="num">13.4</td><td class="num">12.5%</td></tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+      <div class="tablewrap">
+        <p class="tcap"><b>Pusher, online</b></p>
+        <div class="table-scroll">
+        <table class="data meters">
+          <colgroup><col class="c-method"><col class="c-meter"><col class="c-num"><col class="c-num"><col class="c-num"></colgroup>
+          <thead>
+            <tr><th>Method</th><th aria-label="Nominal score and score under the compound shift"></th><th class="num">Nominal</th><th class="num">Compound</th><th class="num">Retention</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="nw">PPO <span class="tag">standard</span></td><td class="meter"><span class="track" style="width:71.4%"><span class="fill" style="width:45.3%"></span></span></td><td class="num">100.0</td><td class="num">45.3</td><td class="num">45.3%</td></tr>
+            <tr><td class="nw">RARL-PPO</td><td class="meter"><span class="track" style="width:61.7%"><span class="fill" style="width:43.3%"></span></span></td><td class="num">86.4</td><td class="num">37.4</td><td class="num">43.3%</td></tr>
+            <tr><td class="nw">ATLA-SA-PPO</td><td class="meter"><span class="track" style="width:71.4%"><span class="fill" style="width:29.3%"></span></span></td><td class="num">99.9</td><td class="num">29.2</td><td class="num">29.3%</td></tr>
+            <tr><td class="nw">ATLA-PPO</td><td class="meter"><span class="track" style="width:56.8%"><span class="fill" style="width:28.1%"></span></span></td><td class="num">79.6</td><td class="num">22.4</td><td class="num">28.1%</td></tr>
+            <tr><td class="nw">DR-SAC</td><td class="meter"><span class="track" style="width:68.9%"><span class="fill" style="width:22.3%"></span></span></td><td class="num">96.5</td><td class="num">21.5</td><td class="num">22.3%</td></tr>
+            <tr><td class="nw">SAC <span class="tag">standard</span></td><td class="meter"><span class="track" style="width:69.9%"><span class="fill" style="width:19.2%"></span></span></td><td class="num">97.9</td><td class="num">18.8</td><td class="num">19.2%</td></tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+      <div class="tablewrap">
+        <p class="tcap"><b>Hopper, online</b></p>
+        <div class="table-scroll">
+        <table class="data meters">
+          <colgroup><col class="c-method"><col class="c-meter"><col class="c-num"><col class="c-num"><col class="c-num"></colgroup>
+          <thead>
+            <tr><th>Method</th><th aria-label="Nominal score and score under the compound shift"></th><th class="num">Nominal</th><th class="num">Compound</th><th class="num">Retention</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="nw">SAC <span class="tag">standard</span></td><td class="meter"><span class="track" style="width:53.5%"><span class="fill" style="width:19.3%"></span></span></td><td class="num">75.0</td><td class="num">14.5</td><td class="num">19.3%</td></tr>
+            <tr><td class="nw">DR-SAC</td><td class="meter"><span class="track" style="width:73.8%"><span class="fill" style="width:18.7%"></span></span></td><td class="num">103.3</td><td class="num">19.4</td><td class="num">18.7%</td></tr>
+            <tr><td class="nw">ATLA-PPO</td><td class="meter"><span class="track" style="width:48.9%"><span class="fill" style="width:16.9%"></span></span></td><td class="num">68.5</td><td class="num">11.6</td><td class="num">16.9%</td></tr>
+            <tr><td class="nw">ATLA-SA-PPO</td><td class="meter"><span class="track" style="width:57.2%"><span class="fill" style="width:15.1%"></span></span></td><td class="num">80.1</td><td class="num">12.1</td><td class="num">15.1%</td></tr>
+            <tr><td class="nw">RSC-SAC</td><td class="meter"><span class="track" style="width:55.9%"><span class="fill" style="width:14.4%"></span></span></td><td class="num">78.3</td><td class="num">11.2</td><td class="num">14.4%</td></tr>
+            <tr><td class="nw">RARL-PPO</td><td class="meter"><span class="track" style="width:54.1%"><span class="fill" style="width:10.3%"></span></span></td><td class="num">75.8</td><td class="num">7.8</td><td class="num">10.3%</td></tr>
+            <tr><td class="nw">RARL-TRPO</td><td class="meter"><span class="track" style="width:56.1%"><span class="fill" style="width:9.9%"></span></span></td><td class="num">78.5</td><td class="num">7.8</td><td class="num">9.9%</td></tr>
+            <tr><td class="nw">PPO <span class="tag">standard</span></td><td class="meter"><span class="track" style="width:59.0%"><span class="fill" style="width:9.7%"></span></span></td><td class="num">82.6</td><td class="num">8.0</td><td class="num">9.7%</td></tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+      <div class="tablewrap">
+        <p class="tcap"><b>Walker2d, online</b></p>
+        <div class="table-scroll">
+        <table class="data meters">
+          <colgroup><col class="c-method"><col class="c-meter"><col class="c-num"><col class="c-num"><col class="c-num"></colgroup>
+          <thead>
+            <tr><th>Method</th><th aria-label="Nominal score and score under the compound shift"></th><th class="num">Nominal</th><th class="num">Compound</th><th class="num">Retention</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="nw">DR-SAC</td><td class="meter"><span class="track" style="width:59.7%"><span class="fill" style="width:39.9%"></span></span></td><td class="num">83.5</td><td class="num">33.3</td><td class="num">39.9%</td></tr>
+            <tr><td class="nw">SAC <span class="tag">standard</span></td><td class="meter"><span class="track" style="width:74.6%"><span class="fill" style="width:35.4%"></span></span></td><td class="num">104.4</td><td class="num">36.9</td><td class="num">35.4%</td></tr>
+            <tr><td class="nw">RSC-SAC</td><td class="meter"><span class="track" style="width:63.7%"><span class="fill" style="width:31.1%"></span></span></td><td class="num">89.2</td><td class="num">27.7</td><td class="num">31.1%</td></tr>
+            <tr><td class="nw">ATLA-SA-PPO</td><td class="meter"><span class="track" style="width:45.5%"><span class="fill" style="width:21.0%"></span></span></td><td class="num">63.8</td><td class="num">13.4</td><td class="num">21.0%</td></tr>
+            <tr><td class="nw">PPO <span class="tag">standard</span></td><td class="meter"><span class="track" style="width:58.3%"><span class="fill" style="width:8.9%"></span></span></td><td class="num">81.7</td><td class="num">7.3</td><td class="num">8.9%</td></tr>
+            <tr><td class="nw">RARL-TRPO</td><td class="meter"><span class="track" style="width:75.1%"><span class="fill" style="width:8.7%"></span></span></td><td class="num">105.1</td><td class="num">9.1</td><td class="num">8.7%</td></tr>
+            <tr><td class="nw">ATLA-PPO</td><td class="meter"><span class="track" style="width:58.0%"><span class="fill" style="width:7.2%"></span></span></td><td class="num">81.2</td><td class="num">5.8</td><td class="num">7.2%</td></tr>
+            <tr><td class="nw">RARL-PPO</td><td class="meter"><span class="track" style="width:82.5%"><span class="fill" style="width:6.2%"></span></span></td><td class="num">115.4</td><td class="num">7.2</td><td class="num">6.2%</td></tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+      <div class="tablewrap">
+        <p class="tcap"><b>HalfCheetah, offline</b></p>
+        <div class="table-scroll">
+        <table class="data meters">
+          <colgroup><col class="c-method"><col class="c-meter"><col class="c-num"><col class="c-num"><col class="c-num"></colgroup>
+          <thead>
+            <tr><th>Method</th><th aria-label="Nominal score and score under the compound shift"></th><th class="num">Nominal</th><th class="num">Compound</th><th class="num">Retention</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="nw">RORL</td><td class="meter"><span class="track" style="width:18.9%"><span class="fill" style="width:86.4%"></span></span></td><td class="num">26.5</td><td class="num">22.9</td><td class="num">86.4%</td></tr>
+            <tr><td class="nw">TD3+BC <span class="tag">standard</span></td><td class="meter"><span class="track" style="width:69.2%"><span class="fill" style="width:53.3%"></span></span></td><td class="num">96.9</td><td class="num">51.6</td><td class="num">53.3%</td></tr>
+            <tr><td class="nw">RFQI</td><td class="meter"><span class="track" style="width:44.0%"><span class="fill" style="width:52.0%"></span></span></td><td class="num">61.6</td><td class="num">32.0</td><td class="num">52.0%</td></tr>
+            <tr><td class="nw">RSC-IQL</td><td class="meter"><span class="track" style="width:71.3%"><span class="fill" style="width:46.9%"></span></span></td><td class="num">99.9</td><td class="num">46.8</td><td class="num">46.9%</td></tr>
+            <tr><td class="nw">FWM</td><td class="meter"><span class="track" style="width:88.4%"><span class="fill" style="width:42.5%"></span></span></td><td class="num">123.7</td><td class="num">52.6</td><td class="num">42.5%</td></tr>
+            <tr><td class="nw">ROMB</td><td class="meter"><span class="track" style="width:86.0%"><span class="fill" style="width:41.4%"></span></span></td><td class="num">120.4</td><td class="num">49.9</td><td class="num">41.4%</td></tr>
+            <tr><td class="nw">IQL <span class="tag">standard</span></td><td class="meter"><span class="track" style="width:85.5%"><span class="fill" style="width:41.3%"></span></span></td><td class="num">119.6</td><td class="num">49.5</td><td class="num">41.3%</td></tr>
+            <tr><td class="nw">ATLA-IQL</td><td class="meter"><span class="track" style="width:80.2%"><span class="fill" style="width:40.9%"></span></span></td><td class="num">112.3</td><td class="num">46.0</td><td class="num">40.9%</td></tr>
+            <tr><td class="nw">PLR-PVL</td><td class="meter"><span class="track" style="width:84.2%"><span class="fill" style="width:40.4%"></span></span></td><td class="num">117.9</td><td class="num">47.7</td><td class="num">40.4%</td></tr>
+            <tr><td class="nw">SynthER <span class="tag">standard</span></td><td class="meter"><span class="track" style="width:78.3%"><span class="fill" style="width:35.7%"></span></span></td><td class="num">109.6</td><td class="num">39.2</td><td class="num">35.7%</td></tr>
+            <tr><td class="nw">RAMBO</td><td class="meter"><span class="track" style="width:82.5%"><span class="fill" style="width:33.5%"></span></span></td><td class="num">115.5</td><td class="num">38.7</td><td class="num">33.5%</td></tr>
+            <tr><td class="nw">MOPO <span class="tag">standard</span></td><td class="meter"><span class="track" style="width:49.2%"><span class="fill" style="width:32.3%"></span></span></td><td class="num">68.9</td><td class="num">22.2</td><td class="num">32.3%</td></tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+    </div>
+
+    <h3 id="setup">The compound shift of each task</h3>
+    <p>All factors of a task are applied together. A bracket is a sampling range, drawn again at every episode. Hopper,
+      Walker2d and HalfCheetah share one factor set; the push and the delay follow the mass and the control step of
+      each robot.</p>
+    <div class="tablewrap setup">
+      <div class="table-scroll">
+      <table class="data">
+        <thead>
+          <tr><th>Shift source</th><th>Factor</th><th>Hopper</th><th>Walker2d</th><th>HalfCheetah</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="nw">Dynamics</td><td>Friction</td><td colspan="3">×[0.38, 1.06]</td></tr>
+          <tr><td class="nw">Dynamics</td><td>Link mass</td><td colspan="3">×[0.81, 1.17]</td></tr>
+          <tr><td class="nw">Dynamics</td><td>Actuator gear</td><td colspan="3">×[0.84, 1.14]</td></tr>
+          <tr><td class="nw">Dynamics</td><td>Torso push</td><td>119 N for 10 steps, every 625 steps</td><td>178 N for 10 steps, every 625 steps</td><td>84 N for 2 steps, every 100 steps</td></tr>
+          <tr><td class="nw">Action</td><td>Torque noise</td><td colspan="3">Gaussian, σ = 0.06</td></tr>
+          <tr><td class="nw">Latency</td><td>Action delay</td><td>1 to 2 control steps (8 ms each)</td><td>1 to 2 control steps (8 ms each)</td><td>0 to 1 control steps (50 ms each)</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+    <div class="tablewrap setup">
+      <div class="table-scroll">
+      <table class="data">
+        <thead>
+          <tr><th>Shift source</th><th>Factor</th><th>Pusher</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="nw">Dynamics</td><td>Link mass</td><td>×[0.03, 32]</td></tr>
+          <tr><td class="nw">Dynamics</td><td>Object mass</td><td>×[0.11, 3.8]</td></tr>
+          <tr><td class="nw">Dynamics</td><td>Joint damping</td><td>×[0.02, 1.8×10³]</td></tr>
+          <tr><td class="nw">Dynamics</td><td>Actuator gear</td><td>×[0.18, 5.7]</td></tr>
+          <tr><td class="nw">Latency</td><td>Control period</td><td>random extra delay per step, rate drawn per episode from [50, 400]</td></tr>
+          <tr><td class="nw">Observation</td><td>Sensor noise</td><td>Gaussian, 0.125 of each feature's standard deviation</td></tr>
+          <tr><td class="nw">Semantic</td><td>Goal displacement</td><td>0.25 m, diagonal</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>RobustRLlib · Anonymous submission under double-blind review.</span>
+    <a href="#top">Back to top ↑</a>
+  </div>
+</footer>
+
+</body>
+</html>
