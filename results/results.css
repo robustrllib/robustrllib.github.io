@@ -45,11 +45,25 @@ table.meters td.meter { vertical-align: middle; padding-right: 22px; }
 table.meters .track { display: block; height: 8px; border-radius: 0 4px 4px 0; background: #d6e3f2; }
 table.meters .fill { display: block; height: 8px; border-radius: 0 4px 4px 0; background: var(--link); }
 table.meters .tag { margin-left: 7px; font-size: 12px; color: var(--muted); }
+/* order of the rows: three radio buttons, hidden but reachable by keyboard; their labels are the buttons */
+.sortable > input { position: absolute; width: 1px; height: 1px; margin: 0; opacity: 0; pointer-events: none; }
+.sortable tbody { display: none; }
+#by-retention:checked ~ .panels tbody.by-retention,
+#by-compound:checked ~ .panels tbody.by-compound,
+#by-nominal:checked ~ .panels tbody.by-nominal { display: table-row-group; }
+p.sortby { margin: 12px 0 0; font-size: 14px; color: var(--ink-2); }
+p.sortby label { display: inline-block; margin-left: 8px; padding: 3px 12px; border: 1px solid var(--line-strong); border-radius: 999px; background: #fff; color: var(--ink-2); font-weight: 550; cursor: pointer; }
+p.sortby label:hover { border-color: var(--ink); }
+#by-retention:checked ~ .sortby label[for="by-retention"],
+#by-compound:checked ~ .sortby label[for="by-compound"],
+#by-nominal:checked ~ .sortby label[for="by-nominal"] { background: var(--ink); border-color: var(--ink); color: #fff; }
+#by-retention:focus-visible ~ .sortby label[for="by-retention"],
+#by-compound:focus-visible ~ .sortby label[for="by-compound"],
+#by-nominal:focus-visible ~ .sortby label[for="by-nominal"] { outline: 2px solid var(--link); outline-offset: 2px; }
 p.key { margin: 26px 0 6px; font-size: 14px; color: var(--ink-2); }
 p.key .sw { display: inline-block; width: 26px; height: 8px; border-radius: 0 4px 4px 0; margin: 0 8px 0 0; vertical-align: 1px; }
 p.key .sw-track { background: #d6e3f2; }
 p.key .sw-fill { background: var(--link); margin-left: 22px; }
-p.key .keynote { margin-left: 22px; color: var(--muted); }
 @media (max-width: 760px) {
   header.page h1 { font-size: 32px; }
   header.page.sub h1 { font-size: 26px; }
@@ -65,5 +79,4 @@ p.key .keynote { margin-left: 22px; color: var(--muted); }
   table.meters td.meter { padding-right: 8px; }
   table.meters td.nw { white-space: normal; }
   table.meters .tag { display: block; margin-left: 0; }
-  p.key .keynote { display: block; margin: 6px 0 0; }
 }
