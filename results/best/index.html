@@ -28,35 +28,27 @@
   <div class="wrap">
     <p class="kicker"><a href="../">Results</a></p>
     <h1>Best robust algorithm vs best standard algorithm</h1>
-    <p class="lede">The two algorithms are selected by overall performance: among the 14 robust and the 6 standard
-      algorithms of the library, we take the one with the highest score under shift, averaged over all tasks and shift
-      conditions of the library-wide evaluation. This selects DR-SAC and SAC. Both are online algorithms, so they are
-      evaluated on the same tasks and the same shift conditions.</p>
+    <p class="lede">In each setting, online and offline, the two algorithms are selected by overall performance: among
+      the robust and among the standard algorithms of the setting, we take the one with the highest score under shift,
+      averaged over all tasks and shift conditions of the library-wide evaluation. Online, this selects DR-SAC from the
+      6 robust algorithms and SAC from the 2 standard algorithms. Offline, it selects ATLA-IQL from the 8 robust
+      algorithms and SynthER from the 4 standard algorithms.</p>
   </div>
 </header>
 
 <section>
   <div class="wrap">
-    <figure class="bordered narrow">
-      <a href="../figures/best_pair.png"><img src="../figures/best_pair.png" alt="Normalized score of DR-SAC, the best robust algorithm, and of SAC, the best standard algorithm, across the severity quartiles." width="1300" height="1075" loading="lazy" decoding="async"></a>
-      <figcaption><b>Figure 1.</b> Normalized score of DR-SAC (best robust RL) and SAC (best standard RL) across the
-        severity quartiles Q1–Q4. The labels give the gap at Q1 and Q4.</figcaption>
+    <figure class="bordered">
+      <a href="../figures/best_pair_regime.png"><img src="../figures/best_pair_regime.png" alt="Normalized score of the best robust and the best standard algorithm across the severity quartiles: DR-SAC and SAC online, ATLA-IQL and SynthER offline." width="2400" height="1075" loading="lazy" decoding="async"></a>
+      <figcaption><b>Figure 1.</b> Normalized score of the best robust and the best standard algorithm across the
+        severity quartiles Q1–Q4. Left: online, DR-SAC and SAC. Right: offline, ATLA-IQL and SynthER. The labels give
+        the gap at Q1 and Q4.</figcaption>
     </figure>
 
-    <p class="finding"><b>The best robust algorithm stays above the best standard algorithm at every severity
+    <p class="finding"><b>Online, the best robust algorithm stays above the best standard algorithm at every severity
       level.</b> The gap is +14.1 at Q1 and +5.2 at Q4. Over all levels DR-SAC scores 66.8 and SAC 56.7.</p>
-
-    <p class="finding">Among the offline algorithms, the same selection by overall performance gives ATLA-IQL, from the
-      8 robust algorithms, and SynthER, from the 4 standard algorithms.</p>
-
-    <figure class="bordered narrow">
-      <a href="../figures/best_pair_offline.png"><img src="../figures/best_pair_offline.png" alt="Normalized score of ATLA-IQL, the best offline robust algorithm, and of SynthER, the best offline standard algorithm, across the severity quartiles." width="1300" height="1075" loading="lazy" decoding="async"></a>
-      <figcaption><b>Figure 2.</b> Normalized score of ATLA-IQL (best offline robust RL) and SynthER (best offline
-        standard RL) across the severity quartiles Q1–Q4. The labels give the gap at Q1 and Q4.</figcaption>
-    </figure>
-
-    <p class="finding"><b>The best offline robust algorithm also stays above the best offline standard algorithm at
-      every severity level.</b> The gap is +7.1 at Q1 and +1.9 at Q4. Over all levels ATLA-IQL scores 56.9 and SynthER
+    <p class="finding"><b>Offline, the best robust algorithm also stays above the best standard algorithm at every
+      severity level.</b> The gap is +7.1 at Q1 and +1.9 at Q4. Over all levels ATLA-IQL scores 56.9 and SynthER
       53.2.</p>
   </div>
 </section>
